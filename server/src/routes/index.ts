@@ -1,0 +1,32 @@
+import { Router } from 'express';
+import { healthRouter } from './modules/health.route';
+import { authRouter } from './modules/auth.route';
+import { userRouter } from './modules/user.route';
+import { websiteRouter } from './modules/website.route';
+import { termsRouter } from './modules/terms.route';
+import { faqsRouter } from './modules/faqs.route';
+import { securityRouter } from './modules/security.route';
+import { placeRouter } from './modules/place.route';
+import { seoRouter } from './modules/seo.route';
+import { tourRouter } from './modules/tour.route';
+import { busRouter } from './modules/bus.route';
+import { bookingRouter } from './modules/booking.route';
+import { inquiryRouter } from './modules/inquiry.route';
+import { mediaRouter } from './modules/media.route';
+
+export const router = Router();
+
+router.use('/health', healthRouter);
+router.use('/auth', authRouter);
+router.use('/users', userRouter);
+router.use('/websites', websiteRouter);
+router.use('/terms', termsRouter);
+router.use('/faqs', faqsRouter);
+router.use('/security', securityRouter);
+router.use('/places', placeRouter);
+router.use('/seo', seoRouter);
+router.use('/tours', tourRouter);
+router.use('/buses', busRouter);
+router.use('/bookings', bookingRouter);
+router.use('/inquiries', inquiryRouter);
+router.use('/media', mediaRouter);

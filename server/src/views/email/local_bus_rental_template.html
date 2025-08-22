@@ -1,0 +1,87 @@
+ <!doctype html>
+ <html>
+
+ <head>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <title><%= website.branding?.brandName %> • Local Bus Rental</title>
+ </head>
+
+ <body style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7f9;padding:24px;color:#111">
+   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:720px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden">
+     <tr>
+       <td style="padding:20px 24px;border-bottom:1px solid #eee">
+         <div style="display:flex;align-items:center;gap:12px">
+           <% if (website.branding?.logo?.url) { %>
+           <img src="<%= website.branding.logo.url %>" alt="<%= website.branding.brandName %>" height="28" />
+           <% } %>
+           <strong style="font-size:18px"><%= website.branding?.brandName || 'Our Travel Co.' %></strong>
+         </div>
+       </td>
+     </tr>
+     <tr>
+       <td style="padding:24px">
+         <h2 style="margin:0 0 12px;font-size:20px">Local Bus Rental Inquiry</h2>
+         <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;font-size:14px">
+           <tr>
+             <td style="padding:6px 0;width:200px;color:#666">Name</td>
+             <td style="padding:6px 0"><%= name %></td>
+           </tr>
+           <tr>
+             <td style="padding:6px 0;color:#666">Email</td>
+             <td style="padding:6px 0"><%= email %></td>
+           </tr>
+           <tr>
+             <td style="padding:6px 0;color:#666">Phone</td>
+             <td style="padding:6px 0"><%= phone %></td>
+           </tr>
+           <tr>
+             <td style="padding:6px 0;color:#666">City</td>
+             <td style="padding:6px 0"><%= city %></td>
+           </tr>
+           <tr>
+             <td style="padding:6px 0;color:#666">Date</td>
+             <td style="padding:6px 0"><%= new Date(date).toDateString() %></td>
+           </tr>
+           <tr>
+             <td style="padding:6px 0;color:#666">Hours</td>
+             <td style="padding:6px 0"><%= hours %></td>
+           </tr>
+           <tr>
+             <td style="padding:6px 0;color:#666">Passengers</td>
+             <td style="padding:6px 0"><%= passengers %></td>
+           </tr>
+         </table>
+         <% if (notes) { %>
+         <div style="margin-top:16px;padding:14px;background:#fafafa;border:1px solid #eee;border-radius:8px;white-space:pre-wrap"><%= notes %></div>
+         <% } %>
+       </td>
+     </tr>
+     <tr>
+       <td style="padding:18px 24px;background:#fafafa">
+         <div style="font-size:12px;color:#666;display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+           <div>
+             <%= website.branding?.brandName || 'Our Travel Co.' %> •
+             <a href="https://<%= website.domains?.primary %>" style="color:#666;text-decoration:none"><%= website.domains?.primary %></a>
+           </div>
+           <div>• Support: <a href="mailto:<%= website.contact?.emails?.supportEmail %>" style="color:#666"><%= website.contact?.emails?.supportEmail %></a></div>
+           <% if (website.contact?.phone) { %>
+           <div>• Phone: <a href="tel:<%= website.contact.phone %>" style="color:#666"><%= website.contact.phone %></a></div>
+           <% } %>
+           <% if (website.files?.brochureUrl) { %>
+           <div>• <a href="<%= website.files.brochureUrl %>" style="color:#666">Brochure</a></div>
+           <% } %>
+         </div>
+         <% if (website.socials) { %>
+         <div style="margin-top:8px;font-size:12px;color:#666">
+           <% Object.entries(website.socials).forEach(function([k,v]){ if (v) { %>
+           <a href="<%= v as string %>" style="color:#666;margin-right:10px;text-decoration:none"><%= k %></a>
+           <% }}); %>
+         </div>
+         <% } %>
+       </td>
+     </tr>
+   </table>
+ </body>
+
+ </html>

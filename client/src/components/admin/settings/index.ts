@@ -1,0 +1,11 @@
+export { default as EmailSettings } from "./EmailSettings";
+export { default as SocialMediaSettings } from "./SocialMediaLinks";
+export { default as LogoSettings } from "./LogoSettings";
+export { default as GeneralSettings } from "./GeneralDetails";
+export { default as BusinessSettings } from "./BusinessSettings";
+export { default as BookingSettings } from "./BookingSettings";
+export { default as DomainsSettings } from "./DomainsSettings";
+export { default as AnalyticsSettings } from "./AnalyticsSettings";
+export { default as SEOSettings } from "./SEOSettings";
+export { default as RentalSettings } from "./RentalSettings";
+export { default as SystemSettings } from "./SystemSettings";
