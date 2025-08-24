@@ -5,7 +5,7 @@ const CSRF_COOKIE = 'csrf_token';
 const CSRF_HEADER = 'x-csrf-token';
 
 export function issueCsrfToken(req: Request, res: Response, next: NextFunction) {
-  const token = req.cookies?.[CSRF_COOKIE];
+  const token = req.cookies?.[CSRF_COOKIE] || req.headers[CSRF_HEADER];
   if (!token) {
     const t = generateRandomToken(16);
     res.cookie(CSRF_COOKIE, t, {

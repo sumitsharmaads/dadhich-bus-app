@@ -56,7 +56,6 @@ export function buildApp(): Application {
   );
 
   app.use(sessionCookies);
-  app.use(issueCsrfToken);
   // Configure body parsers to skip multipart requests
   app.use((req, _, next) => {
     if (req.headers['content-type']?.includes('multipart/form-data')) {
@@ -69,6 +68,7 @@ export function buildApp(): Application {
   app.use(express.urlencoded({ extended: true, limit: env.REQUEST_BODY_LIMIT }));
   app.use(sessionMiddleware);
   app.use(loadCurrentUser);
+  app.use(issueCsrfToken);
 
   app.use('/api', router);
 
