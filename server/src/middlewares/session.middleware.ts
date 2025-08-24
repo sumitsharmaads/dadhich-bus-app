@@ -81,5 +81,6 @@ function setCookie(res: Response, sid: string, expiresAt: Date) {
     sameSite: 'lax',
     path: '/',
     expires: expiresAt,
+    domain: process.env.NODE_ENV === 'production' ? '.dadhichbusservice.com' : undefined,
   });
 }

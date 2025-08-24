@@ -16,6 +16,12 @@ import { mediaRouter } from './modules/media.route';
 
 export const router = Router();
 
+// CSRF token endpoint - must be before other routes to ensure token is available
+router.get('/csrf-token', (req, res) => {
+  // The CSRF middleware will automatically set the cookie
+  res.json({ success: true, message: 'CSRF token cookie set' });
+});
+
 router.use('/health', healthRouter);
 router.use('/auth', authRouter);
 router.use('/users', userRouter);

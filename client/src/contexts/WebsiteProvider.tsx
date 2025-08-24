@@ -14,6 +14,7 @@ import {
 } from "@/lib/storage/localStorage";
 import { websiteService } from "@/lib/api";
 import { transformWebsiteData } from "@/utils/website";
+import { initializeCsrfToken } from "@/lib/api/axiosInstance";
 
 const WebsiteContext = createContext<WebsiteContextType | undefined>(undefined);
 
@@ -79,6 +80,9 @@ export const WebsiteContextProvider: React.FC<WebsiteContextProviderProps> = ({
   useEffect(() => {
     const loadWebsiteInfo = async () => {
       try {
+        // Initialize CSRF token first
+        await initializeCsrfToken();
+
         const cachedData = websiteStorage.getItem("website");
         const lastUpdated = websiteStorageExpiry.getItem("website_expiry");
 

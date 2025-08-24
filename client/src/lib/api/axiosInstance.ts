@@ -34,6 +34,20 @@ export const getCsrfToken = (): string | null => {
   return csrfToken;
 };
 
+// Initialize CSRF token on app startup
+export const initializeCsrfToken = async (): Promise<void> => {
+  try {
+    const token = await fetchCsrfToken();
+    if (token) {
+      console.log("CSRF token initialized successfully");
+    } else {
+      console.warn("Failed to initialize CSRF token");
+    }
+  } catch (error) {
+    console.error("Error initializing CSRF token:", error);
+  }
+};
+
 // Extract CSRF token from cookies
 const extractCsrfToken = (): string | null => {
   if (typeof document === "undefined") return null;
@@ -47,19 +61,68 @@ const extractCsrfToken = (): string | null => {
     return csrfCookie.split("=")[1];
   }
 
+  // Fallback: try to get from localStorage if cookie is not available
+  if (typeof window !== "undefined") {
+    const storedToken = localStorage.getItem("csrf_token");
+    if (storedToken) {
+      return storedToken;
+    }
+  }
+
   return null;
 };
 
+// Function to fetch CSRF token from backend if not available locally
+const fetchCsrfToken = async (): Promise<string | null> => {
+  try {
+    // Make a GET request to get the CSRF token cookie
+    const response = await axios.get(`${domain}/csrf-token`, {
+      withCredentials: true,
+    });
+
+    // Extract token from response headers or cookies
+    const setCookieHeader = response.headers["set-cookie"];
+    if (setCookieHeader) {
+      const csrfCookie = setCookieHeader.find((cookie) =>
+        cookie.includes("csrf_token=")
+      );
+      if (csrfCookie) {
+        const token = csrfCookie.split("csrf_token=")[1].split(";")[0];
+        setCsrfToken(token);
+        // Also store in localStorage as fallback
+        if (typeof window !== "undefined") {
+          localStorage.setItem("csrf_token", token);
+        }
+        return token;
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Failed to fetch CSRF token:", error);
+    return null;
+  }
+};
+
 axiosInstance.interceptors.request.use(
-  (request) => {
+  async (request) => {
     request.withCredentials = true;
 
     // Add CSRF token for state-changing operations
     const method = request.method?.toUpperCase();
     if (method && ["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
-      const token = csrfToken || extractCsrfToken();
+      let token = csrfToken || extractCsrfToken();
+
+      // If no token found, try to fetch it from backend
+      if (!token) {
+        token = await fetchCsrfToken();
+      }
+
       if (token) {
         request.headers["x-csrf-token"] = token;
+        console.log("CSRF token added:", token); // Debug log
+      } else {
+        console.warn("No CSRF token found for", method, "request"); // Debug log
       }
     }
 

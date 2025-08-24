@@ -1,0 +1,94 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+    types: [ closed ]
+
+jobs:
+  deploy:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: |
+        cd client && npm install
+        cd ../server && npm install
+        
+    - name: Build frontend
+      run: |
+        cd client
+        npm run build
+        
+    - name: Build backend
+      run: |
+        cd server
+        npm run build
+        
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: |
+          # Navigate to project directory
+          cd /root/dadhich-bus-app
+          
+          # Pull latest changes
+          git pull origin main
+          
+          # Complete deployment flow: npm install → npm run build → npm start (via PM2)
+          
+          # Frontend deployment
+          echo "🚀 Deploying frontend..."
+          cd client
+          npm install
+          npm run build
+          
+          # Backend deployment
+          echo "🚀 Deploying backend..."
+          cd ../server
+          npm install
+          npm run build
+          
+          # Restart services (this runs npm start via PM2)
+          echo "🔄 Restarting services..."
+          pm2 restart frontend
+          pm2 restart backend
+          
+          # Wait for services to start
+          echo "⏳ Waiting for services to start..."
+          sleep 5
+          
+          # Check service status
+          echo "📊 Checking service status..."
+          pm2 status
+          
+          echo "🚀 Deployment completed successfully!"
+          
+    - name: Deployment notification
+      if: success()
+      run: |
+        echo "✅ Deployment to VPS completed successfully!"
+        echo "🌐 Frontend: https://dadhichbusservice.com"
+        echo "🔌 Backend: https://api.dadhichbusservice.com"
+        
+    - name: Deployment failure notification
+      if: failure()
+      run: |
+        echo "❌ Deployment to VPS failed!"
+        echo "Please check the logs above for errors."

@@ -8,7 +8,13 @@ export function issueCsrfToken(req: Request, res: Response, next: NextFunction) 
   const token = req.cookies?.[CSRF_COOKIE];
   if (!token) {
     const t = generateRandomToken(16);
-    res.cookie(CSRF_COOKIE, t, { httpOnly: false, secure: true, sameSite: 'lax', path: '/' });
+    res.cookie(CSRF_COOKIE, t, {
+      httpOnly: false,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+      domain: process.env.NODE_ENV === 'production' ? '.dadhichbusservice.com' : undefined,
+    });
   }
   next();
 }
