@@ -31,6 +31,7 @@ import {
   TOUR_HIGHLIGHTS,
   SPECIAL_REQUIREMENTS,
 } from "@/constants/tourConstants";
+import axiosInstance from "@/lib/api/axiosInstance";
 
 interface AdvancedSectionProps {
   form: CreateTourRequest;
@@ -52,6 +53,8 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
   const [newHighlight, setNewHighlight] = useState("");
   const [newSpecialRequirement, setNewSpecialRequirement] = useState("");
   const [editingStayIndex, setEditingStayIndex] = useState<number | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [deletingImage, setDeletingImage] = useState(false);
 
   // Stay description form state
   const [stayForm, setStayForm] = useState<Partial<TourStayItem>>({
@@ -171,30 +174,132 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
     }
   };
 
-  const handleImageUpload = (field: "heroImage" | "gallery", file: File) => {
-    // This would typically upload to Cloudinary and return {url, id}
-    // For now, we'll simulate the structure
-    const mockImage = {
-      url: URL.createObjectURL(file),
-      id: `temp_${Date.now()}`,
-    };
+  const handleImageUpload = async (
+    field: "heroImage" | "gallery",
+    file: File
+  ) => {
+    console.log("🚀 handleImageUpload called with:", {
+      field,
+      file,
+      fileName: file.name,
+      fileSize: file.size,
+    });
+    try {
+      setUploadingImage(true);
 
-    if (field === "heroImage") {
-      onFormChange("heroImage", mockImage);
-    } else {
-      onFormChange("gallery", [...(form.gallery || []), mockImage]);
+      // Upload directly to Cloudinary through our media API - no temporary storage
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("folder", "tours");
+
+      console.log(
+        "📤 Sending request to /media/upload with formData:",
+        formData
+      );
+      const response = await axiosInstance.post("/media/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("✅ Response received:", response.data);
+
+      if (response.data.success && response.data.data) {
+        // Store only the Cloudinary data - no temp files, no blob URLs
+        const cloudinaryImage = {
+          url: response.data.data.secure_url,
+          id: response.data.data.public_id,
+          width: response.data.data.width,
+          height: response.data.data.height,
+          format: response.data.data.format,
+          bytes: response.data.data.bytes,
+        };
+
+        if (field === "heroImage") {
+          onFormChange("heroImage", cloudinaryImage);
+        } else {
+          onFormChange("gallery", [...(form.gallery || []), cloudinaryImage]);
+        }
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      // You might want to show a user-friendly error message here
+    } finally {
+      setUploadingImage(false);
     }
   };
 
-  const handleRemoveImage = (
+  const handleMultipleImageUpload = async (files: File[]) => {
+    try {
+      setUploadingImage(true);
+
+      // Upload multiple files directly to Cloudinary through our media API - no temporary storage
+      const formData = new FormData();
+      files.forEach((file) => formData.append("files", file));
+      formData.append("folder", "tours");
+
+      const response = await axiosInstance.post(
+        "/media/upload-multiple",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      if (response.data.success && response.data.data) {
+        // Store only Cloudinary data - no temp files, no blob URLs
+        const cloudinaryImages = response.data.data.results.map(
+          (result: any) => ({
+            url: result.secure_url,
+            id: result.public_id,
+            width: result.width,
+            height: result.height,
+            format: result.format,
+            bytes: result.bytes,
+          })
+        );
+
+        onFormChange("gallery", [...(form.gallery || []), ...cloudinaryImages]);
+      }
+    } catch (error) {
+      console.error("Error uploading multiple images:", error);
+      // You might want to show a user-friendly error message here
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleRemoveImage = async (
     field: "heroImage" | "gallery",
     index?: number
   ) => {
-    if (field === "heroImage") {
-      onFormChange("heroImage", undefined);
-    } else if (typeof index === "number") {
-      const updatedGallery = form.gallery?.filter((_, i) => i !== index) || [];
-      onFormChange("gallery", updatedGallery);
+    try {
+      setDeletingImage(true);
+
+      if (field === "heroImage" && form.heroImage?.id) {
+        // Delete from Cloudinary first, then remove from form
+        await axiosInstance.post("/media/delete", {
+          publicId: form.heroImage.id,
+        });
+        onFormChange("heroImage", undefined);
+      } else if (typeof index === "number" && form.gallery?.[index]?.id) {
+        // Delete from Cloudinary first, then remove from form
+        await axiosInstance.post("/media/delete", {
+          publicId: form.gallery[index].id,
+        });
+        const updatedGallery =
+          form.gallery?.filter((_, i) => i !== index) || [];
+        onFormChange("gallery", updatedGallery);
+      }
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      // Still remove from form even if Cloudinary deletion fails
+      if (field === "heroImage") {
+        onFormChange("heroImage", undefined);
+      } else if (typeof index === "number") {
+        const updatedGallery =
+          form.gallery?.filter((_, i) => i !== index) || [];
+        onFormChange("gallery", updatedGallery);
+      }
+    } finally {
+      setDeletingImage(false);
     }
   };
 
@@ -256,6 +361,10 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
           <Typography variant="subtitle1" gutterBottom>
             Images
           </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+            Images are uploaded directly to Cloudinary through our media API. No
+            temporary storage is used.
+          </Typography>
 
           {/* Hero Image */}
           <Box sx={{ mb: 3 }}>
@@ -283,7 +392,8 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
                   </Box>
                   <IconButton
                     color="error"
-                    onClick={() => handleRemoveImage("heroImage")}
+                    disabled={deletingImage}
+                    onClick={async () => await handleRemoveImage("heroImage")}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -294,16 +404,17 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
                 variant="outlined"
                 component="label"
                 startIcon={<CloudUploadIcon />}
+                disabled={uploadingImage}
                 sx={{ mb: 1 }}
               >
-                Upload Hero Image
+                {uploadingImage ? "Uploading..." : "Upload Hero Image"}
                 <input
                   type="file"
                   hidden
                   accept="image/*"
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const file = e.target.files?.[0];
-                    if (file) handleImageUpload("heroImage", file);
+                    if (file) await handleImageUpload("heroImage", file);
                   }}
                 />
               </Button>
@@ -320,17 +431,20 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
               variant="outlined"
               component="label"
               startIcon={<CloudUploadIcon />}
+              disabled={uploadingImage}
               sx={{ mb: 2 }}
             >
-              Add to Gallery
+              {uploadingImage ? "Uploading..." : "Add to Gallery"}
               <input
                 type="file"
                 hidden
                 accept="image/*"
                 multiple
-                onChange={(e) => {
+                onChange={async (e) => {
                   const files = Array.from(e.target.files || []);
-                  files.forEach((file) => handleImageUpload("gallery", file));
+                  if (files.length > 0) {
+                    await handleMultipleImageUpload(files);
+                  }
                 }}
               />
             </Button>
@@ -353,8 +467,11 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
                       <IconButton
                         size="small"
                         color="error"
+                        disabled={deletingImage}
                         sx={{ position: "absolute", top: 4, right: 4 }}
-                        onClick={() => handleRemoveImage("gallery", index)}
+                        onClick={async () =>
+                          await handleRemoveImage("gallery", index)
+                        }
                       >
                         <DeleteIcon />
                       </IconButton>

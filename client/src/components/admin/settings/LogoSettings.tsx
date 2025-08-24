@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { WebsiteInfoType } from "@/types";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import { settingsService } from "@/lib/api/services/settings.service";
+import axiosInstance from "@/lib/api/axiosInstance";
 
 const LogoSettings: React.FC<{
   settings: WebsiteInfoType;
@@ -24,12 +24,26 @@ const LogoSettings: React.FC<{
     if (!file) return;
 
     try {
-      const res = await settingsService.uploadImage({ image: file });
-      if (res.success && res.data?.secure_url && res.data?.public_id) {
+      // Upload directly to Cloudinary through our media API - no temporary storage
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("folder", "logos");
+
+      const response = await axiosInstance.post("/media/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.data.success && response.data.data) {
+        // Store only the Cloudinary data - no temp files, no blob URLs
+        const cloudinaryImage = {
+          id: response.data.data.public_id,
+          url: response.data.data.secure_url,
+        };
+
         if (kind === "logo") {
-          setLogo({ id: res.data.public_id, url: res.data.secure_url });
+          setLogo(cloudinaryImage);
         } else {
-          setPreLogo({ id: res.data.public_id, url: res.data.secure_url });
+          setPreLogo(cloudinaryImage);
         }
       }
     } catch (error) {

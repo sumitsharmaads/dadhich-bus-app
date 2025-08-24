@@ -53,6 +53,7 @@ const TourHeroSection: React.FC<TourHeroSectionProps> = ({
           }
           alt={data?.tourName}
           className="w-full h-full object-cover"
+          crossOrigin="anonymous"
         />
 
         {/* Gradient Overlay */}
