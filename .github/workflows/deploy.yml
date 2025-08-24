@@ -24,8 +24,8 @@ jobs:
         
     - name: Install dependencies
       run: |
-        cd client && npm install
-        cd ../server && npm install
+        cd client && npm ci
+        cd ../server && npm ci
         
     - name: Build frontend
       run: |
@@ -56,13 +56,13 @@ jobs:
           # Frontend deployment
           echo "🚀 Deploying frontend..."
           cd client
-          npm install
+          npm ci
           npm run build
           
           # Backend deployment
           echo "🚀 Deploying backend..."
           cd ../server
-          npm install
+          npm ci
           npm run build
           
           # Restart services (this runs npm start via PM2)
