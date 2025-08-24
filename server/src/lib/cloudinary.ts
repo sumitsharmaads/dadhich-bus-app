@@ -63,15 +63,6 @@ export async function uploadMany(buffers: Buffer[], folder?: string) {
     throw new Error('Maximum 10 images can be uploaded at once');
   }
 
-  const results = [] as Array<{
-    public_id: string;
-    secure_url: string;
-    width: number;
-    height: number;
-    format: string;
-    bytes: number;
-  }>;
-
   // Use Promise.all for concurrent uploads (better performance)
   const uploadPromises = buffers.map((buffer) => uploadBuffer(buffer, folder));
 
