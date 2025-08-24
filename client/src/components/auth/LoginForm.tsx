@@ -92,7 +92,6 @@ const LoginForm: React.FC = () => {
 
     try {
       const response = await authService.login(formData);
-      console.log("response", response);
 
       if (response.success) {
         // Create user object with actual data from backend

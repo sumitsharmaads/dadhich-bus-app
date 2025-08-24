@@ -52,8 +52,6 @@ export const WebsiteContextProvider: React.FC<WebsiteContextProviderProps> = ({
       // Reset retry count on success
       setRetryCount(0);
     } catch (error: any) {
-      console.error("Error fetching website info:", error);
-
       // Only show error if we've exhausted retries or it's not a retry
       if (!isRetry || retryCount >= MAX_RETRIES) {
         setError(error.message || "Failed to load website configuration");
@@ -97,7 +95,6 @@ export const WebsiteContextProvider: React.FC<WebsiteContextProviderProps> = ({
           await fetchWebsiteInfo();
         }
       } catch (error) {
-        console.error("Error loading website info:", error);
         setError("Failed to load website configuration");
         setIsLoading(false);
       }

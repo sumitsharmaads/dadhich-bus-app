@@ -128,7 +128,6 @@ const AdminToursPage: React.FC = () => {
         setTotalPages(response.data.totalPages);
         setCurrentPage(response.data.page);
       } else {
-        console.error("❌ API returned error:", response.message);
         errorPopup(response.message || "Failed to fetch tours");
         // Set default values if API fails
         setTours([]);
@@ -137,7 +136,6 @@ const AdminToursPage: React.FC = () => {
         setCurrentPage(1);
       }
     } catch (error) {
-      console.error("💥 Exception occurred:", error);
       errorPopup("Failed to fetch tours");
       // Set default values if API fails
       setTours([]);
@@ -155,7 +153,6 @@ const AdminToursPage: React.FC = () => {
       if (response.success) {
         setStats(response.data);
       } else {
-        console.error("Failed to fetch stats:", response.message);
         // Set default stats if API fails
         setStats({
           totalTours: 0,
@@ -169,7 +166,6 @@ const AdminToursPage: React.FC = () => {
         });
       }
     } catch (error) {
-      console.error("Failed to fetch stats:", error);
       // Set default stats if API fails
       setStats({
         totalTours: 0,
@@ -198,7 +194,6 @@ const AdminToursPage: React.FC = () => {
       });
       setCities(citiesData);
     } catch (error) {
-      console.error("Failed to search cities:", error);
       setCities([]);
     } finally {
       setCitiesLoading(false);
@@ -278,7 +273,6 @@ const AdminToursPage: React.FC = () => {
         errorPopup(response.message || "Failed to publish tour");
       }
     } catch (error) {
-      console.error("Failed to publish tour:", error);
       errorPopup("Failed to publish tour");
     }
   };
@@ -294,7 +288,6 @@ const AdminToursPage: React.FC = () => {
         errorPopup(response.message || "Failed to move tour to draft");
       }
     } catch (error) {
-      console.error("Failed to move tour to draft:", error);
       errorPopup("Failed to move tour to draft");
     }
   };
@@ -312,7 +305,6 @@ const AdminToursPage: React.FC = () => {
         errorPopup(response.message || "Failed to update tour status");
       }
     } catch (error) {
-      console.error("Failed to update tour status:", error);
       errorPopup("Failed to update tour status");
     }
   };
@@ -333,7 +325,6 @@ const AdminToursPage: React.FC = () => {
         errorPopup(response.message || "Failed to delete tour");
       }
     } catch (error) {
-      console.error("Failed to delete tour:", error);
       errorPopup("Failed to delete tour");
     }
   };
@@ -357,7 +348,6 @@ const AdminToursPage: React.FC = () => {
         errorPopup(response.message || "Failed to publish tours");
       }
     } catch (error) {
-      console.error("Failed to publish tours:", error);
       errorPopup("Failed to publish tours");
     }
   };
@@ -379,7 +369,6 @@ const AdminToursPage: React.FC = () => {
         errorPopup(response.message || "Failed to move tours to draft");
       }
     } catch (error) {
-      console.error("Failed to move tours to draft:", error);
       errorPopup("Failed to move tours to draft");
     }
   };
@@ -408,7 +397,6 @@ const AdminToursPage: React.FC = () => {
         errorPopup(response.message || "Failed to delete tours");
       }
     } catch (error) {
-      console.error("Failed to delete tours:", error);
       errorPopup("Failed to delete tours");
     }
   };
@@ -420,36 +408,39 @@ const AdminToursPage: React.FC = () => {
         // Handle base64 data URL for Excel export
         if (response.data.downloadUrl.startsWith("data:")) {
           // Create download link for base64 data
-          const link = document.createElement("a");
-          link.href = response.data.downloadUrl;
-          link.download =
-            response.data.filename ||
-            `tours-${dayjs().format("YYYY-MM-DD")}.xlsx`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          successPopup(
-            `Tours exported successfully as ${format.toUpperCase()}`
-          );
+          if (typeof document !== "undefined") {
+            const link = document.createElement("a");
+            link.href = response.data.downloadUrl;
+            link.download =
+              response.data.filename ||
+              `tours-${dayjs().format("YYYY-MM-DD")}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            successPopup(
+              `Tours exported successfully as ${format.toUpperCase()}`
+            );
+          }
         } else {
           // Handle regular URL download
-          const link = document.createElement("a");
-          link.href = response.data.downloadUrl;
-          link.download =
-            response.data.filename ||
-            `tours-${dayjs().format("YYYY-MM-DD")}.${format}`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          successPopup(
-            `Tours exported successfully as ${format.toUpperCase()}`
-          );
+          if (typeof document !== "undefined") {
+            const link = document.createElement("a");
+            link.href = response.data.downloadUrl;
+            link.download =
+              response.data.filename ||
+              `tours-${dayjs().format("YYYY-MM-DD")}.${format}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            successPopup(
+              `Tours exported successfully as ${format.toUpperCase()}`
+            );
+          }
         }
       } else {
         errorPopup(response.message || "Failed to export tours");
       }
     } catch (error) {
-      console.error("Failed to export tours:", error);
       errorPopup("Failed to export tours");
     }
   };
@@ -495,7 +486,6 @@ const AdminToursPage: React.FC = () => {
         errorPopup(response.message || "Failed to import tours");
       }
     } catch (error) {
-      console.error("Failed to import tours:", error);
       errorPopup("Failed to import tours");
     } finally {
       setImporting(false);

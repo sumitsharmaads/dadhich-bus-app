@@ -25,6 +25,7 @@ import {
   Stack,
   Autocomplete,
   FormHelperText,
+  Divider,
 } from "@mui/material";
 import {
   Edit as EditIcon,
@@ -50,6 +51,83 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
   onFormChange,
   errors,
 }) => {
+  // Helper function to format date for display
+  const formatDateForDisplay = (date: any): string => {
+    if (!date) return "";
+
+    try {
+      // If it's already a string, return as is
+      if (typeof date === "string") return date;
+
+      // If it's a Date object, convert to YYYY-MM-DD format
+      if (date instanceof Date) {
+        return date.toISOString().split("T")[0];
+      }
+
+      // If it's a date-like object, try to create a Date and format it
+      const dateObj = new Date(date);
+      if (!isNaN(dateObj.getTime())) {
+        return dateObj.toISOString().split("T")[0];
+      }
+
+      // Fallback: show as readable text
+      return new Date(date).toLocaleDateString("en-IN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch (error) {
+      // Final fallback: show the original value
+      return String(date);
+    }
+  };
+
+  // Helper function to format date for readable display with time
+  const formatDateReadable = (date: any): string => {
+    if (!date) return "Not set";
+
+    try {
+      const dateObj = new Date(date);
+      if (!isNaN(dateObj.getTime())) {
+        const dateStr = dateObj.toLocaleDateString("en-IN", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+        const timeStr = dateObj.toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        return `${dateStr} at ${timeStr}`;
+      }
+      return String(date);
+    } catch (error) {
+      return String(date);
+    }
+  };
+
+  // Helper function to format time only
+  const formatTimeOnly = (date: any): string => {
+    if (!date) return "No time set";
+
+    try {
+      const dateObj = new Date(date);
+      if (!isNaN(dateObj.getTime())) {
+        return dateObj.toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        });
+      }
+      return "Invalid time";
+    } catch (error) {
+      return "Error parsing time";
+    }
+  };
+
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const [placesOpen, setPlacesOpen] = useState(false);
   const [editingSourceIndex, setEditingSourceIndex] = useState<number | null>(
@@ -555,6 +633,178 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
           </DialogTitle>
           <DialogContent>
             <Grid container spacing={2} sx={{ mt: 1 }}>
+              {/* Trip Date Range - Added at top for easy reference */}
+              <Grid item xs={12}>
+                <Typography
+                  variant="subtitle2"
+                  gutterBottom
+                  sx={{ color: "primary.main", fontWeight: 600 }}
+                >
+                  📅 Trip Date Reference
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Trip Start Date"
+                      type="date"
+                      value={formatDateForDisplay(form.startDate)}
+                      InputLabelProps={{ shrink: true }}
+                      InputProps={{ readOnly: true }}
+                      sx={{
+                        bgcolor: "grey.50",
+                        "& .MuiInputBase-input": { color: "text.secondary" },
+                      }}
+                      helperText="Tour start date (read-only)"
+                    />
+                    {/* Readable date display */}
+                    {form.startDate && (
+                      <Box
+                        sx={{
+                          mt: 0.5,
+                          p: 1,
+                          bgcolor: "primary.50",
+                          borderRadius: 1,
+                          border: "1px solid",
+                          borderColor: "primary.200",
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "primary.700", fontWeight: 500 }}
+                        >
+                          📅 {formatDateReadable(form.startDate)}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Trip End Date"
+                      type="date"
+                      value={formatDateForDisplay(form.endDate)}
+                      InputLabelProps={{ shrink: true }}
+                      InputProps={{ readOnly: true }}
+                      sx={{
+                        bgcolor: "grey.50",
+                        "& .MuiInputBase-input": { color: "text.secondary" },
+                      }}
+                      helperText="Tour end date (read-only)"
+                    />
+                    {/* Readable date display */}
+                    {form.endDate && (
+                      <Box
+                        sx={{
+                          mt: 0.5,
+                          p: 1,
+                          bgcolor: "primary.50",
+                          borderRadius: 1,
+                          border: "1px solid",
+                          borderColor: "primary.200",
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "primary.700", fontWeight: 500 }}
+                        >
+                          📅 {formatDateReadable(form.endDate)}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "primary.600",
+                            display: "block",
+                            mt: 0.5,
+                          }}
+                        >
+                          🕐 Time: {formatTimeOnly(form.endDate)}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Grid>
+                </Grid>
+                {/* Helpful note about tour duration */}
+                {form.startDate && form.endDate && (
+                  <Box
+                    sx={{
+                      mt: 1,
+                      p: 1.5,
+                      bgcolor: "info.50",
+                      borderRadius: 1,
+                      border: "1px solid",
+                      borderColor: "info.200",
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "info.700", fontWeight: 500 }}
+                    >
+                      💡 Tip: This tour spans{" "}
+                      {(() => {
+                        try {
+                          const startDate = new Date(form.startDate);
+                          const endDate = new Date(form.endDate);
+                          if (
+                            !isNaN(startDate.getTime()) &&
+                            !isNaN(endDate.getTime())
+                          ) {
+                            const totalMs =
+                              endDate.getTime() - startDate.getTime();
+                            const totalDays = Math.ceil(
+                              totalMs / (1000 * 60 * 60 * 24)
+                            );
+                            const totalHours = Math.floor(
+                              totalMs / (1000 * 60 * 60)
+                            );
+                            const remainingMinutes = Math.floor(
+                              (totalMs % (1000 * 60 * 60)) / (1000 * 60)
+                            );
+
+                            if (totalDays === 1) {
+                              return `${totalHours} hours ${remainingMinutes} minutes`;
+                            } else {
+                              return `${totalDays} days (${totalHours} hours ${remainingMinutes} minutes)`;
+                            }
+                          }
+                          return 0;
+                        } catch (error) {
+                          return 0;
+                        }
+                      })()}{" "}
+                      . Plan departure and arrival times accordingly.
+                    </Typography>
+                  </Box>
+                )}
+                {/* Current time reference */}
+                <Box
+                  sx={{
+                    mt: 1,
+                    p: 1,
+                    bgcolor: "grey.50",
+                    borderRadius: 1,
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "text.secondary" }}
+                  >
+                    🕐 Current Time:{" "}
+                    {new Date().toLocaleTimeString("en-IN", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}{" "}
+                    | Use this as reference for setting departure/arrival times
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Divider sx={{ my: 1 }} />
+              </Grid>
+
               <Grid item xs={12} md={6}>
                 <Autocomplete
                   options={sourceCities}
@@ -610,7 +860,38 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
                     }))
                   }
                   InputLabelProps={{ shrink: true }}
+                  helperText="Time when bus departs from this source (relative to tour start date)"
                 />
+                {/* Quick time suggestions */}
+                <Box
+                  sx={{ mt: 1, display: "flex", gap: 0.5, flexWrap: "wrap" }}
+                >
+                  {[
+                    "06:00",
+                    "08:00",
+                    "10:00",
+                    "12:00",
+                    "14:00",
+                    "16:00",
+                    "18:00",
+                    "20:00",
+                  ].map((time) => (
+                    <Button
+                      key={time}
+                      size="small"
+                      variant="outlined"
+                      onClick={() =>
+                        setSourceForm((prev) => ({
+                          ...prev,
+                          departureTime: time,
+                        }))
+                      }
+                      sx={{ fontSize: "0.75rem", py: 0.25, px: 1 }}
+                    >
+                      {time}
+                    </Button>
+                  ))}
+                </Box>
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
@@ -625,7 +906,38 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
                     }))
                   }
                   InputLabelProps={{ shrink: true }}
+                  helperText="Time when bus arrives at this source (relative to tour start date)"
                 />
+                {/* Quick time suggestions */}
+                <Box
+                  sx={{ mt: 1, display: "flex", gap: 0.5, flexWrap: "wrap" }}
+                >
+                  {[
+                    "08:00",
+                    "10:00",
+                    "12:00",
+                    "14:00",
+                    "16:00",
+                    "18:00",
+                    "20:00",
+                    "22:00",
+                  ].map((time) => (
+                    <Button
+                      key={time}
+                      size="small"
+                      variant="outlined"
+                      onClick={() =>
+                        setSourceForm((prev) => ({
+                          ...prev,
+                          arrivalTime: time,
+                        }))
+                      }
+                      sx={{ fontSize: "0.75rem", py: 0.25, px: 1 }}
+                    >
+                      {time}
+                    </Button>
+                  ))}
+                </Box>
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle2" gutterBottom>
@@ -713,6 +1025,188 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
           </DialogTitle>
           <DialogContent>
             <Grid container spacing={2} sx={{ mt: 1 }}>
+              {/* Trip Date Range - Added at top for easy reference */}
+              <Grid item xs={12}>
+                <Typography
+                  variant="subtitle2"
+                  gutterBottom
+                  sx={{ color: "primary.main", fontWeight: 600 }}
+                >
+                  📅 Trip Date Reference
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Trip Start Date"
+                      type="date"
+                      value={formatDateForDisplay(form.startDate)}
+                      InputLabelProps={{ shrink: true }}
+                      InputProps={{ readOnly: true }}
+                      sx={{
+                        bgcolor: "grey.50",
+                        "& .MuiInputBase-input": { color: "text.secondary" },
+                      }}
+                      helperText="Tour start date (read-only)"
+                    />
+                    {/* Readable date display */}
+                    {form.startDate && (
+                      <Box
+                        sx={{
+                          mt: 0.5,
+                          p: 1,
+                          bgcolor: "primary.50",
+                          borderRadius: 1,
+                          border: "1px solid",
+                          borderColor: "primary.200",
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "primary.700", fontWeight: 500 }}
+                        >
+                          📅 {formatDateReadable(form.startDate)}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "primary.600",
+                            display: "block",
+                            mt: 0.5,
+                          }}
+                        >
+                          🕐 Time: {formatTimeOnly(form.startDate)}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Trip End Date"
+                      type="date"
+                      value={formatDateForDisplay(form.endDate)}
+                      InputLabelProps={{ shrink: true }}
+                      InputProps={{ readOnly: true }}
+                      sx={{
+                        bgcolor: "grey.50",
+                        "& .MuiInputBase-input": { color: "text.secondary" },
+                      }}
+                      helperText="Tour end date (read-only)"
+                    />
+                    {/* Readable date display */}
+                    {form.endDate && (
+                      <Box
+                        sx={{
+                          mt: 0.5,
+                          p: 1,
+                          bgcolor: "primary.50",
+                          borderRadius: 1,
+                          border: "1px solid",
+                          borderColor: "primary.200",
+                        }}
+                      >
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "primary.700", fontWeight: 500 }}
+                        >
+                          📅 {formatDateReadable(form.endDate)}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: "primary.600",
+                            display: "block",
+                            mt: 0.5,
+                          }}
+                        >
+                          🕐 Time: {formatTimeOnly(form.endDate)}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Grid>
+                </Grid>
+                {/* Helpful note about tour duration */}
+                {form.startDate && form.endDate && (
+                  <Box
+                    sx={{
+                      mt: 1,
+                      p: 1.5,
+                      bgcolor: "info.50",
+                      borderRadius: 1,
+                      border: "1px solid",
+                      borderColor: "info.200",
+                    }}
+                  >
+                    <Typography
+                      variant="caption"
+                      sx={{ color: "info.700", fontWeight: 500 }}
+                    >
+                      💡 Tip: This tour spans{" "}
+                      {(() => {
+                        try {
+                          const startDate = new Date(form.startDate);
+                          const endDate = new Date(form.endDate);
+                          if (
+                            !isNaN(startDate.getTime()) &&
+                            !isNaN(endDate.getTime())
+                          ) {
+                            const totalMs =
+                              endDate.getTime() - startDate.getTime();
+                            const totalDays = Math.ceil(
+                              totalMs / (1000 * 60 * 60 * 24)
+                            );
+                            const totalHours = Math.floor(
+                              totalMs / (1000 * 60 * 60)
+                            );
+                            const remainingMinutes = Math.floor(
+                              (totalMs % (1000 * 60 * 60)) / (1000 * 60)
+                            );
+
+                            if (totalDays === 1) {
+                              return `${totalHours} hours ${remainingMinutes} minutes`;
+                            } else {
+                              return `${totalDays} days (${totalHours} hours ${remainingMinutes} minutes)`;
+                            }
+                          }
+                          return 0;
+                        } catch (error) {
+                          return 0;
+                        }
+                      })()}{" "}
+                      . Plan departure and arrival times accordingly.
+                    </Typography>
+                  </Box>
+                )}
+                {/* Current time reference */}
+                <Box
+                  sx={{
+                    mt: 1,
+                    p: 1,
+                    bgcolor: "grey.50",
+                    borderRadius: 1,
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "text.secondary" }}
+                  >
+                    🕐 Current Time:{" "}
+                    {new Date().toLocaleTimeString("en-IN", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })}{" "}
+                    | Use this as reference for setting departure/arrival times
+                  </Typography>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Divider sx={{ my: 1 }} />
+              </Grid>
+
               <Grid item xs={12} md={6}>
                 <Autocomplete
                   options={placeCities}
@@ -765,6 +1259,7 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
                       order: Number(e.target.value),
                     }))
                   }
+                  helperText="Sequence order in the tour (1, 2, 3...)"
                 />
               </Grid>
               <Grid item xs={12} md={6}>
@@ -779,6 +1274,7 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
                       stayDuration: Number(e.target.value),
                     }))
                   }
+                  helperText="How long to stay at this destination"
                 />
               </Grid>
               <Grid item xs={12}>

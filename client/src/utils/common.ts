@@ -93,3 +93,22 @@ export function debounce<T extends (...args: any[]) => any>(
     timeout = setTimeout(() => func(...args), wait);
   };
 }
+
+/**
+ * Check if the code is running on the client side (browser)
+ * This helps prevent SSR issues when using browser APIs like document, window, etc.
+ */
+export const isClient =
+  typeof window !== "undefined" && typeof document !== "undefined";
+
+/**
+ * Safe wrapper for document operations that only runs on the client side
+ * @param operation Function to execute only on client side
+ * @param fallback Fallback value if not on client side
+ */
+export const safeClientOperation = <T>(operation: () => T, fallback: T): T => {
+  if (isClient) {
+    return operation();
+  }
+  return fallback;
+};

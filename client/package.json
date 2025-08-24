@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:fast": "next dev --turbo",
+    "dev:clean": "rm -rf .next && next dev",
+    "dev:fast-clean": "rm -rf .next && next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

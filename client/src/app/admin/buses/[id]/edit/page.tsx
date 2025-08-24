@@ -549,7 +549,6 @@ const EditBusPage: React.FC = () => {
       await busService.updateBus(busId, payload);
       router.push("/admin/buses");
     } catch (error: unknown) {
-      console.error("Error updating bus:", error);
       // Handle specific validation errors from server
       if (error && typeof error === "object" && "response" in error) {
         const errorResponse = error as {

@@ -34,7 +34,7 @@ const OTPForm: React.FC<OTPFormProps> = ({
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const [apiError, setApiError] = useState<string>("");
 
-  const handleChange = (
+  const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number
   ) => {
@@ -44,8 +44,10 @@ const OTPForm: React.FC<OTPFormProps> = ({
     setOtp(updatedOtp);
 
     if (value && index < otp.length - 1) {
-      const nextInput = document.getElementById(`otp-input-${index + 1}`);
-      nextInput?.focus();
+      if (typeof document !== "undefined") {
+        const nextInput = document.getElementById(`otp-input-${index + 1}`);
+        nextInput?.focus();
+      }
     }
   };
 
@@ -54,8 +56,10 @@ const OTPForm: React.FC<OTPFormProps> = ({
     index: number
   ) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-input-${index - 1}`);
-      prevInput?.focus();
+      if (typeof document !== "undefined") {
+        const prevInput = document.getElementById(`otp-input-${index - 1}`);
+        prevInput?.focus();
+      }
     }
   };
 
@@ -151,7 +155,7 @@ const OTPForm: React.FC<OTPFormProps> = ({
                         style: { textAlign: "center" },
                       }}
                       value={digit}
-                      onChange={(e) => handleChange(e, index)}
+                      onChange={(e) => handleInputChange(e, index)}
                       onKeyDown={(e) => handleBackspace(e, index)}
                       sx={{
                         width: "50px",

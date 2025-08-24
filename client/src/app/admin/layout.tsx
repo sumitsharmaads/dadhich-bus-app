@@ -96,6 +96,7 @@ const adminTheme = createTheme({
 });
 
 const drawerWidth = 280;
+const headerHeight = 80; // Height of the header from PublicLayout
 
 const adminMenuItems = [
   {
@@ -147,10 +148,7 @@ const adminMenuItems = [
     text: "SEO",
     icon: <Search />,
     path: "/admin/seo",
-    children: [
-      { text: "All SEO", path: "/admin/seo" },
-      { text: "Add SEO", path: "/admin/seo/add" },
-    ],
+    children: [{ text: "All SEO", path: "/admin/seo" }],
   },
   {
     text: "FAQs",
@@ -304,7 +302,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   return (
     <ThemeProvider theme={adminTheme}>
-      <Box sx={{ display: "flex", minHeight: "calc(100vh - 80px)" }}>
+      {/* Main container with proper positioning */}
+      <Box
+        sx={{
+          display: "flex",
+          minHeight: "100vh",
+          position: "relative",
+          pt: `${headerHeight}px`, // Add top padding to account for header
+        }}
+      >
         {/* Mobile Drawer */}
         <Drawer
           variant="temporary"
@@ -318,6 +324,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              top: headerHeight, // Position below header
+              height: `calc(100vh - ${headerHeight}px)`,
             },
           }}
         >
@@ -332,8 +340,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             flexShrink: 0,
             position: "fixed",
             left: 0,
-            top: 80, // Account for header height
-            height: "calc(100vh - 80px)",
+            top: headerHeight, // Position below header
+            height: `calc(100vh - ${headerHeight}px)`,
             zIndex: 1200,
           }}
         >
@@ -358,8 +366,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             flexGrow: 1,
             p: 3,
             bgcolor: "background.default",
-            minHeight: "100%",
+            minHeight: `calc(100vh - ${headerHeight}px)`,
             ml: { xs: 0, md: `${drawerWidth}px` },
+            width: { xs: "100%", md: `calc(100% - ${drawerWidth}px)` },
           }}
         >
           {/* Mobile Top Bar: hamburger + avatar aligned */}

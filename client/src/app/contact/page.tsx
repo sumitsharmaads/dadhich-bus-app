@@ -166,7 +166,6 @@ const ContactPage = () => {
           );
         }
       } catch (error: any) {
-        console.error("Error submitting form:", error);
         setSubmitError(
           error.response?.data?.message ||
             "Failed to submit message. Please check your connection and try again."

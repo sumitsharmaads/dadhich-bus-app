@@ -286,7 +286,6 @@ const AdminSettings: React.FC = () => {
           errorPopup(res.message || "Failed to save settings");
         }
       } catch (e) {
-        console.error("Error saving settings:", e);
         errorPopup("Failed to save settings");
       }
     },
@@ -303,7 +302,6 @@ const AdminSettings: React.FC = () => {
         errorPopup(res.message || "Failed to fetch settings");
       }
     } catch (e) {
-      console.error("Error fetching website info:", e);
       errorPopup("Failed to fetch settings");
     } finally {
       setLoading(false);
@@ -396,7 +394,7 @@ const AdminSettings: React.FC = () => {
         </Button>
       </Box>
 
-      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl mx-auto">
+      <div className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl mx-auto">
         <Paper elevation={3} sx={{ mb: 3, overflowX: "hidden" }}>
           <Box
             sx={{

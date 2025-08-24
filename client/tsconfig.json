@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
+    "incremental": false, // Disable for faster dev startup
     "plugins": [
       {
         "name": "next"

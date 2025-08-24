@@ -14,7 +14,6 @@ export const encryptData = (data: string): string => {
     const encrypted = CryptoJS.AES.encrypt(data, SECRET_KEY).toString();
     return encrypted;
   } catch (error) {
-    console.error("Encryption error:", error);
     return data; // Fallback to unencrypted data
   }
 };
@@ -35,7 +34,6 @@ export const decryptData = (encryptedData: string): string => {
 
     return decryptedText;
   } catch (error) {
-    console.error("Decryption error:", error);
     return encryptedData; // Fallback to encrypted data
   }
 };

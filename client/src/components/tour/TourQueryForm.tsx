@@ -110,7 +110,6 @@ const TourQueryForm: React.FC<TourQueryFormProps> = ({
         errorPopup("Failed to submit query. Please try again.");
       }
     } catch (error) {
-      console.error("Error submitting query:", error);
       errorPopup("Something went wrong. Please try again later.");
     } finally {
       setLoading(false);

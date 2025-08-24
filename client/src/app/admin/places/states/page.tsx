@@ -110,7 +110,6 @@ const StatesPage: React.FC = () => {
       setTotalCount(response.length);
       setPageCount(Math.max(1, Math.ceil(response.length / ITEMS_PER_PAGE)));
     } catch (error) {
-      console.error("Failed to fetch states:", error);
       errorPopup("Failed to fetch states");
     } finally {
       setLoading(false);
@@ -199,7 +198,6 @@ const StatesPage: React.FC = () => {
       setModalOpen(false);
       fetchStates();
     } catch (error) {
-      console.error("Failed to save state:", error);
       errorPopup("Failed to save state");
     } finally {
       setSaving(false);
@@ -216,7 +214,6 @@ const StatesPage: React.FC = () => {
         successPopup("State deleted successfully");
         fetchStates();
       } catch (error) {
-        console.error("Failed to delete state:", error);
         errorPopup("Failed to delete state");
       }
     }
@@ -230,7 +227,6 @@ const StatesPage: React.FC = () => {
       );
       fetchStates();
     } catch (error) {
-      console.error("Failed to toggle published status:", error);
       errorPopup("Failed to update published status");
     }
   };
@@ -302,7 +298,6 @@ const StatesPage: React.FC = () => {
       successPopup(`Successfully uploaded ${statesToUpload.length} states`);
       fetchStates();
     } catch (error) {
-      console.error("Failed to upload file:", error);
       errorPopup("Failed to upload file");
     } finally {
       event.currentTarget.value = "";

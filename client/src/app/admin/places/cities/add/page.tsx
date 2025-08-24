@@ -111,7 +111,6 @@ const AddCityPage: React.FC = () => {
       const response = await placesService.listCountries();
       setCountries(response);
     } catch (error) {
-      console.error("Failed to fetch countries:", error);
       errorPopup("Failed to fetch countries");
     }
   };
@@ -121,7 +120,6 @@ const AddCityPage: React.FC = () => {
       const response = await placesService.getStatesByCountry(countryId);
       setStates(response);
     } catch (error) {
-      console.error("Failed to fetch states:", error);
       errorPopup("Failed to fetch states");
     }
   };
@@ -147,10 +145,11 @@ const AddCityPage: React.FC = () => {
       ...prev,
       location: {
         ...prev.location!,
-        coordinates: field === "lat" 
-          ? [prev.location!.coordinates[0], numValue]
-          : [numValue, prev.location!.coordinates[1]]
-      }
+        coordinates:
+          field === "lat"
+            ? [prev.location!.coordinates[0], numValue]
+            : [numValue, prev.location!.coordinates[1]],
+      },
     }));
   };
 
@@ -160,8 +159,8 @@ const AddCityPage: React.FC = () => {
         ...prev,
         content: {
           ...prev.content!,
-          tags: [...(prev.content?.tags || []), newTag.trim()]
-        }
+          tags: [...(prev.content?.tags || []), newTag.trim()],
+        },
       }));
       setNewTag("");
     }
@@ -172,19 +171,22 @@ const AddCityPage: React.FC = () => {
       ...prev,
       content: {
         ...prev.content!,
-        tags: prev.content?.tags?.filter(tag => tag !== tagToRemove) || []
-      }
+        tags: prev.content?.tags?.filter((tag) => tag !== tagToRemove) || [],
+      },
     }));
   };
 
   const addCategory = () => {
-    if (newCategory.trim() && !form.content?.categories?.includes(newCategory.trim())) {
+    if (
+      newCategory.trim() &&
+      !form.content?.categories?.includes(newCategory.trim())
+    ) {
       setForm((prev) => ({
         ...prev,
         content: {
           ...prev.content!,
-          categories: [...(prev.content?.categories || []), newCategory.trim()]
-        }
+          categories: [...(prev.content?.categories || []), newCategory.trim()],
+        },
       }));
       setNewCategory("");
     }
@@ -195,19 +197,24 @@ const AddCityPage: React.FC = () => {
       ...prev,
       content: {
         ...prev.content!,
-        categories: prev.content?.categories?.filter(cat => cat !== categoryToRemove) || []
-      }
+        categories:
+          prev.content?.categories?.filter((cat) => cat !== categoryToRemove) ||
+          [],
+      },
     }));
   };
 
   const addAmenity = () => {
-    if (newAmenity.trim() && !form.visitInfo?.amenities?.includes(newAmenity.trim())) {
+    if (
+      newAmenity.trim() &&
+      !form.visitInfo?.amenities?.includes(newAmenity.trim())
+    ) {
       setForm((prev) => ({
         ...prev,
         visitInfo: {
           ...prev.visitInfo!,
-          amenities: [...(prev.visitInfo?.amenities || []), newAmenity.trim()]
-        }
+          amenities: [...(prev.visitInfo?.amenities || []), newAmenity.trim()],
+        },
       }));
       setNewAmenity("");
     }
@@ -218,22 +225,31 @@ const AddCityPage: React.FC = () => {
       ...prev,
       visitInfo: {
         ...prev.visitInfo!,
-        amenities: prev.visitInfo?.amenities?.filter(amenity => amenity !== amenityToRemove) || []
-      }
+        amenities:
+          prev.visitInfo?.amenities?.filter(
+            (amenity) => amenity !== amenityToRemove
+          ) || [],
+      },
     }));
   };
 
   const addKeyword = () => {
-    if (newKeyword.trim() && !form.content?.seo?.metaKeywords?.includes(newKeyword.trim())) {
+    if (
+      newKeyword.trim() &&
+      !form.content?.seo?.metaKeywords?.includes(newKeyword.trim())
+    ) {
       setForm((prev) => ({
         ...prev,
         content: {
           ...prev.content!,
           seo: {
             ...prev.content?.seo!,
-            metaKeywords: [...(prev.content?.seo?.metaKeywords || []), newKeyword.trim()]
-          }
-        }
+            metaKeywords: [
+              ...(prev.content?.seo?.metaKeywords || []),
+              newKeyword.trim(),
+            ],
+          },
+        },
       }));
       setNewKeyword("");
     }
@@ -246,9 +262,12 @@ const AddCityPage: React.FC = () => {
         ...prev.content!,
         seo: {
           ...prev.content?.seo!,
-          metaKeywords: prev.content?.seo?.metaKeywords?.filter(keyword => keyword !== keywordToRemove) || []
-        }
-      }
+          metaKeywords:
+            prev.content?.seo?.metaKeywords?.filter(
+              (keyword) => keyword !== keywordToRemove
+            ) || [],
+        },
+      },
     }));
   };
 
@@ -272,7 +291,6 @@ const AddCityPage: React.FC = () => {
       successPopup("City created successfully");
       router.push("/admin/places/cities");
     } catch (error) {
-      console.error("Failed to create city:", error);
       errorPopup("Failed to create city");
     } finally {
       setSaving(false);
@@ -309,16 +327,25 @@ const AddCityPage: React.FC = () => {
           </Typography>
         </Box>
         <Typography variant="body2" color="text.secondary">
-          Create a new city with comprehensive information including location, visit details, and SEO
+          Create a new city with comprehensive information including location,
+          visit details, and SEO
         </Typography>
       </Box>
 
-      <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSave();
+        }}
+      >
         <Grid container spacing={3}>
           {/* Basic Information */}
           <Grid item xs={12} md={8}>
             <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+              >
                 <Info /> Basic Information
               </Typography>
               <Grid container spacing={2}>
@@ -396,7 +423,10 @@ const AddCityPage: React.FC = () => {
 
             {/* Location Information */}
             <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+              >
                 <LocationOn /> Location Information
               </Typography>
               <Grid container spacing={2}>
@@ -405,7 +435,9 @@ const AddCityPage: React.FC = () => {
                     label="Latitude"
                     type="number"
                     value={form.location?.coordinates[1] || ""}
-                    onChange={(e) => handleLocationChange("lat", e.target.value)}
+                    onChange={(e) =>
+                      handleLocationChange("lat", e.target.value)
+                    }
                     fullWidth
                     placeholder="e.g., 19.0760"
                     inputProps={{ step: "any" }}
@@ -416,7 +448,9 @@ const AddCityPage: React.FC = () => {
                     label="Longitude"
                     type="number"
                     value={form.location?.coordinates[0] || ""}
-                    onChange={(e) => handleLocationChange("lng", e.target.value)}
+                    onChange={(e) =>
+                      handleLocationChange("lng", e.target.value)
+                    }
                     fullWidth
                     placeholder="e.g., 72.8777"
                     inputProps={{ step: "any" }}
@@ -427,7 +461,10 @@ const AddCityPage: React.FC = () => {
 
             {/* Content & SEO */}
             <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+              >
                 <PhotoCamera /> Content & SEO
               </Typography>
               <Grid container spacing={2}>
@@ -436,10 +473,15 @@ const AddCityPage: React.FC = () => {
                     label="Description"
                     name="description"
                     value={form.content?.description || ""}
-                    onChange={(e) => setForm(prev => ({
-                      ...prev,
-                      content: { ...prev.content!, description: e.target.value }
-                    }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        content: {
+                          ...prev.content!,
+                          description: e.target.value,
+                        },
+                      }))
+                    }
                     fullWidth
                     multiline
                     rows={3}
@@ -451,10 +493,15 @@ const AddCityPage: React.FC = () => {
                     label="Long Description"
                     name="longDescription"
                     value={form.content?.longDescription || ""}
-                    onChange={(e) => setForm(prev => ({
-                      ...prev,
-                      content: { ...prev.content!, longDescription: e.target.value }
-                    }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        content: {
+                          ...prev.content!,
+                          longDescription: e.target.value,
+                        },
+                      }))
+                    }
                     fullWidth
                     multiline
                     rows={4}
@@ -465,13 +512,18 @@ const AddCityPage: React.FC = () => {
                   <TextField
                     label="Meta Title"
                     value={form.content?.seo?.metaTitle || ""}
-                    onChange={(e) => setForm(prev => ({
-                      ...prev,
-                      content: {
-                        ...prev.content!,
-                        seo: { ...prev.content?.seo!, metaTitle: e.target.value }
-                      }
-                    }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        content: {
+                          ...prev.content!,
+                          seo: {
+                            ...prev.content?.seo!,
+                            metaTitle: e.target.value,
+                          },
+                        },
+                      }))
+                    }
                     fullWidth
                     placeholder="SEO meta title"
                   />
@@ -480,13 +532,18 @@ const AddCityPage: React.FC = () => {
                   <TextField
                     label="Meta Description"
                     value={form.content?.seo?.metaDescription || ""}
-                    onChange={(e) => setForm(prev => ({
-                      ...prev,
-                      content: {
-                        ...prev.content!,
-                        seo: { ...prev.content?.seo!, metaDescription: e.target.value }
-                      }
-                    }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        content: {
+                          ...prev.content!,
+                          seo: {
+                            ...prev.content?.seo!,
+                            metaDescription: e.target.value,
+                          },
+                        },
+                      }))
+                    }
                     fullWidth
                     multiline
                     rows={2}
@@ -497,13 +554,18 @@ const AddCityPage: React.FC = () => {
                   <TextField
                     label="OG Image URL"
                     value={form.content?.seo?.ogImageUrl || ""}
-                    onChange={(e) => setForm(prev => ({
-                      ...prev,
-                      content: {
-                        ...prev.content!,
-                        seo: { ...prev.content?.seo!, ogImageUrl: e.target.value }
-                      }
-                    }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        content: {
+                          ...prev.content!,
+                          seo: {
+                            ...prev.content?.seo!,
+                            ogImageUrl: e.target.value,
+                          },
+                        },
+                      }))
+                    }
                     fullWidth
                     placeholder="Open Graph image URL"
                   />
@@ -516,7 +578,9 @@ const AddCityPage: React.FC = () => {
           <Grid item xs={12} md={4}>
             {/* Tags */}
             <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>Tags</Typography>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Tags
+              </Typography>
               <Box sx={{ mb: 2 }}>
                 <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
                   <TextField
@@ -524,7 +588,9 @@ const AddCityPage: React.FC = () => {
                     placeholder="Add tag"
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), addTag())
+                    }
                   />
                   <Button
                     variant="outlined"
@@ -552,7 +618,9 @@ const AddCityPage: React.FC = () => {
 
             {/* Categories */}
             <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>Categories</Typography>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Categories
+              </Typography>
               <Box sx={{ mb: 2 }}>
                 <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
                   <TextField
@@ -560,7 +628,9 @@ const AddCityPage: React.FC = () => {
                     placeholder="Add category"
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addCategory())}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), addCategory())
+                    }
                   />
                   <Button
                     variant="outlined"
@@ -588,7 +658,9 @@ const AddCityPage: React.FC = () => {
 
             {/* Keywords */}
             <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2 }}>SEO Keywords</Typography>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                SEO Keywords
+              </Typography>
               <Box sx={{ mb: 2 }}>
                 <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
                   <TextField
@@ -596,7 +668,9 @@ const AddCityPage: React.FC = () => {
                     placeholder="Add keyword"
                     value={newKeyword}
                     onChange={(e) => setNewKeyword(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addKeyword())}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), addKeyword())
+                    }
                   />
                   <Button
                     variant="outlined"
@@ -624,7 +698,10 @@ const AddCityPage: React.FC = () => {
 
             {/* Visit Information */}
             <Paper sx={{ p: 3, mb: 3 }}>
-              <Typography variant="h6" sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+              >
                 <TravelExplore /> Visit Info
               </Typography>
               <Grid container spacing={2}>
@@ -632,10 +709,15 @@ const AddCityPage: React.FC = () => {
                   <TextField
                     label="Best Time to Visit"
                     value={form.visitInfo?.bestTime || ""}
-                    onChange={(e) => setForm(prev => ({
-                      ...prev,
-                      visitInfo: { ...prev.visitInfo!, bestTime: e.target.value }
-                    }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        visitInfo: {
+                          ...prev.visitInfo!,
+                          bestTime: e.target.value,
+                        },
+                      }))
+                    }
                     fullWidth
                     size="small"
                     placeholder="e.g., October to March"
@@ -646,10 +728,16 @@ const AddCityPage: React.FC = () => {
                     label="Average Visit Duration (minutes)"
                     type="number"
                     value={form.visitInfo?.averageVisitDurationMins || ""}
-                    onChange={(e) => setForm(prev => ({
-                      ...prev,
-                      visitInfo: { ...prev.visitInfo!, averageVisitDurationMins: parseInt(e.target.value) || 0 }
-                    }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        visitInfo: {
+                          ...prev.visitInfo!,
+                          averageVisitDurationMins:
+                            parseInt(e.target.value) || 0,
+                        },
+                      }))
+                    }
                     fullWidth
                     size="small"
                     placeholder="e.g., 120"
@@ -659,10 +747,15 @@ const AddCityPage: React.FC = () => {
                   <TextField
                     label="Safety Notes"
                     value={form.visitInfo?.safetyNotes || ""}
-                    onChange={(e) => setForm(prev => ({
-                      ...prev,
-                      visitInfo: { ...prev.visitInfo!, safetyNotes: e.target.value }
-                    }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        visitInfo: {
+                          ...prev.visitInfo!,
+                          safetyNotes: e.target.value,
+                        },
+                      }))
+                    }
                     fullWidth
                     size="small"
                     multiline
@@ -674,14 +767,18 @@ const AddCityPage: React.FC = () => {
 
               {/* Amenities */}
               <Box sx={{ mt: 2 }}>
-                <Typography variant="subtitle2" sx={{ mb: 1 }}>Amenities</Typography>
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Amenities
+                </Typography>
                 <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
                   <TextField
                     size="small"
                     placeholder="Add amenity"
                     value={newAmenity}
                     onChange={(e) => setNewAmenity(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addAmenity())}
+                    onKeyPress={(e) =>
+                      e.key === "Enter" && (e.preventDefault(), addAmenity())
+                    }
                   />
                   <Button
                     variant="outlined"
@@ -710,7 +807,9 @@ const AddCityPage: React.FC = () => {
         </Grid>
 
         {/* Action Buttons */}
-        <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end", mt: 3 }}>
+        <Box
+          sx={{ display: "flex", gap: 2, justifyContent: "flex-end", mt: 3 }}
+        >
           <Button
             variant="outlined"
             onClick={() => router.back()}
@@ -731,7 +830,8 @@ const AddCityPage: React.FC = () => {
 
       {/* Info Alert */}
       <Alert severity="info" sx={{ mt: 3 }}>
-        <strong>💡 Tip:</strong> Fill in as much information as possible. You can always edit the city later to add more details.
+        <strong>💡 Tip:</strong> Fill in as much information as possible. You
+        can always edit the city later to add more details.
       </Alert>
     </Container>
   );

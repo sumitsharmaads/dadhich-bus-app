@@ -6,59 +6,40 @@ import { useRouter } from "next/navigation";
 import { tourService } from "@/lib/api/services/tour.service";
 import { DestinationData, StateBreakupItem } from "@/lib/api/types/tour.types";
 
-// Static destination data with images
-const destinations: Omit<DestinationData, "listings">[] = [
-  {
-    name: "Punjab",
-    image: "/images/states/punjab.jpg",
-    state: "Punjab",
-  },
-  {
-    name: "Haryana",
-    image: "/images/states/haryana.jpg",
-    state: "Haryana",
-  },
-  {
-    name: "Delhi",
-    image: "/images/states/delhi.jpg",
-    state: "Delhi",
-  },
-  {
-    name: "Rajasthan",
-    image: "/images/states/rajasthan.jpg",
-    state: "Rajasthan",
-  },
-  {
-    name: "Bihar",
-    image: "/images/states/bihar.jpg",
-    state: "Bihar",
-  },
-  {
-    name: "Uttar Pradesh",
-    image: "/images/states/uttar_pardesh.jpg",
-    state: "Uttar Pradesh",
-  },
-  {
-    name: "Paschim Bengal",
-    image: "/images/states/pachim_bengal.jpg",
-    state: "Paschim Bengal",
-  },
-  {
-    name: "Uttrakhand",
-    image: "/images/states/uttrakhand.jpg",
-    state: "Uttrakhand",
-  },
-  {
-    name: "Himachal Pradesh",
-    image: "/images/states/himachal_pardesh.jpg",
-    state: "Himachal Pradesh",
-  },
-  {
-    name: "Jammu and Kashmir",
-    image: "/images/states/jammu_kashmir.jpg",
-    state: "Jammu and Kashmir",
-  },
-];
+// Image mapping for states - we'll use these based on real tour data
+const stateImageMap: Record<string, string> = {
+  Punjab: "/images/states/punjab.jpg",
+  Haryana: "/images/states/haryana.jpg",
+  Delhi: "/images/states/delhi.jpg",
+  Rajasthan: "/images/states/rajasthan.jpg",
+  Bihar: "/images/states/bihar.jpg",
+  "Uttar Pradesh": "/images/states/uttar_pardesh.jpg",
+  "West Bengal": "/images/states/pachim_bengal.jpg",
+  Uttarakhand: "/images/states/uttrakhand.jpg",
+  "Himachal Pradesh": "/images/states/himachal_pardesh.jpg",
+  "Jammu and Kashmir": "/images/states/jammu_kashmir.jpg",
+  Maharashtra: "/images/states/maharashtra.jpg",
+  Gujarat: "/images/states/gujarat.jpg",
+  "Madhya Pradesh": "/images/states/madhya_pradesh.jpg",
+  Chhattisgarh: "/images/states/chhattisgarh.jpg",
+  Jharkhand: "/images/states/jharkhand.jpg",
+  Odisha: "/images/states/odisha.jpg",
+  "Andhra Pradesh": "/images/states/andhra_pradesh.jpg",
+  Telangana: "/images/states/telangana.jpg",
+  Karnataka: "/images/states/karnataka.jpg",
+  "Tamil Nadu": "/images/states/tamil_nadu.jpg",
+  Kerala: "/images/states/kerala.jpg",
+  Goa: "/images/states/goa.jpg",
+  Assam: "/images/states/assam.jpg",
+  "Arunachal Pradesh": "/images/states/arunachal_pradesh.jpg",
+  Manipur: "/images/states/manipur.jpg",
+  Meghalaya: "/images/states/meghalaya.jpg",
+  Mizoram: "/images/states/mizoram.jpg",
+  Nagaland: "/images/states/nagaland.jpg",
+  Tripura: "/images/states/tripura.jpg",
+  Sikkim: "/images/states/sikkim.jpg",
+  default: "/images/states/default.jpg",
+};
 
 const TopDestinations: React.FC = () => {
   const router = useRouter();
@@ -70,38 +51,111 @@ const TopDestinations: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log("Fetching state breakup data...");
 
-        const response = await tourService.getStateBreakup();
-        console.log("State breakup response:", response);
+        // Get real tour data to see which destinations actually have tours
+        const facetsResponse = await tourService.getFacets();
+        const stateBreakupResponse = await tourService.getStateBreakup();
 
-        if (response?.data) {
-          // Map the static destinations with dynamic listing counts
-          const updatedData: DestinationData[] = destinations.map(
-            (destination) => {
-              const stateData = response.data.find((item: StateBreakupItem) =>
-                new RegExp(item.state, "i").test(destination.state)
-              );
+        if (facetsResponse?.data && stateBreakupResponse?.data) {
+          // Use real tour data to create dynamic destinations
+          const cityCounts = facetsResponse.data.cityCounts || [];
+          const stateBreakup = stateBreakupResponse.data || [];
 
-              return {
-                ...destination,
-                listings: stateData?.count || 0,
-              };
+          // Create dynamic destinations based on actual tour data
+          const dynamicDestinations: DestinationData[] = [];
+
+          // Process city counts to get state-level data
+          const stateMap = new Map<
+            string,
+            { count: number; cities: string[] }
+          >();
+
+          cityCounts.forEach((city) => {
+            // Try to find state from state breakup data
+            const stateData = stateBreakup.find((item) =>
+              new RegExp(item.state, "i").test(city.state || "")
+            );
+
+            if (stateData) {
+              const stateName = stateData.state;
+              if (stateMap.has(stateName)) {
+                const existing = stateMap.get(stateName)!;
+                existing.count += city.count;
+                existing.cities.push(city.name);
+              } else {
+                stateMap.set(stateName, {
+                  count: city.count,
+                  cities: [city.name],
+                });
+              }
             }
-          );
+          });
 
-          // Sort by listing count (highest first)
-          updatedData.sort((a, b) => b.listings - a.listings);
-          setData(updatedData);
+          // Convert to DestinationData format
+          stateMap.forEach((data, stateName) => {
+            const imagePath =
+              stateImageMap[stateName] || stateImageMap["default"];
+
+            dynamicDestinations.push({
+              name: stateName,
+              image: imagePath,
+              state: stateName,
+              listings: data.count,
+            });
+          });
+
+          // Sort by listing count (highest first) and take top 10
+          dynamicDestinations.sort((a, b) => b.listings - a.listings);
+          const topDestinations = dynamicDestinations.slice(0, 10);
+
+          // If we don't have enough dynamic data, fallback to static with real counts
+          if (topDestinations.length < 6) {
+            const fallbackDestinations = Object.entries(stateImageMap)
+              .filter(([key]) => key !== "default")
+              .slice(0, 10)
+              .map(([stateName, imagePath]) => {
+                const stateData = stateBreakup.find((item) =>
+                  new RegExp(item.state, "i").test(stateName)
+                );
+
+                return {
+                  name: stateName,
+                  image: imagePath,
+                  state: stateName,
+                  listings: stateData?.count || 0,
+                };
+              })
+              .sort((a, b) => b.listings - a.listings);
+
+            setData(fallbackDestinations);
+          } else {
+            setData(topDestinations);
+          }
         } else {
-          console.log("No state data found in response");
           // Fallback to static data with zero listings
-          setData(destinations.map((dest) => ({ ...dest, listings: 0 })));
+          const fallbackData = Object.entries(stateImageMap)
+            .filter(([key]) => key !== "default")
+            .slice(0, 10)
+            .map(([stateName, imagePath]) => ({
+              name: stateName,
+              image: imagePath,
+              state: stateName,
+              listings: 0,
+            }));
+          setData(fallbackData);
         }
       } catch (error) {
-        console.error("Error fetching state data:", error);
         // Fallback to static data with zero listings
-        setData(destinations.map((dest) => ({ ...dest, listings: 0 })));
+        const fallbackData = Object.entries(stateImageMap)
+          .filter(([key]) => key !== "default")
+          .slice(0, 10)
+          .map(([stateName, imagePath]) => ({
+            name: stateName,
+            image: imagePath,
+            state: stateName,
+            listings: 0,
+          }));
+        setData(fallbackData);
       } finally {
         setLoading(false);
       }
@@ -194,11 +248,16 @@ const TopDestinations: React.FC = () => {
                   className="h-[230px] w-full object-cover"
                   loading="lazy"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent text-white p-3">
-                  <h3 className="font-bold text-sm md:text-base">
+                {/* Additional overlay for better text contrast */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent text-white p-3">
+                  <h3 className="font-bold text-sm md:text-base text-white drop-shadow-lg">
                     {item.name}
                   </h3>
-                  <p className="text-xs opacity-90" aria-live="polite">
+                  <p
+                    className="text-xs text-white/95 drop-shadow-md"
+                    aria-live="polite"
+                  >
                     {item.listings} Listings
                   </p>
                 </div>

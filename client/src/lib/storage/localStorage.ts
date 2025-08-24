@@ -19,7 +19,6 @@ const createStorage = function createStorage<T>(subPrefix: string = "") {
           const decryptedData = decryptData(items);
           return JSON.parse(decryptedData) as T;
         } catch (e) {
-          console.error("Error parsing stored data:", e);
           return null;
         }
       }
@@ -85,7 +84,6 @@ const createSessionStorage = function createSessionStorage<T>(
         try {
           return JSON.parse(items) as T;
         } catch (e) {
-          console.error("Error parsing session data:", e);
           return null;
         }
       }

@@ -298,7 +298,6 @@ const ViewBusPage: React.FC = () => {
       const busData = await busService.getBus(busId);
       setBus(busData);
     } catch (error) {
-      console.error("Error fetching bus:", error);
       router.push("/admin/buses");
     } finally {
       setLoading(false);

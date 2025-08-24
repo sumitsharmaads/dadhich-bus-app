@@ -13,8 +13,15 @@ interface PublicLayoutProps {
 export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
   const pathname = usePathname();
   const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const handleScroll = () => {
       const scrollThreshold = window.innerHeight * 1.5; // 100vh + 50vh
       if (window.scrollY > scrollThreshold) {
@@ -28,14 +35,18 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isClient]);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (isClient) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   // Handle hash-based section scrolling (for internal navigation)
   useEffect(() => {
+    if (!isClient) return;
+
     const hash = window.location.hash;
     if (hash) {
       const sectionElement = document.querySelector(hash);
@@ -47,15 +58,23 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [pathname]);
+  }, [pathname, isClient]);
 
   // Check if current page is admin page
   const isAdminPage = pathname?.startsWith("/admin");
 
   return (
     <div className="flex flex-col min-h-screen" id="mainContent">
-      <Header />
-      <main className={`flex-1 ${isAdminPage ? 'bg-gray-50' : ''}`}>{children}</main>
+      {/* Header with fixed positioning for admin pages */}
+      <div className={isAdminPage ? "fixed top-0 left-0 right-0 z-50" : ""}>
+        <Header />
+      </div>
+
+      {/* Main content with proper spacing for admin pages */}
+      <main className={`flex-1 ${isAdminPage ? "bg-gray-50" : ""}`}>
+        {children}
+      </main>
+
       {!isAdminPage && <Footer />}
 
       {/* Scroll to Top Button */}

@@ -76,7 +76,6 @@ const SEOAdminPage: React.FC = () => {
       const entries = await seoService.listSEO();
       setSeoEntries(entries);
     } catch (error) {
-      console.error("Failed to fetch SEO entries:", error);
       errorPopup("Failed to fetch SEO entries");
     } finally {
       setLoading(false);
@@ -193,7 +192,6 @@ const SEOAdminPage: React.FC = () => {
       handleCloseDialog();
       fetchSEOEntries();
     } catch (error) {
-      console.error("Failed to save SEO entry:", error);
       errorPopup("Failed to save SEO entry");
     }
   };
@@ -208,7 +206,6 @@ const SEOAdminPage: React.FC = () => {
         successPopup("SEO entry deleted successfully");
         fetchSEOEntries();
       } catch (error) {
-        console.error("Failed to delete SEO entry:", error);
         errorPopup("Failed to delete SEO entry");
       }
     }
@@ -222,7 +219,6 @@ const SEOAdminPage: React.FC = () => {
       );
       fetchSEOEntries();
     } catch (error) {
-      console.error("Failed to toggle published status:", error);
       errorPopup("Failed to update published status");
     }
   };

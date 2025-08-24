@@ -114,7 +114,6 @@ const AdminAddUser: React.FC = () => {
       await adminService.createUser(user);
       router.push("/admin/users");
     } catch (error: any) {
-      console.error("Error saving user", error);
       // Handle specific API errors
       if (error?.response?.data?.message) {
         setErrors({ submit: error.response.data.message });

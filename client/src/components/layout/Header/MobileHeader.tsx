@@ -29,6 +29,8 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
   };
 
   useEffect(() => {
+    if (typeof document === "undefined") return;
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);

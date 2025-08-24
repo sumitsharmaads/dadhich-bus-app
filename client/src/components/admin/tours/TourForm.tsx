@@ -189,7 +189,6 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
         });
       }
     } catch (error) {
-      console.error("Error loading tour data:", error);
       errorPopup("Failed to load tour data");
     } finally {
       setLoading(false);
@@ -340,11 +339,15 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
       let response;
 
       if (mode === "create") {
-        response = await tourService.createTour(form);
+        // Transform data to correct API format
+        const transformedData = transformFormDataForAPI(form);
+        response = await tourService.createTour(transformedData);
       } else if (tourId) {
+        // Transform data to correct API format
+        const transformedData = transformFormDataForAPI(form);
         const updateData: UpdateTourRequest = {
           _id: tourId,
-          ...form,
+          ...transformedData,
         };
 
         response = await tourService.updateTour(tourId, updateData);
@@ -359,7 +362,6 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
         errorPopup(response?.message || `Failed to ${mode} tour`);
       }
     } catch (error) {
-      console.error("Error saving tour:", error);
       errorPopup(`Failed to ${mode} tour`);
     } finally {
       setSaving(false);
@@ -396,7 +398,9 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
 
     setSaving(true);
     try {
-      const response = await tourService.createTour(quickSaveData);
+      // Transform data to correct API format
+      const transformedData = transformFormDataForAPI(quickSaveData);
+      const response = await tourService.createTour(transformedData);
       if (response.success) {
         successPopup(
           "Tour saved successfully! You can edit it later to add more details."
@@ -406,11 +410,53 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
         errorPopup(response.message || "Failed to save tour");
       }
     } catch (error) {
-      console.error("Error quick saving tour:", error);
       errorPopup("Failed to save tour");
     } finally {
       setSaving(false);
     }
+  };
+
+  // Transform form data to correct API format
+  const transformFormDataForAPI = (formData: any) => {
+    const transformed = { ...formData };
+
+    // Transform sources: ensure cityId is a string
+    if (transformed.sources && Array.isArray(transformed.sources)) {
+      transformed.sources = transformed.sources.map((source: any) => ({
+        ...source,
+        cityId:
+          typeof source.cityId === "string"
+            ? source.cityId
+            : source.cityId?._id || source.cityId,
+      }));
+    }
+
+    // Transform places: ensure cityId is a string
+    if (transformed.places && Array.isArray(transformed.places)) {
+      transformed.places = transformed.places.map((place: any) => ({
+        ...place,
+        cityId:
+          typeof place.cityId === "string"
+            ? place.cityId
+            : place.cityId?._id || place.cityId,
+      }));
+    }
+
+    // Transform captainUserId: ensure it's a string
+    if (
+      transformed.captainUserId &&
+      typeof transformed.captainUserId === "object"
+    ) {
+      transformed.captainUserId =
+        transformed.captainUserId._id || transformed.captainUserId;
+    }
+
+    // Transform busId: ensure it's a string
+    if (transformed.busId && typeof transformed.busId === "object") {
+      transformed.busId = transformed.busId._id || transformed.busId;
+    }
+
+    return transformed;
   };
 
   const handleNext = () => {

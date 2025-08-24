@@ -245,7 +245,6 @@ export async function fetchSEOData(path: string): Promise<SEOInterface | null> {
     const data = await response.json();
     return data.result || null;
   } catch (error) {
-    console.error("Error fetching SEO data:", error);
     return null;
   }
 }

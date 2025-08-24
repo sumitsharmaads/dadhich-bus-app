@@ -103,7 +103,6 @@ const CountriesPage: React.FC = () => {
       setTotalCount(response.length);
       setPageCount(Math.max(1, Math.ceil(response.length / ITEMS_PER_PAGE)));
     } catch (error) {
-      console.error("Failed to fetch countries:", error);
       errorPopup("Failed to fetch countries");
     } finally {
       setLoading(false);
@@ -180,7 +179,6 @@ const CountriesPage: React.FC = () => {
       setModalOpen(false);
       fetchCountries();
     } catch (error) {
-      console.error("Failed to save country:", error);
       errorPopup("Failed to save country");
     } finally {
       setSaving(false);
@@ -197,7 +195,6 @@ const CountriesPage: React.FC = () => {
         successPopup("Country deleted successfully");
         fetchCountries();
       } catch (error) {
-        console.error("Failed to delete country:", error);
         errorPopup("Failed to delete country");
       }
     }
@@ -211,7 +208,6 @@ const CountriesPage: React.FC = () => {
       );
       fetchCountries();
     } catch (error) {
-      console.error("Failed to toggle published status:", error);
       errorPopup("Failed to update published status");
     }
   };
@@ -269,7 +265,6 @@ const CountriesPage: React.FC = () => {
       );
       fetchCountries();
     } catch (error) {
-      console.error("Failed to upload file:", error);
       errorPopup("Failed to upload file");
     } finally {
       event.currentTarget.value = "";

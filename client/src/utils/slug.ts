@@ -50,12 +50,6 @@ export function generateTourSlug(tour: {
 export function extractIdFromSlug(slug: string): string {
   const parts = slug.split("-");
   const id = parts[parts.length - 1]; // Last part is the ID
-
-  // Debug logging
-  console.log("Slug:", slug);
-  console.log("Parts:", parts);
-  console.log("Extracted ID:", id);
-
   return id;
 }
 

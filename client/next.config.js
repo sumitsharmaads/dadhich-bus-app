@@ -1,5 +1,28 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // Optimize large package imports
+    optimizePackageImports: [
+      "@mui/material",
+      "@mui/icons-material",
+      "lodash",
+      "framer-motion",
+      "chart.js",
+      "react-chartjs-2",
+    ],
+  },
+
+  // Development-specific optimizations
+  typescript: {
+    // Skip TS errors during dev for faster startup
+    ignoreBuildErrors: process.env.NODE_ENV === "development",
+  },
+
+  eslint: {
+    // Skip ESLint during dev for faster startup
+    ignoreDuringBuilds: process.env.NODE_ENV === "development",
+  },
+
   images: {
     // Try remotePatterns first (Next.js 13+)
     remotePatterns: [

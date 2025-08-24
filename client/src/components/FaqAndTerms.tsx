@@ -80,7 +80,6 @@ const FaqAndTerms: React.FC = () => {
             setFaqs(getMockFaqs());
           }
         } catch (initError) {
-          console.error("Error initializing FAQs:", initError);
           setFaqs(getMockFaqs());
         }
       } else {
@@ -94,7 +93,6 @@ const FaqAndTerms: React.FC = () => {
         setTerms("Terms and conditions will be displayed here...");
       }
     } catch (error) {
-      console.error("Error fetching FAQ or Terms:", error);
       setError("Failed to load FAQs and Terms. Please try again later.");
 
       // Fallback to mock data if API fails
@@ -128,7 +126,6 @@ const FaqAndTerms: React.FC = () => {
         setError("Failed to initialize FAQs");
       }
     } catch (error) {
-      console.error("Error initializing FAQs:", error);
       setError("Failed to initialize FAQs");
     } finally {
       setLoading(false);

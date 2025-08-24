@@ -44,6 +44,8 @@ export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
 
   // Close dropdown when clicking outside
   useEffect(() => {
+    if (typeof document === "undefined") return;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&

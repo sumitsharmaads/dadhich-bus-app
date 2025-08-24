@@ -150,7 +150,6 @@ const AddBusPage: React.FC = () => {
       await busService.createBus(payload);
       router.push("/admin/buses");
     } catch (error: unknown) {
-      console.error("Error creating bus:", error);
       // Handle specific validation errors from server
       if (error && typeof error === "object" && "response" in error) {
         const errorResponse = error as {

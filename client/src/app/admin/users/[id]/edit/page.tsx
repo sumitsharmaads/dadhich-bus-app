@@ -83,7 +83,6 @@ const AdminEditUser: React.FC = () => {
         setErrors({ fetch: "User not found" });
       }
     } catch (error) {
-      console.error("Error fetching user:", error);
       setErrors({ fetch: "Failed to load user data" });
     } finally {
       setFetching(false);
@@ -154,7 +153,6 @@ const AdminEditUser: React.FC = () => {
       await adminService.updateUser(userId, updateData);
       router.push("/admin/users");
     } catch (error: any) {
-      console.error("Error updating user", error);
       // Handle specific API errors
       if (error?.response?.data?.message) {
         setErrors({ submit: error.response.data.message });

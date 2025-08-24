@@ -27,7 +27,7 @@ const WhatsAppIcon: React.FC<{ className?: string }> = ({
   className = "w-6 h-6",
 }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.088" />
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.088" />
   </svg>
 );
 
@@ -55,30 +55,31 @@ export const Footer: React.FC = () => {
 
   return (
     <footer
-      className="bg-secondary-500 text-white"
+      className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white"
       aria-labelledby="footer-heading"
     >
       <h2 id="footer-heading" className="sr-only">
         Website footer
       </h2>
+
       {/* Top Section */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-14 grid grid-cols-1 md:grid-cols-4 gap-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* About Us */}
         <div>
-          <h4 className="text-lg font-semibold mb-4 text-primary-300 font-secondary">
+          <h4 className="text-xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#C22A54] to-[#A82046]">
             About Us
           </h4>
-          <p className="text-sm leading-relaxed text-white/90 max-w-md font-primary">
-            {websiteInfo?.brandname || "Dadhcih Bus Service"} offers comfortable
+          <p className="text-gray-300 leading-relaxed max-w-md mb-6">
+            {websiteInfo?.brandname || "Dadhich Bus Service"} offers comfortable
             bus rentals and curated tour experiences across India. Safe rides,
             friendly support, and memorable journeys.
           </p>
-          <div className="flex space-x-4 mt-6" aria-label="Social links">
+          <div className="flex space-x-4" aria-label="Social links">
             <a
               href={`https://wa.me/${
                 websiteInfo?.socialLinks?.phone || "your-phone-number"
               }`}
-              className="p-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 transition-colors"
+              className="p-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-xl"
               aria-label="WhatsApp"
               target="_blank"
               rel="noopener noreferrer"
@@ -89,7 +90,7 @@ export const Footer: React.FC = () => {
               href={
                 websiteInfo?.socialLinks?.facebook || "https://facebook.com"
               }
-              className="p-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 transition-colors"
+              className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-xl"
               aria-label="Facebook"
               target="_blank"
               rel="noopener noreferrer"
@@ -100,7 +101,7 @@ export const Footer: React.FC = () => {
               href={
                 websiteInfo?.socialLinks?.instagram || "https://instagram.com"
               }
-              className="p-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 transition-colors"
+              className="p-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl hover:from-pink-600 hover:to-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-xl"
               aria-label="Instagram"
               target="_blank"
               rel="noopener noreferrer"
@@ -112,47 +113,52 @@ export const Footer: React.FC = () => {
 
         {/* Services */}
         <div role="navigation" aria-label="Services">
-          <h4 className="text-lg font-semibold mb-4 text-primary-300 font-secondary">
+          <h4 className="text-xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#C22A54] to-[#A82046]">
             Services
           </h4>
-          <ul className="space-y-3 text-sm">
+          <ul className="space-y-4">
             <li>
               <Link
                 href={PublicRoutes.TOURS}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 Tour Packages
               </Link>
             </li>
             <li>
               <Link
                 href={PublicRoutes.SERVICES}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 Bus Rentals
               </Link>
             </li>
             <li>
               <Link
                 href={PublicRoutes.HOME}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 Guided Tours
               </Link>
             </li>
             <li>
               <Link
                 href={PublicRoutes.HOME}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 Group Travel
               </Link>
             </li>
             <li>
               <Link
                 href={PublicRoutes.HOME}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 Luxury Experiences
               </Link>
             </li>
@@ -161,47 +167,52 @@ export const Footer: React.FC = () => {
 
         {/* Quick Links */}
         <div role="navigation" aria-label="Quick Links">
-          <h4 className="text-lg font-semibold mb-4 text-primary-300 font-secondary">
+          <h4 className="text-xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#C22A54] to-[#A82046]">
             Quick Links
           </h4>
-          <ul className="space-y-3 text-sm">
+          <ul className="space-y-4">
             <li>
               <Link
                 href={PublicRoutes.HOME}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 Home
               </Link>
             </li>
             <li>
               <Link
                 href={PublicRoutes.ABOUT_US}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 About Us
               </Link>
             </li>
             <li>
               <Link
                 href={PublicRoutes.CONTACT}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 Contact Us
               </Link>
             </li>
             <li>
               <Link
                 href={`${PublicRoutes.ABOUT_US}#faq-section`}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 FAQ
               </Link>
             </li>
             <li>
               <Link
                 href={`${PublicRoutes.ABOUT_US}#term-condition`}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300 flex items-center group"
               >
+                <span className="w-2 h-2 bg-[#C22A54] rounded-full mr-3 group-hover:scale-150 transition-transform duration-300"></span>
                 Terms & Conditions
               </Link>
             </li>
@@ -210,48 +221,54 @@ export const Footer: React.FC = () => {
 
         {/* Contact Info */}
         <div>
-          <h4 className="text-lg font-semibold mb-4 text-primary-300 font-secondary">
+          <h4 className="text-xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#C22A54] to-[#A82046]">
             Contact Us
           </h4>
-          <div className="text-sm space-y-4 text-white/90 font-primary">
-            <p className="font-medium">
-              {websiteInfo?.brandname || "Dadhcih Bus Service"}
+          <div className="space-y-4">
+            <p className="font-semibold text-white text-lg">
+              {websiteInfo?.brandname || "Dadhich Bus Service"}
             </p>
-            <div className="flex items-start space-x-2">
-              <svg
-                className="w-5 h-5 text-primary-400 mt-0.5 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <p>
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-[#C22A54] to-[#A82046] rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <p className="text-gray-300">
                 {websiteInfo?.contactAddress?.address1 || "123 Travel Street"},{" "}
                 {websiteInfo?.contactAddress?.city || "Tourism City"},{" "}
                 {websiteInfo?.contactAddress?.state || "Travel State"} -{" "}
                 {websiteInfo?.contactAddress?.pincode || "125050"}
               </p>
             </div>
-            <div className="flex items-center space-x-2">
-              <PhoneIcon className="w-5 h-5 text-primary-400" />
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-[#C22A54] to-[#A82046] rounded-lg flex items-center justify-center flex-shrink-0">
+                <PhoneIcon className="w-4 h-4 text-white" />
+              </div>
               <a
                 href={`tel:${websiteInfo?.phone || "+919479600044"}`}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300"
               >
                 {websiteInfo?.phone || "+91 94796 00044"}
               </a>
             </div>
-            <div className="flex items-center space-x-2">
-              <EnvelopeIcon className="w-5 h-5 text-primary-400" />
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-[#C22A54] to-[#A82046] rounded-lg flex items-center justify-center flex-shrink-0">
+                <EnvelopeIcon className="w-4 h-4 text-white" />
+              </div>
               <a
                 href={`mailto:${
                   websiteInfo?.emails?.supportEmail || "info@traveltourism.com"
                 }`}
-                className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded transition-colors"
+                className="text-gray-300 hover:text-white transition-colors duration-300"
               >
                 {websiteInfo?.emails?.supportEmail || "info@traveltourism.com"}
               </a>
@@ -261,29 +278,34 @@ export const Footer: React.FC = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="bg-secondary-600 py-5">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 md:px-12 text-sm text-white/80 font-primary">
-          <p className="mb-2 md:mb-0">
-            &copy; {new Date().getFullYear()}{" "}
-            {websiteInfo?.brandname || "Dadhcih Bus Service"}. All rights
-            reserved.
-          </p>
-          <div className="space-x-4">
+      <div className="border-t border-gray-700 bg-gradient-to-r from-gray-800 to-gray-900 py-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 md:px-12">
+          <div className="flex items-center mb-4 md:mb-0">
+            <div className="w-10 h-10 bg-gradient-to-r from-[#C22A54] to-[#A82046] rounded-full flex items-center justify-center mr-3">
+              <span className="text-white font-bold text-lg">D</span>
+            </div>
+            <p className="text-gray-400">
+              &copy; {new Date().getFullYear()}{" "}
+              {websiteInfo?.brandname || "Dadhich Bus Service"}. All rights
+              reserved.
+            </p>
+          </div>
+          <div className="flex space-x-6">
             <Link
               href="/privacy"
-              className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded"
+              className="text-gray-400 hover:text-white transition-colors duration-300"
             >
               Privacy
             </Link>
             <Link
               href="/terms"
-              className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded"
+              className="text-gray-400 hover:text-white transition-colors duration-300"
             >
               Terms
             </Link>
             <a
               href="/sitemap.xml"
-              className="hover:text-primary-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200 rounded"
+              className="text-gray-400 hover:text-white transition-colors duration-300"
             >
               Sitemap
             </a>

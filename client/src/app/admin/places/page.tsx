@@ -99,7 +99,6 @@ const AdminPlacesPage: React.FC = () => {
       setTotalCount(response.length);
       setPageCount(Math.max(1, Math.ceil(response.length / ITEMS_PER_PAGE)));
     } catch (error) {
-      console.error("Failed to fetch cities:", error);
       errorPopup("Failed to fetch cities");
     } finally {
       setLoading(false);
@@ -190,7 +189,6 @@ const AdminPlacesPage: React.FC = () => {
       );
       fetchCities();
     } catch (error) {
-      console.error("Failed to toggle published status:", error);
       errorPopup("Failed to update published status");
     }
   };

@@ -98,7 +98,6 @@ const CitiesPage: React.FC = () => {
       setTotalCount(response.length);
       setPageCount(Math.max(1, Math.ceil(response.length / ITEMS_PER_PAGE)));
     } catch (error) {
-      console.error("Failed to fetch cities:", error);
       errorPopup("Failed to fetch cities");
     } finally {
       setLoading(false);
@@ -147,7 +146,6 @@ const CitiesPage: React.FC = () => {
         successPopup("City deleted successfully");
         fetchCities();
       } catch (error) {
-        console.error("Failed to delete city:", error);
         errorPopup("Failed to delete city");
       }
     }
@@ -196,7 +194,6 @@ const CitiesPage: React.FC = () => {
         errorPopup(result.message || "Upload failed");
       }
     } catch (error) {
-      console.error("Failed to upload file:", error);
       errorPopup("Failed to upload file");
     } finally {
       event.currentTarget.value = "";

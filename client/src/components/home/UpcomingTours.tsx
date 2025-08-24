@@ -40,6 +40,40 @@ const UpcomingTours: React.FC = () => {
     router.push(`/tour/${id}`);
   };
 
+  // Helper function to get route display
+  const getRouteDisplay = (tour: TourListItem) => {
+    if (
+      tour.sources &&
+      tour.sources.length > 0 &&
+      tour.places &&
+      tour.places.length > 0
+    ) {
+      const sourceCity =
+        typeof tour.sources[0].cityId === "string"
+          ? tour.sources[0].cityName || "Unknown"
+          : tour.sources[0].cityId.name;
+
+      const destinationCity =
+        typeof tour.places[0].cityId === "string"
+          ? tour.places[0].name
+          : tour.places[0].cityId.name;
+
+      return `${sourceCity} → ${destinationCity}`;
+    }
+    return "Route not specified";
+  };
+
+  // Helper function to get source city name
+  const getSourceCityName = (tour: TourListItem) => {
+    if (tour.sources && tour.sources.length > 0) {
+      const source = tour.sources[0];
+      return typeof source.cityId === "string"
+        ? source.cityName || "Unknown"
+        : source.cityId.name;
+    }
+    return "Unknown";
+  };
+
   if (loading) {
     return (
       <section className="my-12">
@@ -112,7 +146,6 @@ const UpcomingTours: React.FC = () => {
                     }
                     alt={tour.tourName}
                     className="w-full h-full object-cover"
-                    crossOrigin={"anonymous"}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
 
@@ -149,10 +182,7 @@ const UpcomingTours: React.FC = () => {
                           clipRule="evenodd"
                         />
                       </svg>
-                      {tour.places
-                        ?.slice(0, 2)
-                        .map((p) => p.name)
-                        .join(" → ")}
+                      {getRouteDisplay(tour)}
                     </span>
                     <span className="text-primary-600 font-medium">
                       {tour.days}D/{tour.nights}N
@@ -174,8 +204,10 @@ const UpcomingTours: React.FC = () => {
                   {/* Inclusions & Capacity - Compact Row */}
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span className="truncate">
-                      {tour.inclusive?.slice(0, 2).join(", ")}
-                      {tour.inclusive && tour.inclusive.length > 2 && "..."}
+                      {tour.inclusive && tour.inclusive.length > 0
+                        ? tour.inclusive.slice(0, 2).join(", ") +
+                          (tour.inclusive.length > 2 ? "..." : "")
+                        : "No inclusions specified"}
                     </span>
                     {tour.capacity && (
                       <span className="text-xs bg-gray-100 px-2 py-1 rounded">

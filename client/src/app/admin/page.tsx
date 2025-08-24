@@ -89,7 +89,6 @@ const AdminDashboard: React.FC = () => {
         setBusStats(busStatsData);
       }
     } catch (error: any) {
-      console.error("Error fetching dashboard data:", error);
       setError(
         error?.response?.data?.message || "Failed to fetch dashboard data"
       );

@@ -36,6 +36,7 @@ import {
   getTourCategories,
   getTourTypes,
   downloadTourTemplate,
+  searchTourInformation,
 } from '../../controllers/tour.controller';
 import { verifyCsrfToken } from '../../middlewares/csrf.middleware';
 import { uploadSingleFile } from '../../middlewares/upload.middleware';
@@ -58,6 +59,7 @@ tourRouter.get('/state-breakup', limiter, stateBreakup);
 tourRouter.get('/stats', limiter, tourStats);
 tourRouter.get('/categories', limiter, getTourCategories);
 tourRouter.get('/types', limiter, getTourTypes);
+tourRouter.get('/searchtourInformation', limiter, searchTourInformation);
 tourRouter.get('/public/:id', limiter, validate(idParamSchema, 'params'), getTourPublic);
 
 // Admin

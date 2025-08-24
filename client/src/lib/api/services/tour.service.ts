@@ -126,7 +126,6 @@ export const tourService = {
       const response = await get<any>("tours/admin/list", { params });
       return response.data;
     } catch (error) {
-      console.error("💥 Tour Service Error:", error);
       throw error;
     }
   },

@@ -61,7 +61,6 @@ const TourViewPage: React.FC = () => {
       const tourData = await tourService.getTourById(tourId);
       setTour(tourData);
     } catch (error) {
-      console.error("Failed to fetch tour:", error);
       errorPopup("Failed to fetch tour");
     } finally {
       setLoading(false);
@@ -78,7 +77,6 @@ const TourViewPage: React.FC = () => {
         errorPopup(response.message || "Failed to publish tour");
       }
     } catch (error) {
-      console.error("Failed to publish tour:", error);
       errorPopup("Failed to publish tour");
     }
   };
@@ -93,7 +91,6 @@ const TourViewPage: React.FC = () => {
         errorPopup(response.message || "Failed to move tour to draft");
       }
     } catch (error) {
-      console.error("Failed to move tour to draft:", error);
       errorPopup("Failed to move tour to draft");
     }
   };
@@ -115,7 +112,6 @@ const TourViewPage: React.FC = () => {
         errorPopup(response.message || "Failed to update tour status");
       }
     } catch (error) {
-      console.error("Failed to update tour status:", error);
       errorPopup("Failed to update tour status");
     }
   };
@@ -135,7 +131,6 @@ const TourViewPage: React.FC = () => {
         errorPopup(response.message || "Failed to delete tour");
       }
     } catch (error) {
-      console.error("Failed to delete tour:", error);
       errorPopup("Failed to delete tour");
     }
   };

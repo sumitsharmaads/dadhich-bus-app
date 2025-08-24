@@ -466,7 +466,6 @@ const ToursPage: React.FC = () => {
           page,
           items: 10,
         });
-        console.log("Search Tours API response:", response);
         if (response.success && response.data) {
           const newTours = response.data.tours || [];
           const total = response.data.total || 0;
@@ -504,10 +503,8 @@ const ToursPage: React.FC = () => {
     const fetchFacets = async () => {
       try {
         const response = await tourService.getFacets();
-        console.log("Facets API response:", response);
         if (response.success && response.data) {
           setFacets(response.data);
-          console.log("Facets state set:", response);
         }
       } catch (err) {
         console.error("Failed to fetch facets:", err);

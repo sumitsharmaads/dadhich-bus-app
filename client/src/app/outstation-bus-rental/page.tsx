@@ -247,7 +247,6 @@ const OutstationBusRentalPage = () => {
         );
       }
     } catch (error: any) {
-      console.error("Error submitting outstation bus rental inquiry:", error);
       setError(
         error.response?.data?.message ||
           "Failed to submit inquiry. Please check your connection and try again."

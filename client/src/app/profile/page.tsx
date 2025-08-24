@@ -141,7 +141,6 @@ const ProfilePage = () => {
 
   const handleChangePassword = () => {
     // TODO: Implement change password functionality
-    console.log("Change password clicked");
   };
 
   if (!user) {

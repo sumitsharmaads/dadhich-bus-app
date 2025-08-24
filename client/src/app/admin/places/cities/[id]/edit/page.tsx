@@ -124,17 +124,51 @@ const EditCityPage: React.FC = () => {
     }
   }, [city]);
 
+  // Update form when states are loaded and city data is available
+  useEffect(() => {
+    if (city && states.length > 0 && city.countryId) {
+      // Check if the current country matches the city's country
+      const currentCountryStates = states.filter(
+        (state) => state.countryId === city.countryId
+      );
+
+      if (currentCountryStates.length > 0) {
+        // Update the form with the correct stateId (extract _id from stateId object)
+        let cityStateId: string = "";
+        if (typeof city.stateId === "object" && city.stateId !== null) {
+          cityStateId = city.stateId._id;
+        } else if (typeof city.stateId === "string") {
+          cityStateId = city.stateId;
+        }
+
+        if (cityStateId) {
+          setForm((prev) => ({
+            ...prev,
+            stateId: cityStateId,
+          }));
+        }
+      }
+    }
+  }, [city, states]);
+
   const fetchCity = async () => {
     try {
       const response = await placesService.getCityById(cityId);
       setCity(response);
 
-      // Set form data and immediately fetch states for the country
+      // Set form data
+      let stateId: string = "";
+      if (typeof response.stateId === "object" && response.stateId !== null) {
+        stateId = response.stateId._id;
+      } else if (typeof response.stateId === "string") {
+        stateId = response.stateId;
+      }
+
       const cityData = {
         name: response.name,
         slug: response.slug,
         countryId: response.countryId,
-        stateId: response.stateId?._id,
+        stateId: stateId,
         isPublished: response.isPublished,
         location: response.location || { type: "Point", coordinates: [0, 0] },
         visitInfo: response.visitInfo || {
@@ -169,13 +203,7 @@ const EditCityPage: React.FC = () => {
       };
 
       setForm(cityData);
-
-      // Fetch states for the country immediately
-      if (response.countryId) {
-        await fetchStatesByCountry(response.countryId);
-      }
     } catch (error) {
-      console.error("Failed to fetch city:", error);
       errorPopup("Failed to fetch city details");
     } finally {
       setLoading(false);
@@ -187,7 +215,6 @@ const EditCityPage: React.FC = () => {
       const response = await placesService.listCountries();
       setCountries(response);
     } catch (error) {
-      console.error("Failed to fetch countries:", error);
       errorPopup("Failed to fetch countries");
     }
   };
@@ -196,8 +223,24 @@ const EditCityPage: React.FC = () => {
     try {
       const response = await placesService.getStatesByCountry(countryId);
       setStates(response);
+
+      // If we have a city loaded and this is the city's country, ensure the state is selected
+      if (city && city.countryId === countryId) {
+        let cityStateId: string = "";
+        if (typeof city.stateId === "object" && city.stateId !== null) {
+          cityStateId = city.stateId._id;
+        } else if (typeof city.stateId === "string") {
+          cityStateId = city.stateId;
+        }
+
+        if (cityStateId) {
+          setForm((prev) => ({
+            ...prev,
+            stateId: cityStateId,
+          }));
+        }
+      }
     } catch (error) {
-      console.error("Failed to fetch states", error);
       errorPopup("Failed to fetch states");
     }
   };
@@ -378,7 +421,6 @@ const EditCityPage: React.FC = () => {
       successPopup("City updated successfully");
       router.push("/admin/places");
     } catch (error) {
-      console.error("Failed to update city:", error);
       errorPopup("Failed to update city");
     } finally {
       setSaving(false);

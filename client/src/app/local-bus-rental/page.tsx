@@ -223,7 +223,6 @@ const LocalBusRentalPage = () => {
         );
       }
     } catch (error: any) {
-      console.error("Error submitting local bus rental inquiry:", error);
       setError(
         error.response?.data?.message ||
           "Failed to submit inquiry. Please check your connection and try again."

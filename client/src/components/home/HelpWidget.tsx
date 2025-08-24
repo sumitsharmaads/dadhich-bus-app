@@ -122,7 +122,6 @@ const HelpWidget: React.FC = () => {
         );
       }
     } catch (error: any) {
-      console.error("Error submitting inquiry:", error);
       setSubmitError(
         error.response?.data?.message ||
           "Failed to submit inquiry. Please check your connection and try again."

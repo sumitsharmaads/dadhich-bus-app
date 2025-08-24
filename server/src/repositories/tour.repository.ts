@@ -798,13 +798,159 @@ export const tourRepository = {
       _id: id,
       isDeleted: false,
       isActive: true,
-      // startDate: { $gte: minStart },
+      status: 'published',
     })
-      .select('-isDeleted')
-      .populate('places.cityId', 'name')
+      .populate('places.cityId', 'name state')
       .populate('sources.cityId', 'name')
       .populate('captainUserId', 'fullname username')
+      .populate('busId', 'busNumber')
+      .select('-__v') // Exclude version field
       .exec();
+  },
+
+  // NEW METHOD: Search Tour Information - Completely separate from existing methods
+  async searchTourInformation(params: any) {
+    const { search } = params || {};
+
+    if (!search || !String(search).trim()) {
+      return {
+        tours: [],
+        total: 0,
+        searchQuery: null,
+      };
+    }
+
+    const searchQuery = String(search).trim();
+
+    // Build aggregation pipeline
+    const pipeline: PipelineStage[] = [
+      // Match tours that are published and active
+      {
+        $match: {
+          isDeleted: false,
+          status: 'published',
+          isActive: true,
+          $or: [
+            { tourName: { $regex: searchQuery, $options: 'i' } },
+            { description: { $regex: searchQuery, $options: 'i' } },
+            { shortDescription: { $regex: searchQuery, $options: 'i' } },
+            { 'sources.cityName': { $regex: searchQuery, $options: 'i' } },
+            { 'sources.state': { $regex: searchQuery, $options: 'i' } },
+            { 'places.name': { $regex: searchQuery, $options: 'i' } },
+            { 'places.state': { $regex: searchQuery, $options: 'i' } },
+          ],
+        },
+      },
+      // Lookup source cities for detailed information
+      {
+        $lookup: {
+          from: 'cities',
+          localField: 'sources.cityId',
+          foreignField: '_id',
+          as: 'sourceCities',
+        },
+      },
+      // Lookup destination cities for detailed information
+      {
+        $lookup: {
+          from: 'cities',
+          localField: 'places.cityId',
+          foreignField: '_id',
+          as: 'destinationCities',
+        },
+      },
+      // Unwind sources to create separate entries for each source
+      {
+        $unwind: {
+          path: '$sources',
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      // Add computed fields
+      {
+        $addFields: {
+          // Enhanced source with city details
+          enhancedSource: {
+            $mergeObjects: [
+              '$sources',
+              {
+                cityDetails: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: '$sourceCities',
+                        as: 'city',
+                        cond: { $eq: ['$$city._id', '$sources.cityId'] },
+                      },
+                    },
+                    0,
+                  ],
+                },
+              },
+            ],
+          },
+          // Enhanced places with city details
+          enhancedPlaces: {
+            $map: {
+              input: '$places',
+              as: 'place',
+              in: {
+                $mergeObjects: [
+                  '$$place',
+                  {
+                    cityDetails: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: '$destinationCities',
+                            as: 'city',
+                            cond: { $eq: ['$$city._id', '$$place.cityId'] },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+      // Project final fields
+      {
+        $project: {
+          _id: 1,
+          tourName: 1,
+          description: 1,
+          shortDescription: 1,
+          startDate: 1,
+          endDate: 1,
+          days: 1,
+          nights: 1,
+          pricing: 1,
+          heroImage: 1,
+          type: 1,
+          inclusive: 1,
+          capacity: 1,
+          enhancedSource: 1, // Single source with pricing (unwound)
+          enhancedPlaces: 1, // Destinations with details
+          highlights: 1,
+          category: 1,
+          difficulty: 1,
+          ageGroup: 1,
+          fitnessLevel: 1,
+        },
+      },
+    ];
+
+    const tours = await Tour.aggregate(pipeline);
+
+    return {
+      tours,
+      total: tours.length,
+      searchQuery: searchQuery,
+    };
   },
 
   async upcoming(limit = 4) {

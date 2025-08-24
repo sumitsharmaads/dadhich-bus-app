@@ -208,13 +208,12 @@ export const downloadTourTemplate = asyncHandler(async (_req: Request, res: Resp
   // Create buffer
   const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
-  // Set response headers
-  res.setHeader(
-    'Content-Type',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  );
-  res.setHeader('Content-Disposition', 'attachment; filename="tour_bulk_template.xlsx"');
-
   // Send buffer
   res.send(buffer);
+});
+
+// NEW API: Search Tour Information - Completely separate from existing APIs
+export const searchTourInformation = asyncHandler(async (req: Request, res: Response) => {
+  const result = await tourRepository.searchTourInformation(req.query);
+  sendSuccess(res, result, 'Tour search results');
 });
