@@ -266,15 +266,11 @@ export const Footer: React.FC = () => {
               </div>
               <a
                 href={`mailto:${
-                  websiteInfo?.emails?.supportEmail ||
-                  websiteInfo?.contact?.emails?.supportEmail ||
-                  "info@traveltourism.com"
+                  websiteInfo?.emails?.supportEmail || "info@traveltourism.com"
                 }`}
                 className="text-gray-300 hover:text-white transition-colors duration-300"
               >
-                {websiteInfo?.emails?.supportEmail ||
-                  websiteInfo?.contact?.emails?.supportEmail ||
-                  "info@traveltourism.com"}
+                {websiteInfo?.emails?.supportEmail || "info@traveltourism.com"}
               </a>
             </div>
           </div>
