@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Quick Inquiry | Dadhich Bus Services",
     description: "Send us your questions about bus rental services.",
     type: "website",
-    url: "https://dadhichbus.com/inquery",
+    url: "https://dadhichbusservice.com/inquery",
   },
 };
 

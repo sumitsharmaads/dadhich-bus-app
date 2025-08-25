@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description:
       "Explore amazing destinations across India with our curated tour packages. Comfortable transportation and unforgettable experiences.",
     type: "website",
-    url: "https://dadhichbus.com/tours",
+    url: "https://dadhichbusservice.com/tours",
     images: [
       {
         url: "/images/tours-og.jpg",

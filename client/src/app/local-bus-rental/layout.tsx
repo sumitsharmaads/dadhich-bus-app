@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description:
       "Book local bus rental services for city travel and local transportation.",
     type: "website",
-    url: "https://dadhichbus.com/local-bus-rental",
+    url: "https://dadhichbusservice.com/local-bus-rental",
   },
 };
 

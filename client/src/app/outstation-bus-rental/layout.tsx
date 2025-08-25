@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description:
       "Luxury outstation bus rental services for long-distance travel and tours.",
     type: "website",
-    url: "https://dadhichbus.com/outstation-bus-rental",
+    url: "https://dadhichbusservice.com/outstation-bus-rental",
   },
 };
 

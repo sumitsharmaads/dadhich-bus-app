@@ -25,7 +25,7 @@ const getMockFaqs = (): FAQItem[] => [
   {
     question: "How do I book a bus for my tour?",
     answer:
-      "You can book a bus by calling us directly at +91 9511547154 or by filling out our online booking form. Our team will get back to you within 24 hours with a customized quote.",
+      "You can book a bus by calling us directly at +91 9812617300 or by filling out our online booking form. Our team will get back to you within 24 hours with a customized quote.",
   },
   {
     question: "What types of buses do you offer?",
