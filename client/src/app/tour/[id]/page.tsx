@@ -10,7 +10,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   try {
     const { id } = await params;
-    const tourData = await tourService.getTourSeo(id);
+    // Try to get tour data - use existing method for now since SEO endpoint isn't built yet
+    let tourData;
+    try {
+      // First try the SEO endpoint (when it's available)
+      console.log("🔍 Trying SEO endpoint for tour:", id);
+      const seoResponse = await tourService.getTourSeo(id);
+      // Extract the actual tour data from the response
+      tourData = seoResponse.data;
+    } catch (seoError) {
+      console.log(
+        "⚠️ SEO endpoint not available, falling back to full tour data"
+      );
+      // Fallback to full tour data for now
+      tourData = await tourService.getTourById(id);
+      console.log("✅ Fallback tour data successful:", tourData);
+    }
 
     if (!tourData) {
       return {

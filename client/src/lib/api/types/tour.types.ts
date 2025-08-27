@@ -445,3 +445,11 @@ export interface TourSeoData {
   };
   heroImage?: TourImage;
 }
+
+// API response wrapper for SEO data
+export interface TourSeoResponse {
+  success: boolean;
+  message: string;
+  data: TourSeoData;
+  meta: any;
+}
