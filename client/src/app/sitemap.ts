@@ -4,7 +4,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base =
     process.env.NEXT_PUBLIC_SITE_URL || "https://dadhichbusservice.com";
 
-  // Main pages with high priority
+  // Main public pages with high priority
   const mainRoutes = [
     { url: "/", priority: 1.0, changeFrequency: "daily" },
     { url: "/aboutus", priority: 0.9, changeFrequency: "monthly" },
@@ -18,44 +18,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const serviceRoutes = [
     { url: "/local-bus-rental", priority: 0.8, changeFrequency: "weekly" },
     { url: "/outstation-bus-rental", priority: 0.8, changeFrequency: "weekly" },
-    {
-      url: "/corporate-transportation",
-      priority: 0.8,
-      changeFrequency: "weekly",
-    },
-    {
-      url: "/wedding-transportation",
-      priority: 0.8,
-      changeFrequency: "weekly",
-    },
-    { url: "/airport-transfer", priority: 0.8, changeFrequency: "weekly" },
-    { url: "/tour-packages", priority: 0.8, changeFrequency: "weekly" },
   ];
 
-  // User account pages with lower priority
-  const userRoutes = [
-    { url: "/login", priority: 0.5, changeFrequency: "monthly" },
-    { url: "/signup", priority: 0.5, changeFrequency: "monthly" },
-    { url: "/profile", priority: 0.4, changeFrequency: "monthly" },
-    { url: "/forgot-password", priority: 0.3, changeFrequency: "monthly" },
-  ];
-
-  // Inquiry and support pages
-  const supportRoutes = [
+  // Inquiry page
+  const inquiryRoutes = [
     { url: "/inquery", priority: 0.6, changeFrequency: "monthly" },
-    { url: "/support", priority: 0.6, changeFrequency: "monthly" },
-    { url: "/terms-conditions", priority: 0.4, changeFrequency: "yearly" },
-    { url: "/privacy-policy", priority: 0.4, changeFrequency: "yearly" },
-    { url: "/refund-policy", priority: 0.4, changeFrequency: "yearly" },
   ];
 
-  // Combine all routes
-  const allRoutes = [
-    ...mainRoutes,
-    ...serviceRoutes,
-    ...userRoutes,
-    ...supportRoutes,
-  ];
+  // Combine all public routes only
+  const allRoutes = [...mainRoutes, ...serviceRoutes, ...inquiryRoutes];
+
+  // Note: Dynamic tour pages (/tour/[id]) are not included in sitemap
+  // as they are generated dynamically and should be crawled separately
 
   return allRoutes.map((route) => ({
     url: `${base}${route.url}`,

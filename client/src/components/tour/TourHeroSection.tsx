@@ -144,34 +144,101 @@ const TourHeroSection: React.FC<TourHeroSectionProps> = ({
       {/* Mobile: Integrated Booking Card */}
       <div className="block lg:hidden mt-6">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+          {/* Per Person Pricing */}
+          <div className="text-center mb-4 p-3 bg-gray-50 rounded-xl border border-gray-200">
+            <Typography variant="body2" className="text-gray-600 mb-1">
+              Per Person
+            </Typography>
+            <Typography variant="h6" className="font-bold text-[#C22A54]">
+              ₹{data?.pricing?.minFare?.toLocaleString()}
+            </Typography>
+          </div>
+
           {/* Pricing Section */}
           <div className="text-center mb-6">
-            {discountPercentage > 0 && (
-              <Typography
-                variant="body2"
-                className="text-gray-500 line-through mb-1"
-              >
-                ₹{data?.pricing?.minFare?.toLocaleString()}
-              </Typography>
-            )}
-            <Typography variant="h4" className="font-bold text-[#C22A54] mb-1">
-              ₹{discountedPrice.toLocaleString()}
-            </Typography>
-            <Typography variant="body2" className="text-gray-600">
-              per person
-            </Typography>
-            {discountPercentage > 0 && (
-              <div className="mt-2 inline-block px-3 py-1 bg-green-50 rounded-full border border-green-200">
-                <Typography
-                  variant="caption"
-                  className="text-green-700 font-semibold"
-                >
-                  Save ₹
-                  {(
-                    (data?.pricing?.minFare || 0) - discountedPrice
-                  ).toLocaleString()}
+            {/* Show group pricing if available, otherwise show individual pricing */}
+            {data?.groupDiscounts && data.groupDiscounts.length > 0 ? (
+              <>
+                <Typography variant="h6" className="text-gray-700 mb-2">
+                  Group Discounts Available
                 </Typography>
-              </div>
+                {data.groupDiscounts
+                  .slice(0, 2)
+                  .map((groupDiscount: any, index: number) => {
+                    const groupPrice =
+                      groupDiscount.type === "percent"
+                        ? data.pricing?.minFare *
+                          (1 - groupDiscount.value / 100)
+                        : data.pricing?.minFare - groupDiscount.value;
+                    const totalGroupPrice =
+                      groupPrice * groupDiscount.minMembers;
+
+                    return (
+                      <div key={index} className="mb-3">
+                        <Typography
+                          variant="h5"
+                          className="font-bold text-[#C22A54] mb-1"
+                        >
+                          ₹{Math.round(totalGroupPrice).toLocaleString()}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          className="text-gray-600 mb-2"
+                        >
+                          for {groupDiscount.minMembers} travelers
+                        </Typography>
+                        <Typography variant="caption" className="text-gray-500">
+                          (₹{Math.round(groupPrice).toLocaleString()} per
+                          person)
+                        </Typography>
+                        <div className="inline-block px-3 py-1 bg-green-50 rounded-full border border-green-200">
+                          <Typography
+                            variant="caption"
+                            className="text-green-700 font-semibold"
+                          >
+                            Save{" "}
+                            {groupDiscount.type === "percent"
+                              ? `${groupDiscount.value}%`
+                              : `₹${groupDiscount.value}`}
+                          </Typography>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </>
+            ) : (
+              <>
+                {discountPercentage > 0 && (
+                  <Typography
+                    variant="body2"
+                    className="text-gray-500 line-through mb-1"
+                  >
+                    ₹{data?.pricing?.minFare?.toLocaleString()}
+                  </Typography>
+                )}
+                <Typography
+                  variant="h4"
+                  className="font-bold text-[#C22A54] mb-1"
+                >
+                  ₹{discountedPrice.toLocaleString()}
+                </Typography>
+                <Typography variant="body2" className="text-gray-600">
+                  per person
+                </Typography>
+                {discountPercentage > 0 && (
+                  <div className="mt-2 inline-block px-3 py-1 bg-green-50 rounded-full border border-green-200">
+                    <Typography
+                      variant="caption"
+                      className="text-green-700 font-semibold"
+                    >
+                      Save ₹
+                      {(
+                        (data?.pricing?.minFare || 0) - discountedPrice
+                      ).toLocaleString()}
+                    </Typography>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -182,8 +249,9 @@ const TourHeroSection: React.FC<TourHeroSectionProps> = ({
                 href={`tel:${
                   websiteInfo?.contact?.phone ||
                   (typeof data?.captainUserId === "object"
-                    ? data.captainUserId._id
-                    : data?.captainUserId)
+                    ? data.captainUserId.phone
+                    : data?.captainUserId) ||
+                  websiteInfo?.contact?.phone
                 }`}
                 className="flex flex-col items-center p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
               >
@@ -326,34 +394,101 @@ const TourHeroSection: React.FC<TourHeroSectionProps> = ({
           </Tooltip>
         </div>
 
+        {/* Per Person Pricing */}
+        <div className="text-center mb-4 p-3 bg-gray-50 rounded-xl border border-gray-200">
+          <Typography variant="body2" className="text-gray-600 mb-1">
+            Per Person
+          </Typography>
+          <Typography variant="h6" className="font-bold text-[#C22A54]">
+            ₹{data?.pricing?.minFare?.toLocaleString()}
+          </Typography>
+        </div>
+
         {/* Pricing */}
         <div className="text-center mb-6">
-          {discountPercentage > 0 && (
-            <Typography
-              variant="body1"
-              className="text-gray-500 line-through mb-2"
-            >
-              ₹{data?.pricing?.minFare?.toLocaleString()}
-            </Typography>
-          )}
-          <Typography variant="h4" className="font-bold text-[#C22A54] mb-2">
-            ₹{discountedPrice.toLocaleString()}
-          </Typography>
-          <Typography variant="body2" className="text-gray-600">
-            per person
-          </Typography>
-          {discountPercentage > 0 && (
-            <div className="mt-3 p-2 bg-green-50 rounded-lg border border-green-200">
-              <Typography
-                variant="body2"
-                className="text-green-700 font-semibold"
-              >
-                Save ₹
-                {(
-                  (data?.pricing?.minFare || 0) - discountedPrice
-                ).toLocaleString()}
+          {/* Show group pricing if available, otherwise show individual pricing */}
+          {data?.groupDiscounts && data.groupDiscounts.length > 0 ? (
+            <>
+              <Typography variant="h6" className="text-gray-700 mb-3">
+                Group Discounts Available
               </Typography>
-            </div>
+              {data.groupDiscounts
+                .slice(0, 2)
+                .map((groupDiscount: any, index: number) => {
+                  const groupPrice =
+                    groupDiscount.type === "percent"
+                      ? data.pricing?.minFare * (1 - groupDiscount.value / 100)
+                      : data.pricing?.minFare - groupDiscount.value;
+                  const totalGroupPrice = groupPrice * groupDiscount.minMembers;
+
+                  return (
+                    <div key={index} className="mb-4">
+                      <Typography
+                        variant="h5"
+                        className="font-bold text-[#C22A54] mb-2"
+                      >
+                        ₹{Math.round(totalGroupPrice).toLocaleString()}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        className="text-gray-600 mb-2"
+                      >
+                        for {groupDiscount.minMembers} travelers
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        className="text-gray-500 mb-2"
+                      >
+                        (₹{Math.round(groupPrice).toLocaleString()} per person)
+                      </Typography>
+                      <div className="inline-block px-3 py-1 bg-green-50 rounded-lg border border-green-200">
+                        <Typography
+                          variant="body2"
+                          className="text-green-700 font-semibold"
+                        >
+                          Save{" "}
+                          {groupDiscount.type === "percent"
+                            ? `${groupDiscount.value}%`
+                            : `₹${groupDiscount.value}`}
+                        </Typography>
+                      </div>
+                    </div>
+                  );
+                })}
+            </>
+          ) : (
+            <>
+              {discountPercentage > 0 && (
+                <Typography
+                  variant="body1"
+                  className="text-gray-500 line-through mb-2"
+                >
+                  ₹{data?.pricing?.minFare?.toLocaleString()}
+                </Typography>
+              )}
+              <Typography
+                variant="h4"
+                className="font-bold text-[#C22A54] mb-2"
+              >
+                ₹{discountedPrice.toLocaleString()}
+              </Typography>
+              <Typography variant="body2" className="text-gray-600">
+                per person
+              </Typography>
+              {discountPercentage > 0 && (
+                <div className="mt-3 p-2 bg-green-50 rounded-lg border border-green-200">
+                  <Typography
+                    variant="body2"
+                    className="text-green-700 font-semibold"
+                  >
+                    Save ₹
+                    {(
+                      (data?.pricing?.minFare || 0) - discountedPrice
+                    ).toLocaleString()}
+                  </Typography>
+                </div>
+              )}
+            </>
           )}
         </div>
 

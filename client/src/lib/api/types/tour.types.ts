@@ -110,6 +110,7 @@ export interface Tour {
         _id: string;
         fullname: string;
         username: string;
+        phone: string;
       };
   inclusive: string[];
   exclusive?: string[];

@@ -334,7 +334,58 @@ export const updateWebsiteSettings = asyncHandler(async (req: Request, res: Resp
     // Transform and validate the incoming data
     const transformedData = transformWebsiteData(req.body, req);
 
-    const updated = await websiteRepository.update(id, transformedData);
+    // Merge with existing data to preserve unchanged fields
+    const mergedData = {
+      ...existingWebsite.toObject(),
+      ...transformedData,
+      // Ensure nested objects are properly merged
+      branding: {
+        ...existingWebsite.branding,
+        ...transformedData.branding,
+      },
+      contact: {
+        ...existingWebsite.contact,
+        ...transformedData.contact,
+        address: {
+          ...existingWebsite.contact?.address,
+          ...transformedData.contact?.address,
+        },
+        emails: {
+          ...existingWebsite.contact?.emails,
+          ...transformedData.contact?.emails,
+        },
+      },
+      socials: {
+        ...existingWebsite.socials,
+        ...transformedData.socials,
+      },
+      seo: {
+        ...existingWebsite.seo,
+        ...transformedData.seo,
+      },
+      booking: {
+        ...existingWebsite.booking,
+        ...transformedData.booking,
+      },
+      rental: {
+        ...existingWebsite.rental,
+        ...transformedData.rental,
+      },
+      business: {
+        ...existingWebsite.business,
+        ...transformedData.business,
+      },
+      analytics: {
+        ...existingWebsite.analytics,
+        ...transformedData.analytics,
+      },
+      flags: {
+        ...existingWebsite.flags,
+        ...transformedData.flags,
+      },
+    };
+
+    const updated = await websiteRepository.update(id, mergedData);
 
     if (!updated) {
       return res.status(500).json({

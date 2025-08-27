@@ -129,32 +129,102 @@ const BookingSidebar = (params: BookingSidebarProps) => {
       <div className="rounded-2xl bg-gradient-to-br from-[#FF6B6B] via-[#FC466B] to-[#C22A54] text-white px-6 py-6 space-y-4">
         <div className="flex justify-between items-start">
           <div className="text-base">
-            <div className="flex items-center gap-2 mb-2">
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <span className="font-medium">5 Travelers</span>
-            </div>
-            <p className="line-through text-sm opacity-70 mb-2">
-              ₹ {5 * Number(params?.pricing?.minFare || 0)}
-            </p>
-            <p className="bg-white text-[#C22A54] rounded-full text-sm font-bold px-3 py-1 w-max">
-              Save 3%
-            </p>
+            {/* Show group pricing if available, otherwise show individual pricing */}
+            {params.groupDiscounts && params.groupDiscounts.length > 0 ? (
+              <>
+                <div className="flex items-center gap-2 mb-2">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <span className="font-medium">Group Discounts</span>
+                </div>
+                {params.groupDiscounts.map((groupDiscount, index) => {
+                  const groupPrice =
+                    groupDiscount.type === "percent"
+                      ? params.pricing?.minFare *
+                        (1 - groupDiscount.value / 100)
+                      : params.pricing?.minFare - groupDiscount.value;
+                  const totalGroupPrice = groupPrice * groupDiscount.minMembers;
+
+                  return (
+                    <div key={index} className="mb-2">
+                      <p className="text-sm opacity-70">
+                        ₹ {Math.round(totalGroupPrice)} for{" "}
+                        {groupDiscount.minMembers} travelers
+                      </p>
+                      <p className="text-xs opacity-80 mb-1">
+                        (₹{Math.round(groupPrice)} per person)
+                      </p>
+                      <p className="bg-white text-[#C22A54] rounded-full text-xs font-bold px-2 py-1 w-max">
+                        Save{" "}
+                        {groupDiscount.type === "percent"
+                          ? `${groupDiscount.value}%`
+                          : `₹${groupDiscount.value}`}
+                      </p>
+                    </div>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-2">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <span className="font-medium">Per Person</span>
+                </div>
+                {params.discount && (
+                  <>
+                    <p className="text-sm opacity-70 mb-2">
+                      ₹ {Math.round(params.pricing?.minFare || 0)}
+                    </p>
+                    <p className="bg-white text-[#C22A54] rounded-full text-sm font-bold px-3 py-1 w-max">
+                      Save{" "}
+                      {params.discount.type === "percent"
+                        ? `${params.discount.value}%`
+                        : `₹${params.discount.value}`}
+                    </p>
+                  </>
+                )}
+              </>
+            )}
           </div>
           <div className="text-right">
             <p className="text-2xl sm:text-3xl font-bold leading-none">
-              ₹ {params.pricing?.minFare}
+              ₹{" "}
+              {params.discount
+                ? params.discount.type === "percent"
+                  ? Math.round(
+                      params.pricing?.minFare *
+                        (1 - params.discount.value / 100)
+                    )
+                  : Math.round(
+                      Math.max(
+                        0,
+                        params.pricing?.minFare - params.discount.value
+                      )
+                    )
+                : params.pricing?.minFare}
             </p>
             <p className="text-sm text-white/80 font-medium">
               + taxes per person
@@ -165,9 +235,10 @@ const BookingSidebar = (params: BookingSidebarProps) => {
           <a
             className="bg-white text-[#C22A54] hover:text-[#691930]/10 font-semibold text-base rounded-xl py-3 flex justify-center items-center gap-2 transition-all duration-300"
             href={`tel:${
-              (typeof params.captainUserId === "object"
-                ? params.captainUserId._id
-                : params.captainUserId) || websiteInfo?.contact?.phone
+              typeof params.captainUserId === "object" &&
+              params.captainUserId?.phone
+                ? params.captainUserId.phone
+                : websiteInfo?.contact?.phone
             }`}
           >
             <svg
@@ -228,7 +299,7 @@ const BookingSidebar = (params: BookingSidebarProps) => {
             <span className="font-medium">Tour Guide</span>
           </p>
           <a
-                          href={`tel:${websiteInfo?.contact?.phone}`}
+            href={`tel:${websiteInfo?.contact?.phone}`}
             className="flex items-center gap-2 text-sm text-primary-500 hover:text-primary-600 transition-colors"
           >
             <svg
@@ -244,7 +315,7 @@ const BookingSidebar = (params: BookingSidebarProps) => {
                 d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
               />
             </svg>
-                            {websiteInfo?.contact?.phone || "Contact us"}
+            {websiteInfo?.contact?.phone || "Contact us"}
           </a>
         </div>
       </div>

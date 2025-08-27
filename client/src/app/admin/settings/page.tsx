@@ -203,6 +203,7 @@ const AdminSettings: React.FC = () => {
             );
             break;
           case "logo":
+          case "branding":
             res = await settingsService.updateBrandingSettings(
               websiteInfo?.id!,
               updated
@@ -214,7 +215,19 @@ const AdminSettings: React.FC = () => {
               updated
             );
             break;
+          case "email":
+            res = await settingsService.updateContactSettings(
+              websiteInfo?.id!,
+              updated
+            );
+            break;
           case "social links":
+            res = await settingsService.updateContactSettings(
+              websiteInfo?.id!,
+              updated
+            );
+            break;
+          case "contact":
             res = await settingsService.updateContactSettings(
               websiteInfo?.id!,
               updated

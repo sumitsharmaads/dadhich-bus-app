@@ -6,6 +6,7 @@ import { isValidObjectId } from "@/utils/common";
 import { useWebsite } from "@/contexts/WebsiteProvider";
 import { tourService } from "@/lib/api/services/tour.service";
 import { Tour } from "@/lib/api/types/tour.types";
+import { INCLUSIVE_FEATURES } from "@/constants/tourConstants";
 
 import AboutTourSection from "@/components/tour/AboutTourSection";
 import BookingSidebar from "@/components/tour/BookingSidebar";
@@ -23,44 +24,71 @@ import DetailedPricingSection from "@/components/tour/DetailedPricingSection";
 import AdditionalInfoSection from "@/components/tour/AdditionalInfoSection";
 import { Typography, Button, Container, CircularProgress } from "@mui/material";
 
-// Enhanced inclusions with better icons and descriptions
-const inclusions = [
-  {
-    label: "Flight",
-    icon: "✈️",
-    description: "Air travel included",
-    color: "#3B82F6",
-    highlight: false,
-  },
-  {
-    label: "Transfer",
-    icon: "🚗",
-    description: "Ground transportation",
-    color: "#10B981",
-    highlight: false,
-  },
-  {
-    label: "Breakfast",
-    icon: "🍳",
-    description: "Daily breakfast",
-    color: "#F59E0B",
-    highlight: false,
-  },
-  {
-    label: "Hotel",
-    icon: "🏨",
-    description: "Accommodation included",
-    color: "#8B5CF6",
-    highlight: false,
-  },
-  {
-    label: "Sightseeing",
-    icon: "🗺️",
-    description: "Guided tours",
-    color: "#EF4444",
-    highlight: false,
-  },
-];
+// Helper functions for inclusions
+const getInclusionIcon = (item: string): string => {
+  const iconMap: Record<string, string> = {
+    // Accommodation & Meals
+    accommodation: "🏨",
+    "meals (breakfast)": "🍳",
+    "meals (lunch)": "🍽️",
+    "meals (dinner)": "🍴",
+    "all meals": "🍽️",
+
+    // Transportation
+    transportation: "🚌",
+    "airport transfer": "✈️",
+    "local transport": "🚗",
+    "boat transfer": "🚢",
+    "flight tickets": "✈️",
+    "train tickets": "🚂",
+    "bus tickets": "🚌",
+
+    // Services
+    "guide services": "👨‍💼",
+    "entrance fees": "🎫",
+    activities: "🎯",
+    "equipment rental": "🎒",
+    insurance: "🛡️",
+    "visa assistance": "📋",
+
+    // Amenities
+    "welcome drink": "🥤",
+    snacks: "🍿",
+    "water bottles": "💧",
+    wifi: "📶",
+    "air conditioning": "❄️",
+    "room service": "🛎️",
+    "laundry service": "👕",
+    "spa access": "💆",
+    "pool access": "🏊",
+    "gym access": "💪",
+    parking: "🅿️",
+    "pickup & drop": "🚐",
+  };
+
+  const key = item.toLowerCase();
+  return iconMap[key] || "✅";
+};
+
+const getInclusionDescription = (item: string): string => {
+  return `${item} included`;
+};
+
+const getInclusionColor = (index: number): string => {
+  const colors = [
+    "#3B82F6",
+    "#10B981",
+    "#F59E0B",
+    "#8B5CF6",
+    "#EF4444",
+    "#06B6D4",
+    "#84CC16",
+    "#F97316",
+    "#EC4899",
+    "#6366F1",
+  ];
+  return colors[index % colors.length];
+};
 
 // Brand Colors
 const BRAND_COLOR = "#C22A54";
@@ -79,10 +107,13 @@ const TourDetailPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const inclusiveData = useMemo(() => {
-    if (!data?.inclusive) return inclusions;
-    return inclusions.map((inclusive) => ({
-      ...inclusive,
-      highlight: data.inclusive.includes(inclusive.label),
+    if (!data?.inclusive || !Array.isArray(data.inclusive)) return [];
+    return data.inclusive.map((item, index) => ({
+      label: item,
+      icon: getInclusionIcon(item),
+      description: getInclusionDescription(item),
+      color: getInclusionColor(index),
+      highlight: true,
     }));
   }, [data?.inclusive]);
 
@@ -165,10 +196,9 @@ const TourDetailPage: React.FC = () => {
 
   const handleWhatsApp = () => {
     const phone =
-      websiteInfo?.contact?.phone ||
       (typeof data?.captainUserId === "object"
-        ? data.captainUserId._id
-        : data?.captainUserId);
+        ? data?.captainUserId?.phone
+        : websiteInfo?.contact?.phone) || websiteInfo?.contact?.phone;
     if (!phone) return;
     const message = `Hi! I'm interested in the tour: ${
       data?.tourName || "this tour"

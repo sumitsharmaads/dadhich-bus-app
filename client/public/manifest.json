@@ -31,13 +31,13 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/images/icon-192x192.png",
+      "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/images/icon-512x512.png",
+      "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -45,21 +45,21 @@
   ],
   "screenshots": [
     {
-      "src": "/images/screenshot-home.png",
+      "src": "/images/logo.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Homepage of Dadhich Bus Services"
     },
     {
-      "src": "/images/screenshot-services.png",
+      "src": "/images/logo.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Our Services"
     },
     {
-      "src": "/images/screenshot-mobile.png",
+      "src": "/images/logo.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
@@ -74,8 +74,8 @@
       "url": "/services",
       "icons": [
         {
-          "src": "/images/icon-booking.png",
-          "sizes": "96x96"
+          "src": "/favicon-32x32.png",
+          "sizes": "32x32"
         }
       ]
     },
@@ -86,8 +86,8 @@
       "url": "/tours",
       "icons": [
         {
-          "src": "/images/icon-tours.png",
-          "sizes": "96x96"
+          "src": "/favicon-32x32.png",
+          "sizes": "32x32"
         }
       ]
     },
@@ -98,8 +98,8 @@
       "url": "/contact",
       "icons": [
         {
-          "src": "/images/icon-contact.png",
-          "sizes": "96x96"
+          "src": "/favicon-32x32.png",
+          "sizes": "32x32"
         }
       ]
     }
