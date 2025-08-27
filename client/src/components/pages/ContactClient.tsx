@@ -241,10 +241,10 @@ const ContactClient = () => {
                       Phone
                     </h3>
                     <a
-                      href={`tel:${websiteInfo?.phone}`}
+                      href={`tel:${websiteInfo?.contact?.phone}`}
                       className="text-text-secondary hover:text-primary-500 transition-colors"
                     >
-                      {websiteInfo?.phone}
+                      {websiteInfo?.contact?.phone}
                     </a>
                   </div>
                 </div>
@@ -258,10 +258,10 @@ const ContactClient = () => {
                       Email
                     </h3>
                     <a
-                      href={`mailto:${websiteInfo?.emails?.supportEmail}`}
+                      href={`mailto:${websiteInfo?.contact?.emails?.supportEmail}`}
                       className="text-text-secondary hover:text-primary-500 transition-colors"
                     >
-                      {websiteInfo?.emails?.supportEmail}
+                      {websiteInfo?.contact?.emails?.supportEmail}
                     </a>
                   </div>
                 </div>

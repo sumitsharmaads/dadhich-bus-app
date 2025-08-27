@@ -1,6 +1,7 @@
 export type AddressType = {
   city: string;
   state: string;
+  country?: string; // Made optional to match model
   pincode: string;
   address1: string;
   address2: string;
@@ -9,7 +10,7 @@ export type AddressType = {
 export type WebsiteInfoType = {
   id: string;
   branding: {
-    brandName: string;
+    brandName: string; // Only this is mandatory
     tagline?: string;
     logo?: { url?: string; id?: string };
     preLogo?: { url?: string; id?: string };
@@ -56,8 +57,8 @@ export type WebsiteInfoType = {
     brochureUrl?: string;
   };
   domains: {
-    primary: string; // unique canonical host
-    aliases?: string[]; // other accepted hosts
+    primary: string; // Only this is mandatory
+    aliases?: string[];
   };
   analytics?: {
     googleAnalyticsId?: string;
@@ -66,24 +67,8 @@ export type WebsiteInfoType = {
   flags?: {
     isMaintenanceMode?: boolean;
   };
-  createdAt?: Date;
-  updatedAt?: Date;
-
-  // Legacy fields for backward compatibility
-  phone?: string;
-  logo?: { id: string; url: string } | null;
-  preLogo?: { id: string; url: string } | null;
-  brandname?: string;
-  contactAddress?: AddressType;
-  socialLinks?: {
-    facebook: string;
-    instagram: string;
-    twitter: string;
-    phone: string;
-  } | null;
-  emails?: {
-    supportEmail: string;
-  } | null;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export interface WebsiteContextType {

@@ -180,7 +180,7 @@ const TourHeroSection: React.FC<TourHeroSectionProps> = ({
             <Tooltip title="Call us" placement="top">
               <a
                 href={`tel:${
-                  websiteInfo?.phone ||
+                  websiteInfo?.contact?.phone ||
                   (typeof data?.captainUserId === "object"
                     ? data.captainUserId._id
                     : data?.captainUserId)
@@ -283,7 +283,7 @@ const TourHeroSection: React.FC<TourHeroSectionProps> = ({
           <Tooltip title="Call us" placement="top">
             <a
               href={`tel:${
-                websiteInfo?.phone ||
+                websiteInfo?.contact?.phone ||
                 (typeof data?.captainUserId === "object"
                   ? data.captainUserId._id
                   : data?.captainUserId)

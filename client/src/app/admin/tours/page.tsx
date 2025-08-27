@@ -552,62 +552,6 @@ const AdminToursPage: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Debug Section - Remove this after testing */}
-      <Box sx={{ mb: 2, p: 2, bgcolor: "grey.100", borderRadius: 1 }}>
-        <Typography variant="h6" sx={{ mb: 1 }}>
-          🔍 Debug Info
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          <strong>Current Filters:</strong> {JSON.stringify(filters, null, 2)}
-        </Typography>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          <strong>Total Tours:</strong> {totalTours} |{" "}
-          <strong>Current Page:</strong> {currentPage} |{" "}
-          <strong>Total Pages:</strong> {totalPages}
-        </Typography>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => {
-            const allFilters = {
-              ...filters,
-              status: "all" as const,
-              search: "",
-              sourceCity: "",
-              destinationCity: "",
-            };
-            setFilters(allFilters);
-          }}
-          sx={{ mr: 1 }}
-        >
-          Reset All Filters
-        </Button>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => {
-            const draftFilters = { ...filters, status: "draft" as const };
-            setFilters(draftFilters);
-          }}
-          sx={{ mr: 1 }}
-        >
-          Show Draft Tours Only
-        </Button>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => {
-            const publishedFilters = {
-              ...filters,
-              status: "published" as const,
-            };
-            setFilters(publishedFilters);
-          }}
-        >
-          Show Published Tours Only
-        </Button>
-      </Box>
-
       {/* Stats Cards */}
       {stats && (
         <Grid container spacing={3} sx={{ mb: 3 }}>

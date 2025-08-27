@@ -106,7 +106,7 @@ const AboutUsClient = () => {
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <a
-                href={`tel:${websiteInfo?.phone || "+919511547154"}`}
+                href={`tel:${websiteInfo?.contact?.phone || "+919511547154"}`}
                 className="bg-primary-500 hover:bg-primary-600 transition-colors duration-300 text-white font-semibold px-6 py-3 rounded-full shadow-md"
               >
                 📞 Call Us

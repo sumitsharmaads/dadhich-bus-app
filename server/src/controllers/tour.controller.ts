@@ -3,14 +3,49 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { sendCreated, sendNoContent, sendSuccess } from '../utils/apiResponse';
 import { tourRepository } from '../repositories/tour.repository';
 
+/**
+ * Transform tour data to handle empty strings for ObjectId fields
+ * Converts empty strings to null for busId, captainUserId, etc.
+ */
+function transformTourData(data: any): any {
+  const transformed = { ...data };
+
+  // Handle ObjectId fields that should be null if empty string
+  const objectIdFields = ['busId', 'captainUserId'];
+  objectIdFields.forEach((field) => {
+    if (transformed[field] === '' || transformed[field] === undefined) {
+      transformed[field] = null;
+    }
+  });
+
+  // Handle nested ObjectId fields in arrays
+  if (transformed.sources) {
+    transformed.sources = transformed.sources.map((source: any) => ({
+      ...source,
+      cityId: source.cityId || null,
+    }));
+  }
+
+  if (transformed.places) {
+    transformed.places = transformed.places.map((place: any) => ({
+      ...place,
+      cityId: place.cityId || null,
+    }));
+  }
+
+  return transformed;
+}
+
 // Admin
 export const createTour = asyncHandler(async (req: Request, res: Response) => {
-  const created = await tourRepository.create(req.body);
+  const transformedData = transformTourData(req.body);
+  const created = await tourRepository.create(transformedData);
   sendCreated(res, created, 'Tour created');
 });
 
 export const updateTour = asyncHandler(async (req: Request, res: Response) => {
-  const updated = await tourRepository.update(req.params.id, req.body);
+  const transformedData = transformTourData(req.body);
+  const updated = await tourRepository.update(req.params.id, transformedData);
   sendSuccess(res, updated, 'Tour updated');
 });
 

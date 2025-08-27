@@ -5,14 +5,16 @@ import { WebsiteInfoType } from "@/types";
 import { Box, Button, Grid, TextField } from "@mui/material";
 
 const SocialMediaSettings: React.FC<{
-  socialLinks: WebsiteInfoType["socialLinks"];
+  socialLinks: WebsiteInfoType["socials"];
   onSave: (updated: Partial<WebsiteInfoType>) => void;
 }> = ({ socialLinks, onSave }) => {
   const [links, setLinks] = useState({
     facebook: "",
     instagram: "",
     twitter: "",
-    phone: "",
+    youtube: "",
+    whatsapp: "",
+    linkedin: "",
   });
 
   useEffect(() => {
@@ -20,7 +22,9 @@ const SocialMediaSettings: React.FC<{
       facebook: socialLinks?.facebook || "",
       instagram: socialLinks?.instagram || "",
       twitter: socialLinks?.twitter || "",
-      phone: socialLinks?.phone || "",
+      youtube: socialLinks?.youtube || "",
+      whatsapp: socialLinks?.whatsapp || "",
+      linkedin: socialLinks?.linkedin || "",
     });
   }, [socialLinks]);
 
@@ -64,9 +68,29 @@ const SocialMediaSettings: React.FC<{
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Phone"
-            name="phone"
-            value={links.phone}
+            label="YouTube"
+            name="youtube"
+            value={links.youtube}
+            onChange={handleChange}
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="WhatsApp"
+            name="whatsapp"
+            value={links.whatsapp}
+            onChange={handleChange}
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="LinkedIn"
+            name="linkedin"
+            value={links.linkedin}
             onChange={handleChange}
             fullWidth
             size="small"
@@ -76,7 +100,7 @@ const SocialMediaSettings: React.FC<{
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <Button
           variant="contained"
-          onClick={() => onSave({ socialLinks: links } as any)}
+          onClick={() => onSave({ socials: links } as any)}
         >
           Save
         </Button>

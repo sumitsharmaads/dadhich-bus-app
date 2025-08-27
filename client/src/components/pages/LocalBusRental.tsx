@@ -720,13 +720,13 @@ const LocalBusRental = () => {
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link
-              href={`tel:${websiteInfo?.phone}`}
+              href={`tel:${websiteInfo?.contact?.phone}`}
               className="group bg-white text-primary-600 hover:bg-neutral-50 px-10 py-5 rounded-full font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center gap-3 min-w-[280px] justify-center"
             >
               <div className="w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center">
                 <Phone className="text-white text-sm" />
               </div>
-              Call {websiteInfo?.phone}
+              Call {websiteInfo?.contact?.phone}
             </Link>
 
             <Link

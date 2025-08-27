@@ -9,12 +9,14 @@ const LogoSettings: React.FC<{
   settings: WebsiteInfoType;
   onSave: (updated: Partial<WebsiteInfoType>) => void;
 }> = ({ settings, onSave }) => {
-  const [logo, setLogo] = React.useState(settings.logo || { id: "", url: "" });
+  const [logo, setLogo] = React.useState(
+    settings.branding?.logo || { id: "", url: "" }
+  );
   const [preLogo, setPreLogo] = React.useState(
-    settings.preLogo || { id: "", url: "" }
+    settings.branding?.preLogo || { id: "", url: "" }
   );
 
-  const save = () => onSave({ logo, preLogo } as any);
+  const save = () => onSave({ branding: { logo, preLogo } } as any);
 
   const handleUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -54,9 +56,10 @@ const LogoSettings: React.FC<{
   };
 
   useEffect(() => {
-    setLogo(settings.logo || { id: "", url: "" });
-    setPreLogo(settings.preLogo || { id: "", url: "" });
-  }, [settings]);
+    setLogo(settings.branding?.logo || { id: "", url: "" });
+    setPreLogo(settings.branding?.preLogo || { id: "", url: "" });
+  }, [settings.branding]);
+
   return (
     <Box>
       <Stack spacing={2}>

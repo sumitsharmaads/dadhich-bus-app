@@ -124,11 +124,6 @@ export const getWebsiteLogo = (
     return websiteInfo.branding.logo.url;
   }
 
-  // Fallback to legacy structure
-  if (websiteInfo.logo?.url) {
-    return websiteInfo.logo.url;
-  }
-
   return null;
 };
 
@@ -145,11 +140,6 @@ export const getWebsiteBrandName = (
     return websiteInfo.branding.brandName;
   }
 
-  // Fallback to legacy structure
-  if (websiteInfo.brandname) {
-    return websiteInfo.brandname;
-  }
-
   return "Website";
 };
 
@@ -164,11 +154,6 @@ export const getWebsitePhone = (
   // Try new structure first
   if (websiteInfo.contact?.phone) {
     return websiteInfo.contact.phone;
-  }
-
-  // Fallback to legacy structure
-  if (websiteInfo.phone) {
-    return websiteInfo.phone;
   }
 
   return null;
@@ -188,8 +173,8 @@ export const getWebsiteSupportEmail = (
   }
 
   // Fallback to legacy structure
-  if (websiteInfo.emails?.supportEmail) {
-    return websiteInfo.emails.supportEmail;
+  if (websiteInfo.contact?.emails?.supportEmail) {
+    return websiteInfo.contact.emails.supportEmail;
   }
 
   return null;
@@ -226,7 +211,7 @@ export const getWebsiteAddress = (
 ): string => {
   if (!websiteInfo) return "";
 
-  const address = websiteInfo.contact?.address || websiteInfo.contactAddress;
+  const address = websiteInfo.contact?.address;
   if (!address) return "";
 
   const parts = [
@@ -234,6 +219,7 @@ export const getWebsiteAddress = (
     address.address2,
     address.city,
     address.state,
+    address.country,
     address.pincode,
   ].filter(Boolean);
 
@@ -247,14 +233,9 @@ export const getWebsiteSocialLinks = (websiteInfo: WebsiteInfoType | null) => {
   if (!websiteInfo) return {};
 
   return {
-    facebook:
-      websiteInfo.socials?.facebook || websiteInfo.socialLinks?.facebook || "",
-    instagram:
-      websiteInfo.socials?.instagram ||
-      websiteInfo.socialLinks?.instagram ||
-      "",
-    twitter:
-      websiteInfo.socials?.twitter || websiteInfo.socialLinks?.twitter || "",
+    facebook: websiteInfo.socials?.facebook || "",
+    instagram: websiteInfo.socials?.instagram || "",
+    twitter: websiteInfo.socials?.twitter || "",
     youtube: websiteInfo.socials?.youtube || "",
     whatsapp: websiteInfo.socials?.whatsapp || "",
     linkedin: websiteInfo.socials?.linkedin || "",

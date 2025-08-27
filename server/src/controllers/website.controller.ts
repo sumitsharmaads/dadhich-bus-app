@@ -6,39 +6,10 @@ import { WebsiteDocument } from '../models/website.model';
 
 /**
  * Transform and validate website data before saving
- * This ensures backward compatibility and data consistency
+ * This ensures data consistency with the new model structure
  */
 const transformWebsiteData = (data: any, _req?: Request): Partial<WebsiteDocument> => {
   const transformed: any = { ...data };
-
-  // Handle legacy field mappings for backward compatibility
-  if (data.phone) {
-    transformed.contact = { ...transformed.contact, phone: data.phone };
-  }
-
-  if (data.logo) {
-    transformed.branding = { ...transformed.branding, logo: data.logo };
-  }
-
-  if (data.preLogo) {
-    transformed.branding = { ...transformed.branding, preLogo: data.preLogo };
-  }
-
-  if (data.brandname) {
-    transformed.branding = { ...transformed.branding, brandName: data.brandname };
-  }
-
-  if (data.contactAddress) {
-    transformed.contact = { ...transformed.contact, address: data.contactAddress };
-  }
-
-  if (data.socialLinks) {
-    transformed.socials = data.socialLinks;
-  }
-
-  if (data.emails) {
-    transformed.contact = { ...transformed.contact, emails: data.emails };
-  }
 
   // Ensure required fields are present
   if (!transformed.branding?.brandName) {
@@ -47,16 +18,6 @@ const transformWebsiteData = (data: any, _req?: Request): Partial<WebsiteDocumen
       brandName: 'Dadhich Bus Service', // Default brand name
     };
   }
-
-  // if (!transformed.domains?.primary) {
-  //   // Automatically detect primary domain from request
-  //   const host =
-  //     req?.get('host') || req?.get('x-forwarded-host') || req?.get('x-host') || 'localhost:3000';
-  //   transformed.domains = {
-  //     primary: host,
-  //     aliases: transformed.domains?.aliases || [],
-  //   };
-  // }
 
   return transformed;
 };
@@ -80,16 +41,6 @@ const transformResponseData = (website: WebsiteDocument | null): any => {
     domains: website.domains,
     analytics: website.analytics,
     flags: website.flags,
-
-    // Legacy fields for backward compatibility
-    phone: website.phone || website.contact?.phone,
-    logo: website.logo || website.branding?.logo,
-    preLogo: website.preLogo || website.branding?.preLogo,
-    brandname: website.brandname || website.branding?.brandName,
-    contactAddress: website.contactAddress || website.contact?.address,
-    socialLinks: website.socialLinks || website.socials,
-    emails: website.emails || website.contact?.emails,
-
     createdAt: website.createdAt,
     updatedAt: website.updatedAt,
   };

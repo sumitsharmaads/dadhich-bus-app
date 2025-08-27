@@ -15,6 +15,7 @@ export interface WebsiteDocument extends Document {
       address2?: string;
       city?: string;
       state?: string;
+      country?: string;
       pincode?: string;
     };
   };
@@ -65,30 +66,6 @@ export interface WebsiteDocument extends Document {
   flags?: {
     isMaintenanceMode?: boolean;
   };
-
-  // Legacy fields for backward compatibility
-  phone?: string;
-  logo?: { id: string; url: string } | null;
-  preLogo?: { id: string; url: string } | null;
-  brandname?: string;
-  contactAddress?: {
-    address1?: string;
-    address2?: string;
-    city?: string;
-    state?: string;
-    pincode?: string;
-  };
-  socialLinks?: {
-    facebook: string;
-    instagram: string;
-    twitter: string;
-    phone: string;
-  } | null;
-  emails?: {
-    supportEmail: string;
-    infoEmails?: string[];
-  } | null;
-
   createdAt: Date;
   updatedAt: Date;
 }
@@ -163,29 +140,6 @@ const WebsiteSchema = new Schema<WebsiteDocument, WebsiteModel>(
     },
     flags: {
       isMaintenanceMode: { type: Boolean, default: false },
-    },
-
-    // Legacy fields for backward compatibility
-    phone: String,
-    logo: { id: String, url: String },
-    preLogo: { id: String, url: String },
-    brandname: String,
-    contactAddress: {
-      address1: String,
-      address2: String,
-      city: String,
-      state: String,
-      pincode: String,
-    },
-    socialLinks: {
-      facebook: String,
-      instagram: String,
-      twitter: String,
-      phone: String,
-    },
-    emails: {
-      supportEmail: String,
-      infoEmails: { type: [String], default: [] },
     },
   },
   { timestamps: true },

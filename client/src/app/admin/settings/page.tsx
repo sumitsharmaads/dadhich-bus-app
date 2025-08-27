@@ -41,9 +41,7 @@ import { WebsiteInfoType } from "@/types";
 import { settingsService } from "@/lib/api/services/settings.service";
 import { successPopup, errorPopup } from "@/utils/errors/alerts";
 
-type WebsiteSettings = Omit<WebsiteInfoType, "id"> & {
-  emails: { infoEmails: string[]; supportEmail: string } | null;
-};
+type WebsiteSettings = Omit<WebsiteInfoType, "id">;
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,19 +70,6 @@ function TabPanel(props: TabPanelProps) {
 const AdminSettings: React.FC = () => {
   const { websiteInfo, refreshWebsiteInfo } = useWebsite();
   const [settings, setSettings] = useState<WebsiteSettings>({
-    logo: null,
-    preLogo: null,
-    emails: null,
-    contactAddress: {
-      city: "",
-      state: "",
-      pincode: "",
-      address1: "",
-      address2: "",
-    },
-    phone: "",
-    brandname: "",
-    socialLinks: null,
     branding: {
       brandName: "",
       tagline: "",
@@ -99,6 +84,7 @@ const AdminSettings: React.FC = () => {
         address2: "",
         city: "",
         state: "",
+        country: "", // Added country field
         pincode: "",
       },
     },
@@ -135,6 +121,9 @@ const AdminSettings: React.FC = () => {
       registrationNumber: "",
       supportHours: "",
     },
+    files: {
+      brochureUrl: "",
+    },
     domains: {
       primary: "",
       aliases: [],
@@ -146,6 +135,8 @@ const AdminSettings: React.FC = () => {
     flags: {
       isMaintenanceMode: false,
     },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   const info = useMemo(() => settings, [settings]);
@@ -543,7 +534,7 @@ const AdminSettings: React.FC = () => {
                 Contact Information
               </Typography>
               <EmailSettings
-                emails={info.emails as any}
+                emails={info.contact.emails as any}
                 onSave={(data) => handleSaveChanges(data as any, "email")}
               />
               <Divider sx={{ my: 3 }} />
@@ -551,7 +542,7 @@ const AdminSettings: React.FC = () => {
                 Social Media Links
               </Typography>
               <SocialMediaSettings
-                socialLinks={info.socialLinks as any}
+                socialLinks={info.socials as any}
                 onSave={(data) =>
                   handleSaveChanges(data as any, "social links")
                 }

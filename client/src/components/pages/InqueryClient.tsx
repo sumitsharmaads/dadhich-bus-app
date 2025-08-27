@@ -262,11 +262,11 @@ const InqueryClient = () => {
                       Call us directly for urgent inquiries
                     </p>
                     <a
-                      href={`tel:${websiteInfo?.phone}`}
+                      href={`tel:${websiteInfo?.contact?.phone}`}
                       className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
                     >
                       <span>📞</span>
-                      Call {websiteInfo?.phone}
+                      Call {websiteInfo?.contact?.phone}
                     </a>
                   </div>
                 </div>

@@ -165,7 +165,7 @@ const TourDetailPage: React.FC = () => {
 
   const handleWhatsApp = () => {
     const phone =
-      websiteInfo?.phone ||
+      websiteInfo?.contact?.phone ||
       (typeof data?.captainUserId === "object"
         ? data.captainUserId._id
         : data?.captainUserId);

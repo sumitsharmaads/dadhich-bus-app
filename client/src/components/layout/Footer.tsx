@@ -43,7 +43,7 @@ interface WebsiteInfo {
   emails?: {
     supportEmail?: string;
   };
-  socialLinks?: {
+  socials?: {
     phone?: string;
     facebook?: string;
     instagram?: string;
@@ -70,14 +70,14 @@ export const Footer: React.FC = () => {
             About Us
           </h4>
           <p className="text-gray-300 leading-relaxed max-w-md mb-6">
-            {websiteInfo?.brandname || "Dadhich Bus Service"} offers comfortable
-            bus rentals and curated tour experiences across India. Safe rides,
-            friendly support, and memorable journeys.
+            {websiteInfo?.branding?.brandName || "Dadhich Bus Service"} offers
+            comfortable bus rentals and curated tour experiences across India.
+            Safe rides, friendly support, and memorable journeys.
           </p>
           <div className="flex space-x-4" aria-label="Social links">
             <a
               href={`https://wa.me/${
-                websiteInfo?.socialLinks?.phone || "your-phone-number"
+                websiteInfo?.contact?.phone || "your-phone-number"
               }`}
               className="p-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-xl"
               aria-label="WhatsApp"
@@ -87,9 +87,7 @@ export const Footer: React.FC = () => {
               <WhatsAppIcon className="h-5 w-5" />
             </a>
             <a
-              href={
-                websiteInfo?.socialLinks?.facebook || "https://facebook.com"
-              }
+              href={websiteInfo?.socials?.facebook || "https://facebook.com"}
               className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-xl"
               aria-label="Facebook"
               target="_blank"
@@ -98,9 +96,7 @@ export const Footer: React.FC = () => {
               <FacebookIcon className="h-5 w-5" />
             </a>
             <a
-              href={
-                websiteInfo?.socialLinks?.instagram || "https://instagram.com"
-              }
+              href={websiteInfo?.socials?.instagram || "https://instagram.com"}
               className="p-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-xl hover:from-pink-600 hover:to-purple-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pink-400 transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-xl"
               aria-label="Instagram"
               target="_blank"
@@ -226,7 +222,7 @@ export const Footer: React.FC = () => {
           </h4>
           <div className="space-y-4">
             <p className="font-semibold text-white text-lg">
-              {websiteInfo?.brandname || "Dadhich Bus Service"}
+              {websiteInfo?.branding?.brandName || "Dadhich Bus Service"}
             </p>
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-[#C22A54] to-[#A82046] rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
@@ -243,10 +239,10 @@ export const Footer: React.FC = () => {
                 </svg>
               </div>
               <p className="text-gray-300">
-                {websiteInfo?.contactAddress?.address1 || "123 Travel Street"},{" "}
-                {websiteInfo?.contactAddress?.city || "Tourism City"},{" "}
-                {websiteInfo?.contactAddress?.state || "Travel State"} -{" "}
-                {websiteInfo?.contactAddress?.pincode || "125050"}
+                {websiteInfo?.contact?.address?.address1 || "123 Travel Street"}
+                , {websiteInfo?.contact?.address?.city || "Tourism City"},{" "}
+                {websiteInfo?.contact?.address?.state || "Travel State"} -{" "}
+                {websiteInfo?.contact?.address?.pincode || "125050"}
               </p>
             </div>
             <div className="flex items-center space-x-3">
@@ -254,10 +250,10 @@ export const Footer: React.FC = () => {
                 <PhoneIcon className="w-4 h-4 text-white" />
               </div>
               <a
-                href={`tel:${websiteInfo?.phone || "+919479600044"}`}
+                href={`tel:${websiteInfo?.contact?.phone || "+919479600044"}`}
                 className="text-gray-300 hover:text-white transition-colors duration-300"
               >
-                {websiteInfo?.phone || "+91 94796 00044"}
+                {websiteInfo?.contact?.phone || "+91 94796 00044"}
               </a>
             </div>
             <div className="flex items-center space-x-3">
@@ -266,11 +262,13 @@ export const Footer: React.FC = () => {
               </div>
               <a
                 href={`mailto:${
-                  websiteInfo?.emails?.supportEmail || "info@traveltourism.com"
+                  websiteInfo?.contact?.emails?.supportEmail ||
+                  "info@traveltourism.com"
                 }`}
                 className="text-gray-300 hover:text-white transition-colors duration-300"
               >
-                {websiteInfo?.emails?.supportEmail || "info@traveltourism.com"}
+                {websiteInfo?.contact?.emails?.supportEmail ||
+                  "info@traveltourism.com"}
               </a>
             </div>
           </div>
@@ -286,8 +284,8 @@ export const Footer: React.FC = () => {
             </div>
             <p className="text-gray-400">
               &copy; {new Date().getFullYear()}{" "}
-              {websiteInfo?.brandname || "Dadhich Bus Service"}. All rights
-              reserved.
+              {websiteInfo?.branding?.brandName || "Dadhich Bus Service"}. All
+              rights reserved.
             </p>
           </div>
           <div className="flex space-x-6">

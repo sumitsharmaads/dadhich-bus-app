@@ -9,11 +9,12 @@ const GeneralSettings: React.FC<{
   onSave: (updated: Partial<WebsiteInfoType>) => void;
 }> = ({ settings, onSave }) => {
   const [form, setForm] = useState({
-    brandname: "",
+    brandName: "",
     phone: "",
-    contactAddress: {
+    address: {
       city: "",
       state: "",
+      country: "",
       pincode: "",
       address1: "",
       address2: "",
@@ -23,14 +24,15 @@ const GeneralSettings: React.FC<{
   useEffect(() => {
     if (settings) {
       setForm({
-        brandname: settings.brandname || "",
-        phone: settings.phone || "",
-        contactAddress: settings.contactAddress || {
-          city: "",
-          state: "",
-          pincode: "",
-          address1: "",
-          address2: "",
+        brandName: settings.branding?.brandName || "",
+        phone: settings.contact?.phone || "",
+        address: {
+          city: settings.contact?.address?.city ?? "",
+          state: settings.contact?.address?.state ?? "",
+          country: settings.contact?.address?.country ?? "",
+          pincode: settings.contact?.address?.pincode ?? "",
+          address1: settings.contact?.address?.address1 ?? "",
+          address2: settings.contact?.address?.address2 ?? "",
         },
       });
     }
@@ -38,18 +40,22 @@ const GeneralSettings: React.FC<{
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name.startsWith("contactAddress.")) {
-      const key = name.split(".")[1] as keyof typeof form.contactAddress;
+    if (name.startsWith("address.")) {
+      const key = name.split(".")[1] as keyof typeof form.address;
       setForm((prev) => ({
         ...prev,
-        contactAddress: { ...prev.contactAddress, [key]: value },
+        address: { ...prev.address, [key]: value },
       }));
     } else {
       setForm((prev) => ({ ...prev, [name]: value } as any));
     }
   };
 
-  const save = () => onSave(form as any);
+  const save = () =>
+    onSave({
+      branding: { brandName: form.brandName },
+      contact: { phone: form.phone, address: form.address },
+    } as any);
 
   return (
     <Box>
@@ -57,8 +63,8 @@ const GeneralSettings: React.FC<{
         <Grid item xs={12} sm={6}>
           <TextField
             label="Brand Name"
-            name="brandname"
-            value={form.brandname}
+            name="brandName"
+            value={form.brandName}
             onChange={handleChange}
             fullWidth
             size="small"
@@ -77,8 +83,8 @@ const GeneralSettings: React.FC<{
         <Grid item xs={12} sm={6}>
           <TextField
             label="City"
-            name="contactAddress.city"
-            value={form.contactAddress.city}
+            name="address.city"
+            value={form.address.city}
             onChange={handleChange}
             fullWidth
             size="small"
@@ -87,8 +93,18 @@ const GeneralSettings: React.FC<{
         <Grid item xs={12} sm={6}>
           <TextField
             label="State"
-            name="contactAddress.state"
-            value={form.contactAddress.state}
+            name="address.state"
+            value={form.address.state}
+            onChange={handleChange}
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Country"
+            name="address.country"
+            value={form.address.country}
             onChange={handleChange}
             fullWidth
             size="small"
@@ -97,18 +113,18 @@ const GeneralSettings: React.FC<{
         <Grid item xs={12} sm={6}>
           <TextField
             label="Pincode"
-            name="contactAddress.pincode"
-            value={form.contactAddress.pincode}
+            name="address.pincode"
+            value={form.address.pincode}
             onChange={handleChange}
             fullWidth
             size="small"
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
           <TextField
             label="Address Line 1"
-            name="contactAddress.address1"
-            value={form.contactAddress.address1}
+            name="address.address1"
+            value={form.address.address1}
             onChange={handleChange}
             fullWidth
             size="small"
@@ -117,8 +133,8 @@ const GeneralSettings: React.FC<{
         <Grid item xs={12}>
           <TextField
             label="Address Line 2"
-            name="contactAddress.address2"
-            value={form.contactAddress.address2}
+            name="address.address2"
+            value={form.address.address2}
             onChange={handleChange}
             fullWidth
             size="small"

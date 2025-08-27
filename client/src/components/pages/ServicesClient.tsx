@@ -122,7 +122,7 @@ const ServicesClient = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href={`tel:${websiteInfo?.phone}`}
+              href={`tel:${websiteInfo?.contact?.phone}`}
               className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               📞 Call Now
@@ -314,7 +314,7 @@ const ServicesClient = () => {
               {
                 step: "01",
                 title: "Contact Us",
-                description: `Call us at ${websiteInfo?.phone} or fill our online booking form`,
+                description: `Call us at ${websiteInfo?.contact?.phone} or fill our online booking form`,
               },
               {
                 step: "02",
@@ -381,13 +381,13 @@ const ServicesClient = () => {
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link
-              href={`tel:${websiteInfo?.phone}`}
+                              href={`tel:${websiteInfo?.contact?.phone}`}
               className="group bg-white text-primary-600 hover:bg-neutral-50 px-10 py-5 rounded-full font-semibold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center gap-3 min-w-[280px] justify-center"
             >
               <div className="w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center">
                 <Phone className="text-white text-sm" />
               </div>
-              Call {websiteInfo?.phone}
+                              Call {websiteInfo?.contact?.phone}
             </Link>
 
             <Link

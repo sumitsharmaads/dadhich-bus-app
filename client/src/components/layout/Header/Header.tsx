@@ -84,7 +84,7 @@ export const Header: React.FC = () => {
         <div className="w-[50px] md:w-[60px] flex items-center">
           <Link href={PublicRoutes.HOME}>
             <Image
-              src={websiteInfo?.logo?.url || "/images/logo.png"}
+              src={websiteInfo?.branding?.logo?.url || "/images/logo.png"}
               alt="Logo"
               width={60}
               height={52}

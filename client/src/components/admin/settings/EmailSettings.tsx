@@ -7,7 +7,7 @@ import { Box, Button, Chip, Stack, TextField, Typography } from "@mui/material";
 type Emails = {
   infoEmails: string[];
   supportEmail: string;
-} | null;
+};
 
 const EmailSettings: React.FC<{
   emails: Emails;
@@ -46,7 +46,7 @@ const EmailSettings: React.FC<{
   };
 
   const save = () => {
-    onSave({ emails: temp } as any);
+    onSave({ contact: { emails: temp } } as any);
     setEditing(false);
   };
 

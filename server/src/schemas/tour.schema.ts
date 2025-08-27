@@ -2,18 +2,18 @@ import { z } from 'zod';
 
 export const tourCreateSchema = z.object({
   tourName: z.string().min(2),
-  description: z.string().optional(),
-  shortDescription: z.string().optional(),
-  highlights: z.array(z.string()).optional(),
+  description: z.string().optional().or(z.literal('')).nullable(),
+  shortDescription: z.string().optional().or(z.literal('')).nullable(),
+  highlights: z.array(z.string()).optional().nullable(),
   sources: z
     .array(
       z.object({
         cityId: z.string().min(1),
-        cityName: z.string().optional(),
+        cityName: z.string().optional().or(z.literal('')).nullable(),
         fare: z.number().positive(),
-        onBoarding: z.array(z.string()).optional(),
-        departureTime: z.string().optional(),
-        arrivalTime: z.string().optional(),
+        onBoarding: z.array(z.string()).optional().nullable(),
+        departureTime: z.string().optional().or(z.literal('')).nullable(),
+        arrivalTime: z.string().optional().or(z.literal('')).nullable(),
       }),
     )
     .min(1),
@@ -21,65 +21,74 @@ export const tourCreateSchema = z.object({
     .array(
       z.object({
         cityId: z.string().min(1),
-        name: z.string().optional(),
-        state: z.string().optional(),
-        order: z.number().optional(),
-        stayDuration: z.number().optional(),
-        activities: z.array(z.string()).optional(),
+        name: z.string().optional().or(z.literal('')).nullable(),
+        state: z.string().optional().or(z.literal('')).nullable(),
+        order: z.number().optional().nullable(),
+        stayDuration: z.number().optional().nullable(),
+        activities: z.array(z.string()).optional().nullable(),
       }),
     )
     .min(1),
-  heroImage: z.object({ url: z.string().url().optional(), id: z.string().optional() }).optional(),
+  heroImage: z
+    .object({
+      url: z.string().url().optional().or(z.literal('')).nullable(),
+      id: z.string().optional().or(z.literal('')).nullable(),
+    })
+    .optional()
+    .nullable(),
   gallery: z
     .array(
       z.object({
-        url: z.string().url().optional(),
-        id: z.string().optional(),
-        caption: z.string().optional(),
+        url: z.string().url().optional().or(z.literal('')).nullable(),
+        id: z.string().optional().or(z.literal('')).nullable(),
+        caption: z.string().optional().or(z.literal('')).nullable(),
       }),
     )
-    .optional(),
+    .optional()
+    .nullable(),
   startDate: z.string().datetime(),
   endDate: z.string().datetime(),
-  duration: z.string().optional(),
-  days: z.number().int().optional(),
-  nights: z.number().int().optional(),
+  duration: z.string().optional().or(z.literal('')).nullable(),
+  days: z.number().int().optional().nullable(),
+  nights: z.number().int().optional().nullable(),
   stayDescription: z
     .array(
       z.object({
-        nights: z.number().optional(),
-        place: z.string().optional(),
-        accommodation: z.string().optional(),
-        checkIn: z.string().optional(),
-        checkOut: z.string().optional(),
+        nights: z.number().optional().nullable(),
+        place: z.string().optional().or(z.literal('')).nullable(),
+        accommodation: z.string().optional().or(z.literal('')).nullable(),
+        checkIn: z.string().optional().or(z.literal('')).nullable(),
+        checkOut: z.string().optional().or(z.literal('')).nullable(),
       }),
     )
-    .optional(),
-  busId: z.string().optional(),
-  captainUserId: z.string().optional(),
+    .optional()
+    .nullable(),
+  busId: z.string().optional().or(z.literal('')).nullable(),
+  captainUserId: z.string().optional().or(z.literal('')).nullable(),
   inclusive: z.array(z.string()).min(1),
-  exclusive: z.array(z.string()).optional(),
+  exclusive: z.array(z.string()).optional().nullable(),
   type: z.array(z.string()).min(1),
-  category: z.string().optional(),
+  category: z.string().optional().or(z.literal('')).nullable(),
   capacity: z.number().int().positive(),
   itinerary: z
     .array(
       z.object({
         title: z.string().min(1),
-        shortDescription: z.string().optional(),
-        toggles: z.array(z.string()).optional(),
-        sightseeing: z.array(z.string()).optional(),
-        order: z.number().optional(),
-        day: z.number().optional(),
-        duration: z.string().optional(),
-        meals: z.array(z.string()).optional(),
-        accommodation: z.string().optional(),
-        transportation: z.string().optional(),
-        highlights: z.array(z.string()).optional(),
-        notes: z.string().optional(),
+        shortDescription: z.string().optional().or(z.literal('')).nullable(),
+        toggles: z.array(z.string()).optional().nullable(),
+        sightseeing: z.array(z.string()).optional().nullable(),
+        order: z.number().optional().nullable(),
+        day: z.number().optional().nullable(),
+        duration: z.string().optional().or(z.literal('')).nullable(),
+        meals: z.array(z.string()).optional().nullable(),
+        accommodation: z.string().optional().or(z.literal('')).nullable(),
+        transportation: z.string().optional().or(z.literal('')).nullable(),
+        highlights: z.array(z.string()).optional().nullable(),
+        notes: z.string().optional().or(z.literal('')).nullable(),
       }),
     )
-    .optional(),
+    .optional()
+    .nullable(),
   pricing: z.object({
     minFare: z.number().positive(),
     currencyCode: z.string().min(3).max(3).default('INR'),
@@ -88,42 +97,45 @@ export const tourCreateSchema = z.object({
     .object({
       type: z.enum(['percent', 'amount']),
       value: z.number().positive(),
-      validFrom: z.string().datetime().optional(),
-      validTo: z.string().datetime().optional(),
-      minAmount: z.number().positive().optional(),
-      maxDiscount: z.number().positive().optional(),
-      applicableOn: z.string().optional(),
+      validFrom: z.string().datetime().optional().nullable(),
+      validTo: z.string().datetime().optional().nullable(),
+      minAmount: z.number().positive().optional().nullable(),
+      maxDiscount: z.number().positive().optional().nullable(),
+      applicableOn: z.string().optional().or(z.literal('')).nullable(),
     })
-    .optional(),
+    .optional()
+    .nullable(),
   groupDiscounts: z
     .array(
       z.object({
         minMembers: z.number().int().positive(),
-        maxMembers: z.number().int().positive().optional(),
+        maxMembers: z.number().int().positive().optional().nullable(),
         type: z.enum(['percent', 'amount']),
         value: z.number().positive(),
-        applicableOn: z.string().optional(),
-        description: z.string().optional(),
+        applicableOn: z.string().optional().or(z.literal('')).nullable(),
+        description: z.string().optional().or(z.literal('')).nullable(),
       }),
     )
-    .optional(),
+    .optional()
+    .nullable(),
   seo: z
     .object({
-      title: z.string().optional(),
-      description: z.string().optional(),
-      keywords: z.array(z.string()).optional(),
+      title: z.string().optional().or(z.literal('')).nullable(),
+      description: z.string().optional().or(z.literal('')).nullable(),
+      keywords: z.array(z.string()).optional().nullable(),
     })
-    .optional(),
-  seoRoutePath: z.string().optional(),
-  status: z.enum(['draft', 'published']).optional(),
-  isActive: z.boolean().optional(),
-  isFeatured: z.boolean().optional(),
-  difficulty: z.enum(['easy', 'moderate', 'difficult']).optional(),
-  ageGroup: z.array(z.string()).optional(),
-  fitnessLevel: z.string().optional(),
-  specialRequirements: z.array(z.string()).optional(),
-  cancellationPolicy: z.string().optional(),
-  refundPolicy: z.string().optional(),
+    .optional()
+    .nullable(),
+  seoRoutePath: z.string().optional().or(z.literal('')).nullable(),
+  status: z.enum(['draft', 'published']).optional().nullable(),
+  isActive: z.boolean().optional().nullable(),
+  isFeatured: z.boolean().optional().nullable(),
+  difficulty: z.enum(['easy', 'moderate', 'difficult']).optional().nullable(),
+  ageGroup: z.array(z.string()).optional().nullable(),
+  fitnessLevel: z.string().optional().or(z.literal('')).nullable(),
+  specialRequirements: z.array(z.string()).optional().nullable(),
+  cancellationPolicy: z.string().optional().or(z.literal('')).nullable(),
+  refundPolicy: z.string().optional().or(z.literal('')).nullable(),
 });
 
 export const tourUpdateSchema = tourCreateSchema.partial();
@@ -131,22 +143,22 @@ export const tourUpdateSchema = tourCreateSchema.partial();
 export const idParamSchema = z.object({ id: z.string().min(1) });
 
 export const tourPublicQuerySchema = z.object({
-  q: z.string().optional(),
-  priceMin: z.coerce.number().optional(),
-  priceMax: z.coerce.number().optional(),
-  startDate: z.string().datetime().optional(),
-  endDate: z.string().datetime().optional(),
-  daysMin: z.coerce.number().int().optional(),
-  daysMax: z.coerce.number().int().optional(),
-  nightsMin: z.coerce.number().int().optional(),
-  nightsMax: z.coerce.number().int().optional(),
-  inclusive: z.string().optional(), // comma-separated
-  type: z.string().optional(), // comma-separated
-  sourceCity: z.string().optional(),
-  placeCity: z.string().optional(),
-  state: z.string().optional(),
-  capacity: z.coerce.number().int().positive().optional(),
-  rating: z.coerce.number().min(1).max(5).optional(),
+  q: z.string().optional().or(z.literal('')).nullable(),
+  priceMin: z.coerce.number().optional().nullable(),
+  priceMax: z.coerce.number().optional().nullable(),
+  startDate: z.string().datetime().optional().nullable(),
+  endDate: z.string().datetime().optional().nullable(),
+  daysMin: z.coerce.number().int().optional().nullable(),
+  daysMax: z.coerce.number().int().optional().nullable(),
+  nightsMin: z.coerce.number().int().optional().nullable(),
+  nightsMax: z.coerce.number().int().optional().nullable(),
+  inclusive: z.string().optional().or(z.literal('')).nullable(), // comma-separated
+  type: z.string().optional().or(z.literal('')).nullable(), // comma-separated
+  sourceCity: z.string().optional().or(z.literal('')).nullable(),
+  placeCity: z.string().optional().or(z.literal('')).nullable(),
+  state: z.string().optional().or(z.literal('')).nullable(),
+  capacity: z.coerce.number().int().positive().optional().nullable(),
+  rating: z.coerce.number().min(1).max(5).optional().nullable(),
   sortBy: z
     .enum([
       'price_asc',
@@ -157,7 +169,8 @@ export const tourPublicQuerySchema = z.object({
       'date_desc',
       'popularity',
     ])
-    .optional(),
+    .optional()
+    .nullable(),
   page: z.coerce.number().int().min(1).default(1),
   items: z.coerce.number().int().min(1).max(100).default(20),
 });

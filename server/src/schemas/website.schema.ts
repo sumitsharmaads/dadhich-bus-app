@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
-const url = () => z.string().url().optional();
+const url = () => z.string().url().optional().or(z.literal(''));
 const phone = () => z.string().min(5).max(20).optional();
 
 export const websiteCreateSchema = z.object({
   branding: z.object({
-    brandName: z.string().min(2),
+    brandName: z.string().min(2), // Only this is mandatory
     tagline: z.string().optional(),
     logo: z.object({ url: z.string().url().optional(), id: z.string().optional() }).optional(),
     preLogo: z.object({ url: z.string().url().optional(), id: z.string().optional() }).optional(),
@@ -25,7 +25,7 @@ export const websiteCreateSchema = z.object({
           address2: z.string().optional(),
           city: z.string().optional(),
           state: z.string().optional(),
-          country: z.string().optional(),
+          country: z.string().optional(), // Added country field
           pincode: z.string().optional(),
         })
         .optional(),
@@ -75,9 +75,9 @@ export const websiteCreateSchema = z.object({
     })
     .optional(),
   files: z.object({ brochureUrl: url() }).optional(),
-  domains: z.object({ 
-    primary: z.string().min(3), 
-    aliases: z.array(z.string().min(3)).optional() 
+  domains: z.object({
+    primary: z.string().min(3), // Only this is mandatory
+    aliases: z.array(z.string().min(3)).optional(),
   }),
   analytics: z
     .object({
@@ -86,35 +86,8 @@ export const websiteCreateSchema = z.object({
     })
     .optional(),
   flags: z.object({ isMaintenanceMode: z.boolean().optional() }).optional(),
-  
-  // Legacy fields for backward compatibility
-  phone: phone(),
-  logo: z.object({ id: z.string().optional(), url: z.string().url().optional() }).optional(),
-  preLogo: z.object({ id: z.string().optional(), url: z.string().url().optional() }).optional(),
-  brandname: z.string().optional(),
-  contactAddress: z
-    .object({
-      address1: z.string().optional(),
-      address2: z.string().optional(),
-      city: z.string().optional(),
-      state: z.string().optional(),
-      pincode: z.string().optional(),
-    })
-    .optional(),
-  socialLinks: z
-    .object({
-      facebook: z.string().optional(),
-      instagram: z.string().optional(),
-      twitter: z.string().optional(),
-      phone: z.string().optional(),
-    })
-    .optional(),
-  emails: z
-    .object({
-      supportEmail: z.string().email().optional(),
-      infoEmails: z.array(z.string().email()).optional(),
-    })
-    .optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export const websiteUpdateSchema = websiteCreateSchema.partial();
