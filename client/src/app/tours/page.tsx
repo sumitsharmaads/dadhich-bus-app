@@ -53,6 +53,7 @@ import {
   TourPriceRange,
   TourListItem,
 } from "@/lib/api/types/tour.types";
+import { useWebsite } from "@/contexts/WebsiteProvider";
 
 // Enhanced Brand Colors
 const BRAND_COLOR = "#C22A54";
@@ -80,29 +81,8 @@ const categories = [
 const TourOptionsDialog: React.FC<{
   open: boolean;
   onClose: () => void;
-  tourTitle: string;
-}> = ({ open, onClose, tourTitle }) => {
-  const dummyOptions = [
-    {
-      id: 1,
-      name: "Standard Bus (Volvo)",
-      priceModifier: 0,
-      details: "Comfortable AC Volvo bus.",
-    },
-    {
-      id: 2,
-      name: "Sleeper Bus Option",
-      priceModifier: 300,
-      details: "Overnight sleeper bus for more comfort.",
-    },
-    {
-      id: 3,
-      name: "Tempo Traveller (Group)",
-      priceModifier: -200,
-      details: "Shared Tempo Traveller, cost-effective.",
-    },
-  ];
-
+  tour: TourListItem;
+}> = ({ open, onClose, tour }) => {
   return (
     <Dialog
       open={open}
@@ -110,7 +90,7 @@ const TourOptionsDialog: React.FC<{
       PaperProps={{
         sx: {
           borderRadius: "12px",
-          maxWidth: "500px",
+          maxWidth: "600px",
           width: "100%",
         },
       }}
@@ -118,7 +98,7 @@ const TourOptionsDialog: React.FC<{
       <div className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-gray-800">
-            Choose Your Option for {tourTitle}
+            Tour Sources & Options for {tour.tourName}
           </h3>
           <IconButton onClick={onClose} size="small">
             <CloseIcon />
@@ -126,35 +106,70 @@ const TourOptionsDialog: React.FC<{
         </div>
 
         <div className="space-y-4">
-          {dummyOptions.map((option) => (
-            <div
-              key={option.id}
-              className="border border-gray-200 rounded-lg p-4 hover:border-[#C22A54] transition-colors cursor-pointer"
-            >
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium text-gray-800">{option.name}</h4>
-                <span className="text-sm text-gray-600">
-                  {option.priceModifier >= 0 ? "+" : ""}₹{option.priceModifier}
-                </span>
+          {tour.sources && tour.sources.length > 0 ? (
+            tour.sources.map((source, index) => (
+              <div
+                key={index}
+                className="border border-gray-200 rounded-lg p-4 hover:border-[#C22A54] transition-colors"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium text-gray-800">
+                    Source {index + 1}: {source.cityName || "Unknown City"}
+                  </h4>
+                  <Chip
+                    label={`₹${source.fare}`}
+                    size="small"
+                    className="bg-green-100 text-green-700"
+                  />
+                </div>
+
+                {source.departureTime && (
+                  <p className="text-sm text-gray-600 mb-2">
+                    🕐 Departure: {source.departureTime}
+                  </p>
+                )}
+
+                {source.arrivalTime && (
+                  <p className="text-sm text-gray-600 mb-2">
+                    🕐 Arrival: {source.arrivalTime}
+                  </p>
+                )}
+
+                {source.onBoarding && source.onBoarding.length > 0 && (
+                  <div className="mb-2">
+                    <p className="text-sm text-gray-600 mb-1">
+                      🚌 Boarding Points:
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {source.onBoarding.map((point, idx) => (
+                        <Chip
+                          key={idx}
+                          label={point}
+                          size="small"
+                          variant="outlined"
+                          className="text-xs"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-gray-600">{option.details}</p>
+            ))
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <LocationOnIcon className="text-4xl mx-auto mb-2 text-gray-400" />
+              <p>No source information available for this tour.</p>
             </div>
-          ))}
+          )}
         </div>
 
-        <div className="mt-6 flex gap-3">
-          <Button
-            variant="outlined"
-            onClick={onClose}
-            className="flex-1 border-[#C22A54] text-[#C22A54] hover:border-[#A82046] hover:bg-[#FDECF2]"
-          >
-            Cancel
-          </Button>
+        <div className="mt-6">
           <Button
             variant="contained"
-            className="flex-1 bg-[#C22A54] hover:bg-[#A82046]"
+            onClick={onClose}
+            className="w-full bg-[#C22A54] hover:bg-[#A82046]"
           >
-            Select Option
+            Close
           </Button>
         </div>
       </div>
@@ -164,6 +179,7 @@ const TourOptionsDialog: React.FC<{
 
 // --- Tour Card Component ---
 const TourCard: React.FC<{ tour: TourListItem }> = ({ tour }) => {
+  const { websiteInfo } = useWebsite();
   const [optionsOpen, setOptionsOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -172,15 +188,22 @@ const TourCard: React.FC<{ tour: TourListItem }> = ({ tour }) => {
   };
 
   const handleShare = () => {
+    const tourUrl = `${window.location.origin}/tour/${tour._id}`;
     if (navigator.share) {
       navigator.share({
         title: tour.tourName,
         text: tour.description || "",
-        url: window.location.href,
+        url: tourUrl,
       });
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(tourUrl);
       // You can add a toast notification here
+    }
+  };
+
+  const handleCall = () => {
+    if (websiteInfo?.contact?.phone) {
+      window.open(`tel:${websiteInfo.contact.phone}`);
     }
   };
 
@@ -377,16 +400,18 @@ const TourCard: React.FC<{ tour: TourListItem }> = ({ tour }) => {
               View Details
             </Button>
 
-            <Button
-              variant="outlined"
-              onClick={() => setOptionsOpen(true)}
-              className="flex-1 border-primary-500 text-primary-600 hover:bg-primary-50 text-sm"
-              size="small"
-            >
-              View Options
-            </Button>
+            {tour.sources && tour.sources.length > 1 && (
+              <Button
+                variant="outlined"
+                onClick={() => setOptionsOpen(true)}
+                className="flex-1 border-primary-500 text-primary-600 hover:bg-primary-50 text-sm"
+                size="small"
+              >
+                View Options ({tour.sources.length})
+              </Button>
+            )}
 
-            <Tooltip title="Share">
+            <Tooltip title="Share Tour">
               <IconButton
                 onClick={handleShare}
                 size="small"
@@ -396,10 +421,12 @@ const TourCard: React.FC<{ tour: TourListItem }> = ({ tour }) => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title="Contact">
+            <Tooltip title={`Call ${websiteInfo?.contact?.phone || "us"}`}>
               <IconButton
+                onClick={handleCall}
                 size="small"
                 className="border border-gray-300 hover:border-primary-500 hover:bg-primary-50"
+                disabled={!websiteInfo?.contact?.phone}
               >
                 <CallIcon className="text-gray-600 text-sm" />
               </IconButton>
@@ -411,7 +438,7 @@ const TourCard: React.FC<{ tour: TourListItem }> = ({ tour }) => {
       <TourOptionsDialog
         open={optionsOpen}
         onClose={() => setOptionsOpen(false)}
-        tourTitle={tour.tourName}
+        tour={tour}
       />
     </>
   );
