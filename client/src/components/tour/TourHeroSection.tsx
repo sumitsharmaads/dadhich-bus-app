@@ -105,22 +105,23 @@ const TourHeroSection: React.FC<TourHeroSectionProps> = ({
             {data?.tourName}
           </Typography>
 
-          {routeInfo && (
-            <div className="space-y-1">
-              <Typography
-                variant="body1"
-                className="font-medium text-white/95 drop-shadow-md"
-              >
-                {routeInfo.source} → {routeInfo.destination}
-              </Typography>
+          {/* Show only duration instead of redundant route info */}
+          <div className="space-y-1">
+            <Typography
+              variant="body1"
+              className="font-medium text-white/95 drop-shadow-md"
+            >
+              {data?.days || 0} Days / {data?.nights || 0} Nights
+            </Typography>
+            {data?.pricing?.minFare && (
               <Typography
                 variant="body2"
                 className="text-white/90 drop-shadow-md"
               >
-                {routeInfo.totalDistance}
+                Starting from ₹{data.pricing.minFare.toLocaleString()}
               </Typography>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Gallery Navigation */}
