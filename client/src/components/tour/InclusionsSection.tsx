@@ -1,84 +1,69 @@
 "use client";
 
 import React from "react";
-import { Typography } from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
+
+interface InclusiveItem {
+  label: string;
+  icon: string;
+  description: string;
+  color: string;
+  highlight: boolean;
+}
 
 interface InclusionsSectionProps {
-  inclusiveData: any[];
+  inclusiveData: InclusiveItem[];
 }
 
 const InclusionsSection: React.FC<InclusionsSectionProps> = ({
   inclusiveData,
 }) => {
-  if (!inclusiveData || inclusiveData.length === 0) {
-    return null;
-  }
+  if (!inclusiveData || inclusiveData.length === 0) return null;
 
   return (
-    <section className="mb-12">
-      <div className="text-center mb-8">
-        <Typography
-          variant="h3"
-          className="font-bold text-gray-900 mb-3 text-2xl md:text-3xl"
-        >
-          What&apos;s Included
-        </Typography>
-        <div className="w-16 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto"></div>
-      </div>
+    <section className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 sm:p-6">
+      <Typography
+        variant="h5"
+        className="font-semibold text-gray-800 mb-4 flex items-center gap-2"
+      >
+        <span className="text-2xl">✅</span>
+        What's Included
+      </Typography>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
         {inclusiveData.map((item, index) => (
-          <div
+          <Card
             key={index}
-            className={`group relative p-6 rounded-xl transition-all duration-300 hover:scale-[1.02] ${
-              item?.highlight
-                ? "bg-gradient-to-br from-[#C22A54]/5 to-[#A82046]/5 border border-[#C22A54]/20"
-                : "bg-white border border-gray-100 hover:border-gray-200"
-            }`}
+            className="hover:shadow-md transition-shadow duration-200 border border-gray-100"
+            sx={{ minHeight: "auto" }}
           >
-            <div className="flex items-start gap-4">
-              {/* Icon */}
-              <div
-                className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${
-                  item?.highlight
-                    ? "bg-[#C22A54] text-white"
-                    : "bg-gray-100 text-gray-600 group-hover:bg-[#C22A54] group-hover:text-white"
-                } transition-all duration-300`}
-              >
-                <span className="text-xl">{item.icon}</span>
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 min-w-0">
+            <CardContent className="p-3 text-center">
+              <div className="flex flex-col items-center gap-2">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg"
+                  style={{ backgroundColor: item.color }}
+                >
+                  {item.icon}
+                </div>
                 <Typography
-                  variant="h6"
-                  className={`font-semibold mb-2 ${
-                    item?.highlight
-                      ? "text-[#C22A54]"
-                      : "text-gray-900 group-hover:text-[#C22A54]"
-                  } transition-colors`}
+                  variant="body2"
+                  className="font-medium text-gray-700 text-xs leading-tight"
+                  sx={{ lineHeight: 1.2 }}
                 >
                   {item.label}
                 </Typography>
-                <Typography
-                  variant="body2"
-                  className="text-gray-600 leading-relaxed"
-                >
-                  {item.description}
-                </Typography>
-
-                {item?.highlight && (
-                  <div className="mt-3">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#C22A54] text-white">
-                      ✓ Included
-                    </span>
-                  </div>
-                )}
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
+
+      <Typography
+        variant="body2"
+        className="text-gray-500 text-center mt-4 text-sm"
+      >
+        {inclusiveData.length} services included in your tour package
+      </Typography>
     </section>
   );
 };

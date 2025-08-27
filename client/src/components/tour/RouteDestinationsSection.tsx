@@ -1,197 +1,149 @@
 "use client";
 
 import React from "react";
-import { Typography, Chip } from "@mui/material";
-import {
-  FlightTakeoff,
-  LocationOn,
-  AccessTime,
-  Hotel,
-} from "@mui/icons-material";
+import { Typography, Card, CardContent, Box, Chip } from "@mui/material";
+import { Tour } from "@/lib/api/types/tour.types";
+import { LocationOn, AccessTime, DirectionsCar } from "@mui/icons-material";
 
 interface RouteDestinationsSectionProps {
-  data: any;
+  data: Tour;
 }
 
 const RouteDestinationsSection: React.FC<RouteDestinationsSectionProps> = ({
   data,
 }) => {
+  if (!data?.sources || !data?.places) return null;
+
   return (
-    <section className="mb-12">
-      <div className="text-center mb-8">
-        <Typography
-          variant="h3"
-          className="font-bold text-gray-900 mb-3 text-2xl md:text-3xl"
-        >
-          Route & Destinations
-        </Typography>
-        <div className="w-16 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto"></div>
-      </div>
+    <section className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 sm:p-6">
+      <Typography
+        variant="h5"
+        className="font-semibold text-gray-800 mb-4 flex items-center gap-2"
+      >
+        <span className="text-2xl">🗺️</span>
+        Route & Destinations
+      </Typography>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Sources */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-              <FlightTakeoff className="text-white text-lg" />
-            </div>
-            <Typography variant="h5" className="font-semibold text-gray-900">
-              Starting Points
-            </Typography>
-          </div>
-
-          {data?.sources && data.sources.length > 0 ? (
-            <div className="space-y-4">
-              {data.sources.map((source: any, index: number) => (
-                <div
-                  key={index}
-                  className="p-5 bg-white rounded-xl border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-sm"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <Typography
-                      variant="h6"
-                      className="font-semibold text-gray-900"
-                    >
-                      {source.cityName || "City"}
-                    </Typography>
-                    <div className="px-3 py-1 bg-gradient-to-r from-[#C22A54] to-[#A82046] text-white rounded-full text-sm font-semibold">
-                      ₹{source.fare?.toLocaleString() || "0"}
-                    </div>
-                  </div>
-
-                  {source.onBoarding && source.onBoarding.length > 0 && (
-                    <div className="mb-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Starting Points */}
+        <div>
+          <Typography
+            variant="h6"
+            className="font-medium text-gray-700 mb-3 flex items-center gap-2"
+          >
+            <DirectionsCar className="text-blue-500" />
+            Starting Points
+          </Typography>
+          <div className="space-y-3">
+            {data.sources.map((source, index) => (
+              <Card
+                key={index}
+                className="border border-gray-100 hover:shadow-sm transition-shadow"
+              >
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <LocationOn className="text-red-500 text-sm" />
                       <Typography
                         variant="body2"
-                        className="text-gray-600 mb-2 font-medium"
+                        className="font-medium text-gray-800"
                       >
-                        🚌 Pickup Points:
-                      </Typography>
-                      <div className="flex flex-wrap gap-2">
-                        {source.onBoarding.map((point: string, i: number) => (
-                          <Chip
-                            key={i}
-                            label={point}
-                            size="small"
-                            sx={{
-                              backgroundColor: "rgba(194, 42, 84, 0.1)",
-                              color: "#C22A54",
-                              border: "1px solid rgba(194, 42, 84, 0.2)",
-                              fontSize: "0.75rem",
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {source.departureTime && (
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <AccessTime className="text-sm" />
-                      <Typography variant="body2" className="font-medium">
-                        Departure: {source.departureTime}
+                        {source.cityName || "Unknown City"}
                       </Typography>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center p-8 bg-gray-50 rounded-xl">
-              <Typography variant="body2" className="text-gray-500">
-                No starting points available
-              </Typography>
-            </div>
-          )}
+                    <div className="text-right">
+                      <Typography
+                        variant="body2"
+                        className="font-semibold text-green-600"
+                      >
+                        ₹{source.fare?.toLocaleString() || "N/A"}
+                      </Typography>
+                      <Typography variant="caption" className="text-gray-500">
+                        {source.departureTime || "TBD"}
+                      </Typography>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* Destinations */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
-              <LocationOn className="text-white text-lg" />
-            </div>
-            <Typography variant="h5" className="font-semibold text-gray-900">
-              Destinations
-            </Typography>
-          </div>
-
-          {data?.places && data.places.length > 0 ? (
-            <div className="space-y-4">
-              {data.places.map((place: any, index: number) => (
-                <div
-                  key={index}
-                  className="p-5 bg-white rounded-xl border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-sm"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <Typography
-                      variant="h6"
-                      className="font-semibold text-gray-900"
-                    >
-                      {place.name || "Destination"}
-                    </Typography>
-                    {place.order && (
-                      <div className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-full text-sm font-semibold">
-                        Stop {place.order}
+        <div>
+          <Typography
+            variant="h6"
+            className="font-medium text-gray-700 mb-3 flex items-center gap-2"
+          >
+            <span className="text-2xl">🎯</span>
+            Destinations
+          </Typography>
+          <div className="space-y-2">
+            {data.places.map((place, index) => (
+              <Card
+                key={index}
+                className="border border-gray-100 hover:shadow-sm transition-shadow"
+              >
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Chip
+                        label={`Step ${index + 1}`}
+                        size="small"
+                        className="bg-green-100 text-green-800 text-xs font-medium"
+                      />
+                      <div>
+                        <Typography
+                          variant="body2"
+                          className="font-medium text-gray-800"
+                        >
+                          {place.name || "Unknown Place"}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          className="text-gray-500 flex items-center gap-1"
+                        >
+                          <LocationOn className="text-xs" />
+                          {place.state || "Unknown State"}
+                        </Typography>
                       </div>
-                    )}
-                  </div>
-
-                  {place.state && (
-                    <Typography
-                      variant="body2"
-                      className="text-gray-600 mb-3 font-medium"
-                    >
-                      📍 {place.state}
-                    </Typography>
-                  )}
-
-                  {place.stayDuration && place.stayDuration > 0 && (
-                    <div className="flex items-center gap-2 text-gray-600 mb-3">
-                      <Hotel className="text-sm" />
-                      <Typography variant="body2" className="font-medium">
-                        Stay: {place.stayDuration} day
-                        {place.stayDuration !== 1 ? "s" : ""}
-                      </Typography>
                     </div>
-                  )}
-
-                  {place.activities && place.activities.length > 0 && (
-                    <div>
+                    <div className="text-right">
                       <Typography
-                        variant="body2"
-                        className="text-gray-600 mb-2 font-medium"
+                        variant="caption"
+                        className="text-blue-600 font-medium flex items-center gap-1"
                       >
-                        🎯 Activities:
+                        <AccessTime className="text-xs" />
+                        {place.stayDuration
+                          ? `${place.stayDuration} hours`
+                          : "TBD"}
                       </Typography>
-                      <div className="flex flex-wrap gap-2">
-                        {place.activities.map((activity: string, i: number) => (
-                          <Chip
-                            key={i}
-                            label={activity}
-                            size="small"
-                            sx={{
-                              backgroundColor: "rgba(16, 185, 129, 0.1)",
-                              color: "#059669",
-                              border: "1px solid rgba(16, 185, 129, 0.2)",
-                              fontSize: "0.75rem",
-                            }}
-                          />
-                        ))}
-                      </div>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center p-8 bg-gray-50 rounded-xl">
-              <Typography variant="body2" className="text-gray-500">
-                No destinations available
-              </Typography>
-            </div>
-          )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Summary */}
+      <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+        <Typography variant="body2" className="text-gray-600 text-center">
+          <span className="font-medium">
+            {data.places?.length || 0} destinations
+          </span>{" "}
+          •
+          <span className="font-medium">
+            {" "}
+            {data.sources?.length || 0} starting points
+          </span>{" "}
+          •
+          <span className="font-medium">
+            {" "}
+            Total duration: {data.days || 0} days
+          </span>
+        </Typography>
       </div>
     </section>
   );

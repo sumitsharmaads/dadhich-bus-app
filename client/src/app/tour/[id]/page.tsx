@@ -280,34 +280,31 @@ const TourDetailPage: React.FC = () => {
               {/* Quick Info Cards */}
               <QuickInfoCards data={data} />
 
+              {/* Route & Destinations Section - Moved up for better UX */}
+              <RouteDestinationsSection data={data} />
+
+              {/* Inclusions Section */}
+              <InclusionsSection inclusiveData={inclusiveData} />
+
+              {/* Detailed Pricing Section - Moved up for decision making */}
+              <DetailedPricingSection
+                pricing={data?.pricing}
+                groupDiscounts={data?.groupDiscounts || []}
+              />
+
               {/* About Section */}
               <section>
                 <AboutTourSection description={data?.description || ""} />
               </section>
 
-              {/* Inclusions Section */}
-              <InclusionsSection inclusiveData={inclusiveData} />
-
-              {/* Route & Destinations Section */}
-              <RouteDestinationsSection data={data} />
-
               {/* Tour Highlights Section */}
               <TourHighlightsSection highlights={data?.highlights || []} />
-
-              {/* Exclusive Features Section */}
-              <ExclusiveFeaturesSection exclusive={data?.exclusive || []} />
 
               {/* Tour Itinerary Section */}
               <TourItinerarySection itinerary={data?.itinerary || []} />
 
               {/* Tour Gallery Section */}
               <TourGallerySection gallery={data?.gallery || []} />
-
-              {/* Detailed Pricing Section */}
-              <DetailedPricingSection
-                pricing={data?.pricing}
-                groupDiscounts={data?.groupDiscounts || []}
-              />
 
               {/* Additional Information Section */}
               <AdditionalInfoSection data={data} />
