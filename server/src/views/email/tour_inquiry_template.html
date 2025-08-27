@@ -21,68 +21,137 @@
     </tr>
     <tr>
       <td style="padding:24px">
-        <h2 style="margin:0 0 12px;font-size:20px">Tour Inquiry</h2>
-        <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;font-size:14px">
-          <tr>
-            <td style="padding:6px 0;width:200px;color:#666">Name</td>
-            <td style="padding:6px 0"><%= name %></td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;color:#666">Email</td>
-            <td style="padding:6px 0"><%= email %></td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;color:#666">Phone</td>
-            <td style="padding:6px 0"><%= phone || '-' %></td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;color:#666">Tour ID</td>
-            <td style="padding:6px 0"><%= tourId || '-' %></td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;color:#666">Tour</td>
-            <td style="padding:6px 0"><%= tourName %></td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;color:#666">Tour Route</td>
-            <td style="padding:6px 0"><a href="<%= route %>" style="color:#007bff;text-decoration:none"><%= route %></a></td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;color:#666">Approx Date</td>
-            <td style="padding:6px 0"><%= approxDate ? new Date(approxDate).toDateString() : '-' %></td>
-          </tr>
-          <tr>
-            <td style="padding:6px 0;color:#666">Passengers</td>
-            <td style="padding:6px 0"><%= passengers || '-' %></td>
-          </tr>
-        </table>
+        <h2 style="margin:0 0 12px;font-size:20px;color:#1f2937">🎯 New Tour Inquiry Received</h2>
+        <p style="margin:0 0 16px;color:#6b7280">A customer has shown interest in one of your tour packages. Here are the details:</p>
+
+        <!-- Tour Information Section -->
+        <div style="background:#f0f9ff;border:1px solid #0ea5e9;border-radius:8px;padding:20px;margin-bottom:20px">
+          <h3 style="margin:0 0 16px;font-size:16px;color:#0c4a6e;display:flex;align-items:center;gap:8px">
+            🚌 Tour Details
+          </h3>
+          <div style="display:flex;flex-wrap:wrap;gap:16px">
+            <div style="flex:1;min-width:200px">
+              <div style="font-weight:600;color:#0c4a6e;font-size:14px;margin-bottom:4px">Tour Name</div>
+              <div style="color:#111;font-size:14px"><%= tourName %></div>
+            </div>
+            <div style="flex:1;min-width:200px">
+              <div style="font-weight:600;color:#0c4a6e;font-size:14px;margin-bottom:4px">Tour ID</div>
+              <div style="color:#111;font-size:14px;font-family:monospace;background:#f1f5f9;padding:4px 8px;border-radius:4px"><%= tourId || 'N/A' %></div>
+            </div>
+          </div>
+          <% if (route) { %>
+          <div style="margin-top:12px">
+            <div style="font-weight:600;color:#0c4a6e;font-size:14px;margin-bottom:4px">Tour Route</div>
+            <a href="<%= route %>" style="color:#0ea5e9;text-decoration:none;font-size:14px;word-break:break-all"><%= route %></a>
+          </div>
+          <% } %>
+        </div>
+
+        <!-- Customer Details Section -->
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:20px">
+          <h3 style="margin:0 0 16px;font-size:16px;color:#374151;display:flex;align-items:center;gap:8px">
+            👤 Customer Information
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px">
+            <div>
+              <div style="font-weight:600;color:#6b7280;font-size:14px;margin-bottom:4px">Full Name</div>
+              <div style="color:#111;font-size:14px"><%= name %></div>
+            </div>
+            <div>
+              <div style="font-weight:600;color:#6b7280;font-size:14px;margin-bottom:4px">Email Address</div>
+              <div style="color:#111;font-size:14px">
+                <a href="mailto:<%= email %>" style="color:#3b82f6;text-decoration:none"><%= email %></a>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:600;color:#6b7280;font-size:14px;margin-bottom:4px">Phone Number</div>
+              <div style="color:#111;font-size:14px">
+                <% if (phone) { %>
+                <a href="tel:<%= phone %>" style="color:#3b82f6;text-decoration:none"><%= phone %></a>
+                <% } else { %>
+                <span style="color:#9ca3af">Not provided</span>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Travel Preferences Section -->
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:20px">
+          <h3 style="margin:0 0 16px;font-size:16px;color:#374151;display:flex;align-items:center;gap:8px">
+            🗓️ Travel Preferences
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:16px">
+            <div>
+              <div style="font-weight:600;color:#6b7280;font-size:14px;margin-bottom:4px">Number of Passengers</div>
+              <div style="color:#111;font-size:14px">
+                <% if (passengers) { %>
+                <span style="background:#10b981;color:white;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600"><%= passengers %> passengers</span>
+                <% } else { %>
+                <span style="color:#9ca3af">Not specified</span>
+                <% } %>
+              </div>
+            </div>
+            <div>
+              <div style="font-weight:600;color:#6b7280;font-size:14px;margin-bottom:4px">Preferred Date</div>
+              <div style="color:#111;font-size:14px">
+                <% if (approxDate) { %>
+                <span style="background:#f59e0b;color:white;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">
+                  <%= new Date(approxDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %>
+                </span>
+                <% } else { %>
+                <span style="color:#9ca3af">Not specified</span>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message Section -->
         <% if (message) { %>
-        <div style="margin-top:16px;padding:14px;background:#fafafa;border:1px solid #eee;border-radius:8px;white-space:pre-wrap"><%= message %></div>
+        <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:20px;margin-bottom:20px">
+          <h3 style="margin:0 0 16px;font-size:16px;color:#92400e;display:flex;align-items:center;gap:8px">
+            💬 Customer Message
+          </h3>
+          <div style="color:#92400e;font-size:14px;line-height:1.6;white-space:pre-wrap;background:white;padding:16px;border-radius:6px;border:1px solid #fde68a"><%= message %></div>
+        </div>
         <% } %>
+
+        <!-- Action Required Section -->
+        <div style="margin-top:24px;padding:16px;background:#f0fdf4;border:1px solid #22c55e;border-radius:8px">
+          <p style="margin:0;color:#166534;font-size:14px">
+            <strong>🚀 Action Required:</strong> Please contact the customer within 24 hours to discuss their tour requirements, provide pricing details, and assist with the booking process.
+          </p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="margin-top:20px;text-align:center">
+          <a href="mailto:<%= email %>?subject=Re: Tour Inquiry - <%= tourName %>&body=Hi <%= name.split(' ')[0] %>,%0D%0A%0D%0AThank you for your interest in our <%= tourName %> tour!%0D%0A%0D%0AI'll be happy to assist you with all the details and help you plan your perfect trip.%0D%0A%0D%0ABest regards,%0D%0A<%= website.branding?.brandName || 'Our Team' %>" style="display:inline-block;background:#3b82f6;color:white;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;margin-right:12px">
+            ✉️ Reply to Customer
+          </a>
+          <% if (phone) { %>
+          <a href="tel:<%= phone %>" style="display:inline-block;background:#10b981;color:white;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600">
+            📞 Call Customer
+          </a>
+          <% } %>
+        </div>
       </td>
     </tr>
     <tr>
-      <td style="padding:18px 24px;background:#fafafa">
-        <div style="font-size:12px;color:#666;display:flex;flex-wrap:wrap;gap:12px;align-items:center">
-          <div>
-            <%= website.branding?.brandName || 'Our Travel Co.' %> •
-            <a href="https://<%= website.domains?.primary %>" style="color:#666;text-decoration:none"><%= website.domains?.primary %></a>
-          </div>
-          <div>• Support: <a href="mailto:<%= website.contact?.emails?.supportEmail %>" style="color:#666"><%= website.contact?.emails?.supportEmail %></a></div>
+      <td style="padding:16px 24px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center">
+        <p style="margin:0;color:#6b7280;font-size:12px">
+          This email was sent from a tour inquiry form on your website.
+          <% if (website.contact?.emails?.supportEmail) { %>
+          For support, contact: <a href="mailto:<%= website.contact.emails.supportEmail %>" style="color:#3b82f6"><%= website.contact.emails.supportEmail %></a>
+          <% } %>
+        </p>
+        <div style="margin-top:8px;font-size:12px;color:#6b7280">
+          <%= website.branding?.brandName || 'Our Travel Co.' %> •
+          <a href="https://<%= website.domains?.primary %>" style="color:#3b82f6;text-decoration:none"><%= website.domains?.primary %></a>
           <% if (website.contact?.phone) { %>
-          <div>• Phone: <a href="tel:<%= website.contact.phone %>" style="color:#666"><%= website.contact.phone %></a></div>
-          <% } %>
-          <% if (website.files?.brochureUrl) { %>
-          <div>• <a href="<%= website.files.brochureUrl %>" style="color:#666">Brochure</a></div>
+          • <a href="tel:<%= website.contact.phone %>" style="color:#3b82f6;text-decoration:none"><%= website.contact.phone %></a>
           <% } %>
         </div>
-        <% if (website.socials) { %>
-        <div style="margin-top:8px;font-size:12px;color:#666">
-          <% Object.entries(website.socials).forEach(function([k,v]){ if (v) { %>
-          <a href="<%= v as string %>" style="color:#666;margin-right:10px;text-decoration:none"><%= k %></a>
-          <% }}); %>
-        </div>
-        <% } %>
       </td>
     </tr>
   </table>
