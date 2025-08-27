@@ -53,7 +53,19 @@ jobs:
           echo "Current directory: $(pwd)"
           echo "Git remote: $(git remote -v)"
           echo "Git status: $(git status)"
-          echo "SSH agent: $(ssh-add -l)"
+          
+          # Set up SSH authentication for GitHub
+          echo "🔐 Setting up SSH authentication..."
+          
+          # Start SSH agent
+          eval "$(ssh-agent -s)"
+          
+          # Add your VPS's SSH key to the agent
+          ssh-add ~/.ssh/id_rsa
+          
+          # Test GitHub SSH connection
+          echo "🧪 Testing GitHub SSH connection..."
+          ssh -T git@github.com || echo "SSH test completed"
           
           # Configure git for this session
           echo "⚙️ Configuring git..."
