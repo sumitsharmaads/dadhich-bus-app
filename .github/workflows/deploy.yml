@@ -47,7 +47,25 @@ jobs:
           # Navigate to project directory
           cd /root/dadhich-bus-app
           
-          # Pull latest changes
+          # Debug information to understand the execution context
+          echo "🔍 Debug Information:"
+          echo "Current user: $(whoami)"
+          echo "Current directory: $(pwd)"
+          echo "Git remote: $(git remote -v)"
+          echo "Git status: $(git status)"
+          echo "SSH agent: $(ssh-add -l)"
+          
+          # Configure git for this session
+          echo "⚙️ Configuring git..."
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          # Ensure we're on main branch
+          echo "🌿 Checking out main branch..."
+          git checkout main
+          
+          # Pull latest changes with explicit origin
+          echo "📥 Pulling latest changes..."
           git pull origin main
           
           # Complete deployment flow: npm ci → npm run build → npm start (via PM2)
