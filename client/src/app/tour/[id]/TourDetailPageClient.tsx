@@ -279,6 +279,11 @@ const TourDetailPageClient: React.FC<TourDetailPageClientProps> = ({
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
             <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+              {/* About Section */}
+              <section>
+                <AboutTourSection description={data?.description || ""} />
+              </section>
+
               {/* Quick Info Cards */}
               <QuickInfoCards data={data} />
 
@@ -293,11 +298,6 @@ const TourDetailPageClient: React.FC<TourDetailPageClientProps> = ({
                 pricing={data?.pricing}
                 groupDiscounts={data?.groupDiscounts || []}
               />
-
-              {/* About Section */}
-              <section>
-                <AboutTourSection description={data?.description || ""} />
-              </section>
 
               {/* Tour Highlights Section */}
               <TourHighlightsSection highlights={data?.highlights || []} />
