@@ -15,15 +15,11 @@ export default function robots(): MetadataRoute.Robots {
           "/tours",
           "/local-bus-rental",
           "/outstation-bus-rental",
-          "/corporate-transportation",
-          "/wedding-transportation",
-          "/airport-transfer",
-          "/tour-packages",
           "/contact",
           "/faq",
-          "/terms-conditions",
-          "/privacy-policy",
-          "/refund-policy",
+          "/inquery",
+          "/tour",
+          "/test-images",
         ],
         disallow: [
           "/admin",
@@ -56,11 +52,7 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 2,
       },
     ],
-    sitemap: [
-      `${base}/sitemap.xml`,
-      `${base}/sitemap-tours.xml`,
-      `${base}/sitemap-services.xml`,
-    ],
+    sitemap: [`${base}/sitemap.xml`],
     host: base,
   };
 }
