@@ -47,30 +47,10 @@ jobs:
           # Navigate to project directory
           cd /root/dadhich-bus-app
           
-          # Debug information to understand the execution context
-          echo "🔍 Debug Information:"
-          echo "Current user: $(whoami)"
-          echo "Current directory: $(pwd)"
-          echo "Git remote: $(git remote -v)"
-          echo "Git status: $(git status)"
-          
-          # Set up SSH authentication for GitHub
-          echo "🔐 Setting up SSH authentication..."
-          
-          # Start SSH agent
-          eval "$(ssh-agent -s)"
-          
-          # Add your VPS's SSH key to the agent
-          ssh-add ~/.ssh/id_rsa
-          
-          # Test GitHub SSH connection
-          echo "🧪 Testing GitHub SSH connection..."
-          ssh -T git@github.com || echo "SSH test completed"
-          
           # Configure git for this session
           echo "⚙️ Configuring git..."
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config --global user.name "Sumit Sharma"
+          git config --global user.email "dadhich.uideveloper@gmail.com"
           
           # Ensure we're on main branch
           echo "🌿 Checking out main branch..."
