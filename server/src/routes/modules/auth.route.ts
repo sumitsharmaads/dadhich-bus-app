@@ -7,6 +7,10 @@ import {
   forgotPassword,
   selfUpdate,
   changePassword,
+  logout,
+  logoutAllDevices,
+  getSessions,
+  terminateSession,
 } from '../../controllers/auth.controller';
 import { validate } from '../../middlewares/validate.middleware';
 import {
@@ -51,3 +55,9 @@ authRouter.post(
   validate(changePasswordSchema),
   changePassword,
 );
+
+// Session management routes
+authRouter.post('/logout', requireAuth, logout);
+authRouter.post('/logout-all', requireAuth, logoutAllDevices);
+authRouter.get('/sessions', requireAuth, getSessions);
+authRouter.delete('/sessions/:sessionId', requireAuth, terminateSession);

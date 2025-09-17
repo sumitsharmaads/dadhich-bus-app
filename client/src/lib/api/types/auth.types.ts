@@ -64,3 +64,29 @@ export interface ValidationErrorResponse {
   message: string;
   errors?: ValidationError[];
 }
+
+// Session Management Types
+export interface Session {
+  id: string;
+  userAgent: string;
+  ip: string;
+  deviceId: string;
+  deviceName: string;
+  lastSeenAt: string;
+  createdAt: string;
+  isCurrent: boolean;
+}
+
+export interface SessionsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    sessions: Session[];
+  };
+}
+
+export interface SessionResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}

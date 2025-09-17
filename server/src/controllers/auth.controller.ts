@@ -3,9 +3,10 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { sendCreated, sendSuccess } from '../utils/apiResponse';
 import { userRepository } from '../repositories/user.repository';
 import { AppError } from '../utils/errors';
-import { generateRandomToken } from '../lib/crypto';
+import { generateRandomToken, sha256 } from '../lib/crypto';
 import mongoose from 'mongoose';
 import { User } from '../models/user.model';
+import { Session } from '../models/session.model';
 import { websiteRepository } from '../repositories/website.repository';
 import { renderTemplate, sendBrandedMail } from '../lib/mailer';
 
@@ -156,4 +157,83 @@ export const getCurrentUser = asyncHandler(async (req: Request, res: Response) =
     },
     'Current user data',
   );
+});
+
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+  const session = (req as any).session;
+  const sessionId = (req as any).sessionId;
+
+  if (session && sessionId) {
+    // Delete the current session
+    await Session.deleteOne({ sessionIdHash: sha256(sessionId) });
+  }
+
+  // Clear the session cookie
+  res.clearCookie('sid');
+
+  sendSuccess(res, null, 'Logged out successfully');
+});
+
+export const logoutAllDevices = asyncHandler(async (req: Request, res: Response) => {
+  const session = (req as any).session;
+  if (!session?.userId) throw new AppError('Unauthorized', 401);
+
+  // Delete all sessions for this user
+  await Session.deleteMany({ userId: session.userId });
+
+  // Clear the current session cookie
+  res.clearCookie('sid');
+
+  sendSuccess(res, null, 'Logged out from all devices');
+});
+
+export const getSessions = asyncHandler(async (req: Request, res: Response) => {
+  const session = (req as any).session;
+  if (!session?.userId) throw new AppError('Unauthorized', 401);
+
+  const sessions = await Session.find({ userId: session.userId })
+    .select('userAgent ip deviceId deviceName lastSeenAt createdAt')
+    .sort({ lastSeenAt: -1 })
+    .exec();
+
+  const currentSessionId = (req as any).sessionId;
+  const formattedSessions = sessions.map((s) => ({
+    id: (s._id as any).toString(),
+    userAgent: s.userAgent || 'Unknown',
+    ip: s.ip || 'Unknown',
+    deviceId: s.deviceId || 'Unknown',
+    deviceName: s.deviceName || 'Unknown Device',
+    lastSeenAt: s.lastSeenAt,
+    createdAt: s.createdAt,
+    isCurrent: s.sessionIdHash === sha256(currentSessionId),
+  }));
+
+  sendSuccess(res, { sessions: formattedSessions }, 'User sessions retrieved');
+});
+
+export const terminateSession = asyncHandler(async (req: Request, res: Response) => {
+  const session = (req as any).session;
+  if (!session?.userId) throw new AppError('Unauthorized', 401);
+
+  const { sessionId } = req.params;
+  const currentSessionId = (req as any).sessionId;
+
+  // Prevent terminating current session
+  if (sessionId === currentSessionId) {
+    throw new AppError('Cannot terminate current session', 400);
+  }
+
+  // Find and delete the session
+  const targetSession = await Session.findOne({
+    _id: sessionId,
+    userId: session.userId,
+  }).exec();
+
+  if (!targetSession) {
+    throw new AppError('Session not found', 404);
+  }
+
+  await Session.deleteOne({ _id: sessionId });
+
+  sendSuccess(res, null, 'Session terminated successfully');
 });

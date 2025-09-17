@@ -1,4 +1,4 @@
-import { post } from "@/lib/service";
+import { post, del, get } from "@/lib/service";
 import {
   RegisterRequest,
   LoginRequest,
@@ -7,6 +7,8 @@ import {
   SelfUpdateRequest,
   AuthResponse,
   ErrorResponse,
+  SessionsResponse,
+  SessionResponse,
 } from "../types/auth.types";
 import { successPopup, errorPopup } from "@/utils/errors/alerts";
 
@@ -181,6 +183,103 @@ class AuthService {
         errorPopup("User not found. Please login again.");
       } else {
         errorPopup("Failed to fetch user data. Please try again.");
+      }
+
+      throw error;
+    }
+  }
+
+  /**
+   * Logout current session
+   */
+  async logout(): Promise<SessionResponse> {
+    try {
+      const response = await post<SessionResponse>(`${this.baseUrl}/logout`);
+
+      // Show success message
+      successPopup("Logged out successfully!");
+
+      return response.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 401) {
+        errorPopup("Please login to logout.");
+      } else {
+        errorPopup("Logout failed. Please try again.");
+      }
+
+      throw error;
+    }
+  }
+
+  /**
+   * Logout from all devices
+   */
+  async logoutAllDevices(): Promise<SessionResponse> {
+    try {
+      const response = await post<SessionResponse>(
+        `${this.baseUrl}/logout-all`
+      );
+
+      // Show success message
+      successPopup("Logged out from all devices successfully!");
+
+      return response.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 401) {
+        errorPopup("Please login to logout from all devices.");
+      } else {
+        errorPopup("Logout from all devices failed. Please try again.");
+      }
+
+      throw error;
+    }
+  }
+
+  /**
+   * Get all user sessions
+   */
+  async getSessions(): Promise<SessionsResponse> {
+    try {
+      const response = await get<SessionsResponse>(`${this.baseUrl}/sessions`);
+
+      return response.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 401) {
+        errorPopup("Please login to view your sessions.");
+      } else {
+        errorPopup("Failed to fetch sessions. Please try again.");
+      }
+
+      throw error;
+    }
+  }
+
+  /**
+   * Terminate a specific session
+   */
+  async terminateSession(sessionId: string): Promise<SessionResponse> {
+    try {
+      const response = await del<SessionResponse>(
+        `${this.baseUrl}/sessions/${sessionId}`
+      );
+
+      // Show success message
+      successPopup("Session terminated successfully!");
+
+      return response.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 401) {
+        errorPopup("Please login to terminate sessions.");
+      } else if (error.response?.status === 404) {
+        errorPopup("Session not found.");
+      } else if (error.response?.status === 400) {
+        errorPopup("Cannot terminate current session.");
+      } else {
+        errorPopup("Failed to terminate session. Please try again.");
       }
 
       throw error;
