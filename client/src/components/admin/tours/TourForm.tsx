@@ -647,34 +647,40 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
           </Box>
 
           <Stack direction="row" spacing={2}>
-            {mode === "create" && activeStep === 1 && (
-              <Button
-                variant="outlined"
-                onClick={handleQuickSave}
-                disabled={saving}
-              >
-                Create and Skip Further
-              </Button>
-            )}
-
-            {activeStep < steps.length - 1 ? (
-              <Button variant="contained" onClick={handleNext}>
-                Next
-              </Button>
-            ) : (
+            {/* Show Create Tour button for create mode after step 1 (from step 2 onwards) */}
+            {mode === "create" && activeStep >= 1 && (
               <Button
                 variant="contained"
+                color="primary"
                 onClick={handleSave}
                 disabled={saving}
                 startIcon={
                   saving ? <CircularProgress size={20} /> : <SaveIcon />
                 }
               >
-                {saving
-                  ? "Saving..."
-                  : mode === "create"
-                  ? "Create Tour"
-                  : "Update Tour"}
+                {saving ? "Creating..." : "Create Tour"}
+              </Button>
+            )}
+
+            {/* Show Update button for edit mode on all steps */}
+            {mode === "edit" && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSave}
+                disabled={saving}
+                startIcon={
+                  saving ? <CircularProgress size={20} /> : <SaveIcon />
+                }
+              >
+                {saving ? "Updating..." : "Update Tour"}
+              </Button>
+            )}
+
+            {/* Show Next button when not on last step */}
+            {activeStep < steps.length - 1 && (
+              <Button variant="contained" onClick={handleNext}>
+                Next
               </Button>
             )}
           </Stack>
