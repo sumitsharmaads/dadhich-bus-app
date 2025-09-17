@@ -1,0 +1,13 @@
+<svg width="160" height="80" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="30" width="140" height="30" rx="10" fill="#2563eb"/>
+  <rect x="20" y="35" width="120" height="18" rx="5" fill="#fbbf24"/>
+  <rect x="25" y="38" width="25" height="12" rx="3" fill="#e0e7ff"/>
+  <rect x="55" y="38" width="25" height="12" rx="3" fill="#e0e7ff"/>
+  <rect x="85" y="38" width="25" height="12" rx="3" fill="#e0e7ff"/>
+  <rect x="115" y="38" width="20" height="12" rx="3" fill="#e0e7ff"/>
+  <circle cx="35" cy="65" r="8" fill="#374151" stroke="#fff" stroke-width="2"/>
+  <circle cx="125" cy="65" r="8" fill="#374151" stroke="#fff" stroke-width="2"/>
+  <rect x="135" y="48" width="10" height="8" rx="2" fill="#2563eb"/>
+  <rect x="15" y="48" width="10" height="8" rx="2" fill="#2563eb"/>
+  <text x="80" y="60" text-anchor="middle" font-size="10" fill="#2563eb" font-family="Arial">Dadhich Bus</text>
+</svg>

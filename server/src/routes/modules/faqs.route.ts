@@ -50,6 +50,16 @@ faqsRouter.post(
   validate(faqsCreateSchema),
   createFAQs,
 );
+
+faqsRouter.put(
+  '/update',
+  limiter,
+  verifyCsrfToken,
+  requireAuth,
+  requireAdmin,
+  validate(faqsUpdateCurrentSchema),
+  updateCurrentFAQs,
+);
 faqsRouter.put(
   '/:id',
   limiter,
@@ -59,15 +69,6 @@ faqsRouter.put(
   validate(faqsIdParamSchema, 'params'),
   validate(faqsUpdateSchema),
   updateFAQs,
-);
-faqsRouter.put(
-  '/update',
-  limiter,
-  verifyCsrfToken,
-  requireAuth,
-  requireAdmin,
-  validate(faqsUpdateCurrentSchema),
-  updateCurrentFAQs,
 );
 faqsRouter.delete(
   '/:id',

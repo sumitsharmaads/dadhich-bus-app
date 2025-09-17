@@ -36,7 +36,6 @@ interface FAQsDoc {
 }
 
 const AdminFAQsPage: React.FC = () => {
-  const [id, setId] = useState<string | null>(null);
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [original, setOriginal] = useState<FAQ[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | false>(false);
@@ -48,7 +47,6 @@ const AdminFAQsPage: React.FC = () => {
     try {
       const res = await faqsService.getCurrentFAQs();
       if (res.success && res.data?.questions) {
-        setId(res.data._id);
         setFaqs(res.data.questions);
         setOriginal(res.data.questions);
       } else {
@@ -101,7 +99,7 @@ const AdminFAQsPage: React.FC = () => {
 
     setSaving(true);
     try {
-      const response = await faqsService.updateFAQs({ questions: faqs }, id);
+      const response = await faqsService.updateFAQs({ questions: faqs });
       if (response.success) {
         successPopup("FAQs saved successfully");
         setOriginal(faqs);

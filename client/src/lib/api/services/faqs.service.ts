@@ -26,11 +26,8 @@ export const faqsService = {
     return response.data;
   },
 
-  updateFAQs: async (
-    data: UpdateFAQsRequest,
-    id: string | null
-  ): Promise<FAQsResponse> => {
-    const response = await put<FAQsResponse>(`/faqs/update/${id}`, data);
+  updateFAQs: async (data: UpdateFAQsRequest): Promise<FAQsResponse> => {
+    const response = await put<FAQsResponse>(`/faqs/update`, data);
     return response.data;
   },
 
