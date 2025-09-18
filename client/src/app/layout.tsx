@@ -6,31 +6,14 @@ import { LoaderContextProvider } from "@/contexts/LoaderContext";
 import { AuthContextProvider } from "@/contexts/AuthContextProvider";
 import "./globals.css";
 
+// Basic metadata - let individual pages handle their own SEO
 export const metadata: Metadata = {
+  metadataBase: new URL("https://dadhichbusservice.com"),
   title: {
-    default:
-      "Dadhich Bus Services - Premium Bus Rental & Tour Packages Across India",
     template: "%s | Dadhich Bus Services",
+    default: "Dadhich Bus Services",
   },
-  description:
-    "Dadhich Bus Services offers premium bus rentals, corporate transportation, and curated tour packages across India. Safe, comfortable, and reliable bus services for groups, corporate events, and tourism.",
-  keywords: [
-    "Dadhich Bus Services",
-    "bus rental India",
-    "corporate bus service",
-    "tour packages India",
-    "group transportation",
-    "luxury bus hire",
-    "outstation bus service",
-    "local bus rental",
-    "bus booking online",
-    "travel agency India",
-    "bus transportation",
-    "corporate travel",
-    "wedding transportation",
-    "airport transfer",
-    "bus charter service",
-  ].join(", "),
+  description: "Premium bus rental and tour services across India",
   authors: [{ name: "Dadhich Bus Services" }],
   creator: "Dadhich Bus Services",
   publisher: "Dadhich Bus Services",
@@ -39,79 +22,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://dadhichbusservice.com"),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: "Dadhich Bus Services - Premium Bus Rental & Tour Packages",
-    description:
-      "Experience premium bus rentals, corporate transportation, and curated tour packages across India with Dadhich Bus Services. Safe, comfortable, and reliable transportation solutions.",
-    url: "https://dadhichbusservice.com",
-    siteName: "Dadhich Bus Services",
-    images: [
-      {
-        url: "/images/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Dadhich Bus Services - Premium Bus Rental & Tour Packages",
-      },
-      {
-        url: "/images/og-image-square.jpg",
-        width: 600,
-        height: 600,
-        alt: "Dadhich Bus Services Logo",
-      },
-    ],
-    locale: "en_IN",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Dadhich Bus Services - Premium Bus Rental & Tour Packages",
-    description:
-      "Premium bus rentals, corporate transportation, and curated tour packages across India. Safe, comfortable, and reliable transportation solutions.",
-    images: ["/images/og-image.jpg"],
-    creator: "@dadhichbusservice",
-    site: "@dadhichbusservice",
-  },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
   verification: {
-    google:
-      process.env.GOOGLE_VERIFICATION_CODE || "your-google-verification-code",
+    google: process.env.GOOGLE_VERIFICATION_CODE,
     yandex: process.env.YANDEX_VERIFICATION_CODE,
     yahoo: process.env.YAHOO_VERIFICATION_CODE,
-  },
-  category: "Travel & Tourism",
-  classification: "Business",
-  other: {
-    "geo.region": "IN",
-    "geo.placename": "India",
-    "geo.position": "20.5937;78.9629",
-    ICBM: "20.5937, 78.9629",
-    "DC.title": "Dadhich Bus Services",
-    "DC.creator": "Dadhich Bus Services",
-    "DC.subject": "Bus Rental, Tour Packages, Transportation",
-    "DC.description": "Premium bus rental and tour services across India",
-    "DC.publisher": "Dadhich Bus Services",
-    "DC.contributor": "Dadhich Bus Services",
-    "DC.date": new Date().toISOString(),
-    "DC.type": "Service",
-    "DC.format": "text/html",
-    "DC.identifier": "https://dadhichbusservice.com",
-    "DC.language": "en",
-    "DC.coverage": "India",
-    "DC.rights": "Copyright © 2024 Dadhich Bus Services. All rights reserved.",
   },
 };
 
@@ -166,83 +84,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//www.google-analytics.com" />
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
 
-        {/* Structured Data for Organization */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "TravelAgency",
-              name: "Dadhich Bus Services",
-              alternateName: "Dadhich Bus Service",
-              description: "Premium bus rental and tour services across India",
-              url: "https://dadhichbusservice.com",
-              logo: "https://dadhichbusservice.com/images/logo.png",
-              image: "https://dadhichbusservice.com/images/og-image.jpg",
-              telephone: "+91-XXXXXXXXXX",
-              email: "info@dadhichbusservice.com",
-              address: {
-                "@type": "PostalAddress",
-                addressCountry: "IN",
-                addressRegion: "India",
-              },
-              geo: {
-                "@type": "GeoCoordinates",
-                latitude: 20.5937,
-                longitude: 78.9629,
-              },
-              sameAs: [
-                "https://www.facebook.com/dadhichbusservice",
-                "https://www.instagram.com/dadhichbusservice",
-                "https://www.linkedin.com/company/dadhichbusservice",
-                "https://twitter.com/dadhichbusservice",
-              ],
-              openingHours: "Mo-Su 00:00-23:59",
-              priceRange: "₹₹",
-              currenciesAccepted: "INR",
-              paymentAccepted:
-                "Cash, Credit Card, Debit Card, UPI, Net Banking",
-              areaServed: {
-                "@type": "Country",
-                name: "India",
-              },
-              serviceType: [
-                "Bus Rental",
-                "Tour Packages",
-                "Corporate Transportation",
-                "Airport Transfer",
-                "Wedding Transportation",
-              ],
-              hasOfferCatalog: {
-                "@type": "OfferCatalog",
-                name: "Bus Services",
-                itemListElement: [
-                  {
-                    "@type": "Offer",
-                    itemOffered: {
-                      "@type": "Service",
-                      name: "Local Bus Rental",
-                    },
-                  },
-                  {
-                    "@type": "Offer",
-                    itemOffered: {
-                      "@type": "Service",
-                      name: "Outstation Bus Rental",
-                    },
-                  },
-                  {
-                    "@type": "Offer",
-                    itemOffered: {
-                      "@type": "Service",
-                      name: "Tour Packages",
-                    },
-                  },
-                ],
-              },
-            }),
-          }}
-        />
+        {/* Structured Data will be handled by individual page SEO */}
       </head>
       <body className="font-primary text-text-primary bg-surface-primary antialiased">
         <LoaderContextProvider>

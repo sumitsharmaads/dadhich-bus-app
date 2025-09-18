@@ -1,13 +1,33 @@
 import FaqAndTerms from "@/components/FaqAndTerms";
 import type { Metadata } from "next";
+import { generatePageSEO, seoEntryToMetadata } from "@/lib/seo/seoUtils";
+import { seoService } from "@/lib/api/services/seo.service";
+import { generateServerMetadata } from "@/lib/seo/serverSEO";
 
-export const metadata: Metadata = {
-  title: "FAQ & Terms | Dadhich Bus Service",
-  description:
-    "Find answers to frequently asked questions about our bus rental services, tours, and travel policies. Read our terms and conditions.",
-  keywords:
-    "FAQ, frequently asked questions, bus rental FAQ, tour FAQ, travel terms, bus service terms",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return generateServerMetadata("/faq", {
+    title: "FAQ & Terms | Dadhich Bus Service",
+    description:
+      "Find answers to frequently asked questions about our bus rental services, tours, and travel policies. Read our terms and conditions.",
+    keywords: [
+      "FAQ",
+      "frequently asked questions",
+      "bus rental FAQ",
+      "tour FAQ",
+      "travel terms",
+      "bus service terms",
+      "bus rental help",
+      "tour questions",
+      "travel policies",
+      "booking FAQ",
+      "bus service support",
+      "transportation FAQ",
+      "travel assistance",
+      "bus rental guide",
+    ],
+    image: "/images/og-image.jpg",
+  });
+}
 
 export default function FAQPage() {
   return (

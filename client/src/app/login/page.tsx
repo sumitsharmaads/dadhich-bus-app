@@ -1,16 +1,30 @@
 import React from "react";
 import { Metadata } from "next";
-import { generateMetadata, createPageSEO } from "@/utils/seo";
+import { generatePageSEO, seoEntryToMetadata } from "@/lib/seo/seoUtils";
+import { seoService } from "@/lib/api/services/seo.service";
 import { LoginForm, PreventLoginRoute } from "@/components/auth";
+import { generateServerMetadata } from "@/lib/seo/serverSEO";
 
-export const metadata: Metadata = generateMetadata(
-  createPageSEO({
-    title: "Login - Travel & Tourism | Sign In to Your Account",
+export async function generateMetadata(): Promise<Metadata> {
+  return generateServerMetadata("/login", {
+    title: "Login | Dadhich Bus Services",
     description:
-      "Sign in to your Travel & Tourism account to book tours, manage bookings, and access exclusive offers.",
-    keywords: "login, sign in, travel account, tourism, book tours",
-  })
-);
+      "Sign in to your Dadhich Bus Services account to book tours, manage bookings, and access exclusive offers.",
+    keywords: [
+      "login",
+      "sign in",
+      "Dadhich Bus account",
+      "bus service login",
+      "tour booking login",
+      "user account",
+      "bus rental login",
+      "travel account",
+      "customer login",
+      "member login",
+    ],
+    image: "/images/og-image.jpg",
+  });
+}
 
 export default function LoginPage() {
   return (
