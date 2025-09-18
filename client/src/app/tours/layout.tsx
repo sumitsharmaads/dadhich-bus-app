@@ -1,37 +1,26 @@
 import { Metadata } from "next";
+import { generateServerMetadata } from "@/lib/seo/serverSEO";
 
-export const metadata: Metadata = {
-  title: "Tour Packages | Dadhich Bus Service",
-  description:
-    "Discover amazing tour packages across India with Dadhich Bus Service. From spiritual journeys to adventure expeditions, we provide unforgettable travel experiences with comfortable transportation.",
-  keywords:
-    "tour packages, India tours, spiritual tours, adventure tours, guided tours, travel packages, bus tours, group tours, religious tours, luxury tours",
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  return generateServerMetadata("/tours", {
     title: "Tour Packages | Dadhich Bus Service",
     description:
-      "Explore amazing destinations across India with our curated tour packages. Comfortable transportation and unforgettable experiences.",
-    type: "website",
-    url: "https://dadhichbusservice.com/tours",
-    images: [
-      {
-        url: "/images/tours-og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Dadhich Bus Service Tour Packages",
-      },
+      "Discover amazing tour packages across India with Dadhich Bus Service. From spiritual journeys to adventure expeditions, we provide unforgettable travel experiences with comfortable transportation.",
+    keywords: [
+      "tour packages",
+      "India tours",
+      "spiritual tours",
+      "adventure tours",
+      "guided tours",
+      "travel packages",
+      "bus tours",
+      "group tours",
+      "religious tours",
+      "luxury tours",
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Tour Packages | Dadhich Bus Service",
-    description:
-      "Discover amazing tour packages across India with comfortable transportation and expert guidance.",
-    images: ["/images/tours-og.jpg"],
-  },
-  alternates: {
-    canonical: "/tours",
-  },
-};
+    image: "/images/tours-og.jpg",
+  });
+}
 
 export default function ToursLayout({
   children,
