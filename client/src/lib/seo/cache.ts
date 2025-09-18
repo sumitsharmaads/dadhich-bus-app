@@ -6,7 +6,7 @@
 import { normalizeRoutePath } from "./routeUtils";
 
 interface CacheEntry {
-  data: any;
+  data: any | null;
   timestamp: number;
   ttl: number; // Time to live in milliseconds
 }

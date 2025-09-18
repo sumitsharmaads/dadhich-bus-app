@@ -15,7 +15,14 @@ export const seoRepository = {
     return Seo.findById(id).exec();
   },
   getByRoute(routePath: string) {
-    return Seo.findOne({ routePath, isDeleted: false }).exec();
+    // Handle null, undefined, empty string cases - default to root route
+    const normalizedRoute = routePath || '/';
+
+    return Seo.findOne({
+      routePath: normalizedRoute,
+      isDeleted: false,
+      isPublished: true,
+    }).exec();
   },
   list(filter: FilterQuery<SeoDocument> = {}) {
     return Seo.find({ isDeleted: false, ...filter })

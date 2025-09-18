@@ -6,14 +6,21 @@
 import { Metadata } from "next";
 import { generatePageSEO, seoEntryToMetadata } from "./seoUtils";
 import { seoCache, generateCacheKey } from "./cache";
+import { get } from "../service";
+import { SEOEntry, SEOByRouteResponse } from "../api/services/seo.service";
 
 /**
  * Server-side SEO data fetcher with caching
  * This should be used in generateMetadata functions
  */
-export async function fetchServerSEO(routePath: string): Promise<any | null> {
+export async function fetchServerSEO(
+  routePath: string
+): Promise<SEOEntry | null> {
+  // Handle null, undefined, empty string cases - default to root route
+  const normalizedRoute = routePath || "/";
+
   try {
-    const cacheKey = generateCacheKey(routePath);
+    const cacheKey = generateCacheKey(normalizedRoute);
 
     // Check cache first
     const cachedData = seoCache.get(cacheKey);
@@ -21,23 +28,67 @@ export async function fetchServerSEO(routePath: string): Promise<any | null> {
       return cachedData;
     }
 
-    // In a real implementation, you would directly access the database here
-    // For now, we'll return null to use fallback SEO
-    // This prevents the ECONNREFUSED error during build time
+    // Check if we're in a build environment where server might not be available
+    const isBuildTime =
+      process.env.NODE_ENV === "production" && !process.env.NEXT_PUBLIC_API_URL;
 
-    // TODO: Implement direct database access here
-    // Example:
-    // const seoData = await db.seo.findOne({ routePath, isPublished: true, isDeleted: false });
-    // if (seoData) {
-    //   seoCache.set(cacheKey, seoData, 10 * 60 * 1000); // Cache for 10 minutes
-    //   return seoData;
-    // }
+    if (isBuildTime) {
+      // During build time, skip API calls and use fallback
+      seoCache.set(cacheKey, null, 5 * 60 * 1000);
+      return null;
+    }
 
-    // Cache the null result to avoid repeated database queries
+    // Fetch SEO data from server API using existing service
+    const response = await get<SEOByRouteResponse>("/seo/by-route", {
+      params: { routePath: normalizedRoute },
+      timeout: 5000, // 5 second timeout
+    });
+
+    // Check if we got valid SEO data
+    if (
+      response.data.success &&
+      response.data.data &&
+      response.data.data.isPublished &&
+      !response.data.data.isDeleted
+    ) {
+      console.log(`✅ SEO data fetched for route: ${normalizedRoute}`);
+      // Cache the valid SEO data
+      seoCache.set(cacheKey, response.data.data, 10 * 60 * 1000); // Cache for 10 minutes
+      return response.data.data;
+    } else {
+      console.log(
+        `ℹ️ No published SEO data found for route: ${normalizedRoute}`
+      );
+    }
+
+    // Cache the null result to avoid repeated API calls
     seoCache.set(cacheKey, null, 5 * 60 * 1000); // Cache null for 5 minutes
     return null;
   } catch (error) {
-    console.warn(`Failed to fetch server SEO for route ${routePath}:`, error);
+    const cacheKey = generateCacheKey(normalizedRoute);
+
+    // Handle different types of errors
+    if (error instanceof Error) {
+      if (error.message.includes("timeout")) {
+        console.warn(`SEO API timeout for route ${normalizedRoute}`);
+        // Cache null for shorter time on timeout
+        seoCache.set(cacheKey, null, 1 * 60 * 1000); // 1 minute
+      } else {
+        console.warn(
+          `Failed to fetch server SEO for route ${normalizedRoute}:`,
+          error.message
+        );
+        // Cache null for longer time on other errors
+        seoCache.set(cacheKey, null, 2 * 60 * 1000); // 2 minutes
+      }
+    } else {
+      console.warn(
+        `Failed to fetch server SEO for route ${normalizedRoute}:`,
+        error
+      );
+      seoCache.set(cacheKey, null, 2 * 60 * 1000); // 2 minutes
+    }
+
     return null;
   }
 }
@@ -54,14 +105,18 @@ export async function generateServerMetadata(
     image?: string;
   }
 ): Promise<Metadata> {
+  // Normalize route path - handle null, undefined, empty string cases
+  const normalizedRoute = routePath || "/";
+
   try {
     // Try to fetch server-side SEO data
-    const dynamicSEO = await fetchServerSEO(routePath);
+    console.log("Fetching server SEO for", normalizedRoute);
+    const dynamicSEO = await fetchServerSEO(normalizedRoute);
     if (dynamicSEO && dynamicSEO.isPublished && !dynamicSEO.isDeleted) {
-      return seoEntryToMetadata(dynamicSEO, routePath);
+      return seoEntryToMetadata(dynamicSEO, normalizedRoute);
     }
   } catch (error) {
-    console.warn(`Failed to fetch server SEO for ${routePath}:`, error);
+    console.warn(`Failed to fetch server SEO for ${normalizedRoute}:`, error);
   }
 
   // Fallback to page-specific SEO with global config
