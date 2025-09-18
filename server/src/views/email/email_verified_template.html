@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= website.branding?.brandName %> • Email Verified</title>
+</head>
+
+<body style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7f9;padding:24px;color:#111">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:720px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden">
+    <tr>
+      <td style="padding:20px 24px;border-bottom:1px solid #eee">
+        <div style="display:flex;align-items:center;gap:12px">
+          <% if (website.branding?.logo?.url) { %>
+          <img src="<%= website.branding.logo.url %>" alt="<%= website.branding.brandName %>" height="28" />
+          <% } %>
+          <strong style="font-size:18px"><%= website.branding?.brandName || 'Dadhich Bus Services' %></strong>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:24px">
+        <!-- Success Header -->
+        <div style="text-align:center;margin-bottom:24px">
+          <div style="font-size:64px;color:#22c55e;margin-bottom:16px">🎉</div>
+          <h2 style="margin:0 0 12px;font-size:24px;color:#22c55e">Email Successfully Verified!</h2>
+          <p style="margin:0 0 16px;color:#6b7280;font-size:16px">Congratulations <strong><%= fullname %></strong>!</p>
+          <p style="margin:0;color:#6b7280;font-size:16px">Your email address has been successfully verified. Your account is now fully activated and you can start using all our services.</p>
+        </div>
+
+        <!-- Success Message -->
+        <div style="background:#f0fdf4;border:1px solid #22c55e;border-radius:8px;padding:20px;margin-bottom:24px">
+          <h3 style="margin:0 0 16px;font-size:18px;color:#166534;display:flex;align-items:center;gap:8px">
+            ✅ Account Successfully Activated
+          </h3>
+          <p style="margin:0;color:#166534;font-size:14px">Your account is now fully verified and ready to use. You can access all features of our platform.</p>
+        </div>
+
+        <!-- Features Section -->
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:20px;margin-bottom:24px">
+          <h3 style="margin:0 0 16px;font-size:16px;color:#374151;display:flex;align-items:center;gap:8px">
+            🚀 What You Can Do Now
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));gap:16px">
+            <div style="padding:12px;background:#fff;border-radius:6px;border:1px solid #e5e7eb">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <span style="color:#22c55e;font-size:16px">🚌</span>
+                <strong style="color:#374151;font-size:14px">Book Bus Tickets</strong>
+              </div>
+              <p style="margin:0;color:#6b7280;font-size:12px">Search and book bus tickets for your travels across India</p>
+            </div>
+            <div style="padding:12px;background:#fff;border-radius:6px;border:1px solid #e5e7eb">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <span style="color:#22c55e;font-size:16px">📋</span>
+                <strong style="color:#374151;font-size:14px">Manage Bookings</strong>
+              </div>
+              <p style="margin:0;color:#6b7280;font-size:12px">View, modify, or cancel your existing reservations</p>
+            </div>
+            <div style="padding:12px;background:#fff;border-radius:6px;border:1px solid #e5e7eb">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <span style="color:#22c55e;font-size:16px">🎯</span>
+                <strong style="color:#374151;font-size:14px">Exclusive Deals</strong>
+              </div>
+              <p style="margin:0;color:#6b7280;font-size:12px">Access special offers and discounts for members</p>
+            </div>
+            <div style="padding:12px;background:#fff;border-radius:6px;border:1px solid #e5e7eb">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <span style="color:#22c55e;font-size:16px">📊</span>
+                <strong style="color:#374151;font-size:14px">Travel History</strong>
+              </div>
+              <p style="margin:0;color:#6b7280;font-size:12px">Track your past and upcoming travel bookings</p>
+            </div>
+            <div style="padding:12px;background:#fff;border-radius:6px;border:1px solid #e5e7eb">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <span style="color:#22c55e;font-size:16px">🔔</span>
+                <strong style="color:#374151;font-size:14px">Travel Updates</strong>
+              </div>
+              <p style="margin:0;color:#6b7280;font-size:12px">Receive important notifications about your trips</p>
+            </div>
+            <div style="padding:12px;background:#fff;border-radius:6px;border:1px solid #e5e7eb">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <span style="color:#22c55e;font-size:16px">👤</span>
+                <strong style="color:#374151;font-size:14px">Profile Management</strong>
+              </div>
+              <p style="margin:0;color:#6b7280;font-size:12px">Update your personal information and preferences</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div style="text-align:center;margin:24px 0">
+          <a href="<%= loginUrl %>" style="display:inline-block;background:linear-gradient(135deg, #22c55e, #16a34a);color:white;padding:16px 32px;text-decoration:none;border-radius:8px;font-weight:bold;font-size:16px;box-shadow:0 4px 12px rgba(34, 197, 94, 0.3)">
+            🚀 Start Your Journey
+          </a>
+        </div>
+
+        <!-- Welcome Message -->
+        <div style="background:#f0f9ff;border:1px solid #0ea5e9;border-radius:8px;padding:20px;text-align:center">
+          <h4 style="margin:0 0 12px;font-size:16px;color:#0c4a6e">Welcome to the Family!</h4>
+          <p style="margin:0;color:#0c4a6e;font-size:14px">Thank you for choosing <%= website.branding?.brandName || 'Dadhich Bus Services' %> for your travel needs. We're excited to be part of your journey and look forward to serving you with the best bus travel experience!</p>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:18px 24px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center">
+        <p style="margin:0;color:#6b7280;font-size:12px">
+          This email was sent from your account verification.
+          <% if (website.contact?.emails?.supportEmail) { %>
+          For support, contact: <a href="mailto:<%= website.contact.emails.supportEmail %>" style="color:#3b82f6"><%= website.contact.emails.supportEmail %></a>
+          <% } %>
+        </p>
+        <div style="margin-top:8px;font-size:12px;color:#6b7280">
+          <%= website.branding?.brandName || 'Dadhich Bus Services' %> •
+          <a href="https://<%= website.domains?.primary %>" style="color:#3b82f6;text-decoration:none"><%= website.domains?.primary %></a>
+          <% if (website.contact?.phone) { %>
+          • <a href="tel:<%= website.contact.phone %>" style="color:#3b82f6;text-decoration:none"><%= website.contact.phone %></a>
+          <% } %>
+        </div>
+        <% if (website.socials) { %>
+        <div style="margin-top:8px;font-size:12px;color:#6b7280">
+          <% Object.entries(website.socials).forEach(function([k,v]){ if (v) { %>
+          <a href="<%= v %>" style="color:#6b7280;margin-right:10px;text-decoration:none"><%= k %></a>
+          <% }}); %>
+        </div>
+        <% } %>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

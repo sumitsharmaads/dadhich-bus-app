@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Box,
@@ -15,36 +15,45 @@ import {
   InputAdornment,
   Container,
 } from "@mui/material";
-import { Email, ArrowBack, LockReset } from "@mui/icons-material";
+import { Email, ArrowBack } from "@mui/icons-material";
 import { authService } from "@/lib/api";
-import { successPopup, errorPopup } from "@/utils/errors/alerts";
 
-const ForgotPasswordPage: React.FC = () => {
+const ResendVerificationPage: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
+  useEffect(() => {
+    const emailParam = searchParams.get("email");
+    if (emailParam) {
+      setEmail(emailParam);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) {
-      errorPopup("Email is required");
+      setError("Email is required");
       return;
     }
 
     setIsLoading(true);
+    setError("");
+    setMessage("");
 
     try {
-      const response = await authService.requestPasswordReset(email);
-      successPopup(
-        response.message || "Password reset email sent successfully!"
-      );
+      const response = await authService.resendVerificationEmail(email);
+      setMessage(response.message || "Verification email sent successfully!");
       setIsSuccess(true);
     } catch (error: any) {
-      errorPopup(
-        error.message ||
-          "Failed to send password reset email. Please try again."
+      setError(
+        error.response?.data?.message ||
+          "Failed to send verification email. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -67,7 +76,7 @@ const ForgotPasswordPage: React.FC = () => {
         >
           <CardContent sx={{ p: 4 }}>
             <Box textAlign="center" mb={4}>
-              <LockReset
+              <Email
                 sx={{
                   fontSize: 48,
                   color: "var(--color-primary-500)",
@@ -83,7 +92,7 @@ const ForgotPasswordPage: React.FC = () => {
                   color: "var(--color-text-primary)",
                 }}
               >
-                Forgot Password?
+                Resend Verification Email
               </Typography>
               <Typography
                 variant="body1"
@@ -91,8 +100,7 @@ const ForgotPasswordPage: React.FC = () => {
                   color: "var(--color-text-secondary)",
                 }}
               >
-                Enter your email address and we'll send you a link to reset your
-                password
+                Enter your email address to receive a new verification link
               </Typography>
             </Box>
 
@@ -108,11 +116,10 @@ const ForgotPasswordPage: React.FC = () => {
                   }}
                 >
                   <Typography variant="body2">
-                    <strong>Password reset email sent!</strong>
+                    <strong>Verification email sent!</strong>
                     <br />
-                    Please check your inbox and click the reset link to change
-                    your password. The link will expire in 1 hour for security
-                    reasons.
+                    Please check your inbox and click the verification link to
+                    activate your account. The link will expire in 24 hours.
                   </Typography>
                 </Alert>
                 <Box
@@ -129,6 +136,7 @@ const ForgotPasswordPage: React.FC = () => {
                     onClick={() => {
                       setEmail("");
                       setIsSuccess(false);
+                      setMessage("");
                     }}
                     sx={{
                       borderColor: "var(--color-primary-500)",
@@ -153,7 +161,7 @@ const ForgotPasswordPage: React.FC = () => {
                       },
                     }}
                   >
-                    Back to Login
+                    Go to Login
                   </Button>
                 </Box>
               </Box>
@@ -196,6 +204,32 @@ const ForgotPasswordPage: React.FC = () => {
                   }}
                 />
 
+                {error && (
+                  <Alert
+                    severity="error"
+                    sx={{
+                      mb: 3,
+                      backgroundColor: "var(--color-error-50)",
+                      borderColor: "var(--color-error-200)",
+                    }}
+                  >
+                    {error}
+                  </Alert>
+                )}
+
+                {message && !isSuccess && (
+                  <Alert
+                    severity="info"
+                    sx={{
+                      mb: 3,
+                      backgroundColor: "var(--color-info-50)",
+                      borderColor: "var(--color-info-200)",
+                    }}
+                  >
+                    {message}
+                  </Alert>
+                )}
+
                 <Button
                   type="submit"
                   fullWidth
@@ -222,7 +256,7 @@ const ForgotPasswordPage: React.FC = () => {
                       Sending...
                     </>
                   ) : (
-                    "Send Reset Link"
+                    "Send Verification Email"
                   )}
                 </Button>
 
@@ -250,4 +284,4 @@ const ForgotPasswordPage: React.FC = () => {
   );
 };
 
-export default ForgotPasswordPage;
+export default ResendVerificationPage;

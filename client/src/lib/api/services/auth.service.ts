@@ -114,7 +114,7 @@ class AuthService {
   async changePassword(data: ChangePasswordRequest): Promise<AuthResponse> {
     try {
       const response = await post<AuthResponse>(
-        `${this.baseUrl}/reset-password`,
+        `${this.baseUrl}/change-password`,
         data
       );
 
@@ -280,6 +280,153 @@ class AuthService {
         errorPopup("Cannot terminate current session.");
       } else {
         errorPopup("Failed to terminate session. Please try again.");
+      }
+
+      throw error;
+    }
+  }
+
+  /**
+   * Validate password strength
+   */
+  async validatePassword(
+    password: string
+  ): Promise<{ strength: any; isValid: boolean }> {
+    try {
+      const response = await post<{
+        success: boolean;
+        data: { strength: any; isValid: boolean };
+      }>(`${this.baseUrl}/validate-password`, { password });
+
+      // Return the data object from the API response
+      return response.data.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 400) {
+        errorPopup("Password is required for validation.");
+      } else if (error.response?.status === 429) {
+        errorPopup("Too many validation attempts. Please try again later.");
+      } else {
+        errorPopup("Password validation failed. Please try again.");
+      }
+
+      throw error;
+    }
+  }
+
+  /**
+   * Verify email with token
+   */
+  async verifyEmail(token: string): Promise<{ message: string; data: any }> {
+    try {
+      const response = await get<{
+        success: boolean;
+        message: string;
+        data: any;
+      }>(`${this.baseUrl}/verify-email?token=${encodeURIComponent(token)}`);
+
+      return response.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 400) {
+        errorPopup(
+          "Invalid verification token. Please check your email for the correct link."
+        );
+      } else if (error.response?.status === 404) {
+        errorPopup(
+          "Verification token not found. The link may be expired or invalid."
+        );
+      } else {
+        errorPopup("Email verification failed. Please try again.");
+      }
+
+      throw error;
+    }
+  }
+
+  /**
+   * Resend verification email
+   */
+  async resendVerificationEmail(email: string): Promise<{ message: string }> {
+    try {
+      const response = await post<{
+        success: boolean;
+        message: string;
+      }>(`${this.baseUrl}/resend-verification`, { email });
+
+      return response.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 400) {
+        errorPopup("Email is required.");
+      } else if (error.response?.status === 404) {
+        errorPopup("User not found with this email address.");
+      } else if (error.response?.status === 429) {
+        errorPopup(
+          "Please wait 5 minutes before requesting another verification email."
+        );
+      } else {
+        errorPopup(
+          "Failed to send verification email. Please try again later."
+        );
+      }
+
+      throw error;
+    }
+  }
+
+  // Password Reset
+  async requestPasswordReset(email: string): Promise<{ message: string }> {
+    try {
+      const response = await post<{
+        success: boolean;
+        message: string;
+      }>(`${this.baseUrl}/forgot-password`, { email });
+
+      return response.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 400) {
+        throw new Error(
+          error.response?.data?.message ||
+            "Invalid email address. Please check and try again."
+        );
+      } else if (error.response?.status === 403) {
+        throw new Error(
+          "Please verify your email address before resetting your password."
+        );
+      } else if (error.response?.status === 429) {
+        throw new Error(
+          "Too many password reset attempts. Please try again later."
+        );
+      }
+
+      throw error;
+    }
+  }
+
+  async resetPassword(
+    token: string,
+    newPassword: string
+  ): Promise<{ message: string }> {
+    try {
+      const response = await post<{
+        success: boolean;
+        message: string;
+      }>(`${this.baseUrl}/reset-password`, { token, newPassword });
+
+      return response.data;
+    } catch (error: any) {
+      // Handle specific error cases
+      if (error.response?.status === 400) {
+        throw new Error(
+          error.response?.data?.message ||
+            "Invalid or expired reset token. Please request a new one."
+        );
+      } else if (error.response?.status === 404) {
+        throw new Error("User not found. Please contact support.");
+      } else if (error.response?.status === 429) {
+        throw new Error("Too many attempts. Please try again later.");
       }
 
       throw error;

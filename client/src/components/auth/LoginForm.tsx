@@ -115,7 +115,26 @@ const LoginForm: React.FC = () => {
         setApiError(response.message || "Login failed. Please try again.");
       }
     } catch (error: any) {
-      setApiError(error.message || "Login failed. Please try again.");
+      // Handle specific error cases
+      if (error.response?.status === 423) {
+        // Account locked
+        setApiError(
+          error.response?.data?.message ||
+            "Account is temporarily locked due to too many failed login attempts."
+        );
+      } else if (error.response?.status === 403) {
+        // Email not verified
+        setApiError(
+          error.response?.data?.message ||
+            "Please verify your email address before logging in. Check your inbox for a verification email."
+        );
+      } else if (error.response?.status === 401) {
+        setApiError("Invalid email or password. Please try again.");
+      } else if (error.response?.status === 429) {
+        setApiError("Too many login attempts. Please try again later.");
+      } else {
+        setApiError(error.message || "Login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

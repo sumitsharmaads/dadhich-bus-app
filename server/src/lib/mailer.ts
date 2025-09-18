@@ -59,24 +59,29 @@ export function buildBrandedHtml(
    </body></html>`;
 }
 
+// Templates are always in server/src/views/email - NO FALLBACK
 const INTERNAL_TEMPLATES_DIR = path.join(__dirname, '..', 'views', 'email');
 
 export async function renderTemplate(
   templateFile: string,
   data: Record<string, unknown>,
-): Promise<string | null> {
-  const searchPaths = [env.EMAIL_TEMPLATES_DIR, INTERNAL_TEMPLATES_DIR].filter(Boolean) as string[];
-  for (const base of searchPaths) {
-    const fullPath = path.join(base, templateFile);
-    try {
-      await fs.promises.access(fullPath, fs.constants.R_OK);
-      const tpl = await fs.promises.readFile(fullPath, 'utf8');
-      return ejs.render(tpl, data);
-    } catch {
-      // continue
-    }
+): Promise<string> {
+  const fullPath = path.join(INTERNAL_TEMPLATES_DIR, templateFile);
+
+  console.log('🔍 Looking for template:', templateFile);
+  console.log('📁 Template path:', fullPath);
+
+  try {
+    await fs.promises.access(fullPath, fs.constants.R_OK);
+    console.log('✅ Template found at:', fullPath);
+    const tpl = await fs.promises.readFile(fullPath, 'utf8');
+    const rendered = ejs.render(tpl, data);
+    console.log('✅ Template rendered successfully');
+    return rendered;
+  } catch (error) {
+    console.log('❌ Template not found at:', fullPath, (error as Error).message);
+    throw new Error(`Template not found: ${templateFile}`);
   }
-  return null;
 }
 
 export async function sendBrandedMail(

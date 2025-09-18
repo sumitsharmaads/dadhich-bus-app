@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -30,6 +30,8 @@ import { useLoader } from "@/contexts/LoaderContext";
 import { authService } from "@/lib/api";
 import { RegisterRequest } from "@/lib/api/types/auth.types";
 import { PublicRoutes } from "@/constants/routes";
+import PasswordStrengthMeter from "./PasswordStrengthMeter";
+import { successPopup } from "@/utils/errors/alerts";
 
 const SignupForm: React.FC = () => {
   const router = useRouter();
@@ -46,6 +48,14 @@ const SignupForm: React.FC = () => {
   const [errors, setErrors] = useState<Partial<RegisterRequest>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState<string>("");
+  const [passwordStrength, setPasswordStrength] = useState<any>(null);
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
+
+  // Stable callback to prevent infinite re-renders
+  const handlePasswordStrengthChange = useCallback((response: any) => {
+    setPasswordStrength(response.strength);
+    setIsPasswordValid(response.isValid);
+  }, []);
 
   const handleInputChange =
     (field: keyof RegisterRequest) =>
@@ -90,8 +100,8 @@ const SignupForm: React.FC = () => {
 
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 10) {
-      newErrors.password = "Password must be at least 10 characters";
+    } else if (!isPasswordValid) {
+      newErrors.password = "Password does not meet security requirements";
     }
 
     setErrors(newErrors);
@@ -110,7 +120,12 @@ const SignupForm: React.FC = () => {
       const response = await authService.register(formData);
 
       if (response.success) {
-        // Redirect to login page after successful registration
+        // Show success message about email verification
+        setApiError(""); // Clear any previous errors
+        // Show success message instead of redirecting
+        successPopup(
+          "Registration successful! Please check your email to verify your account before logging in."
+        );
         router.push(PublicRoutes.LOGIN);
       } else {
         setApiError(
@@ -118,7 +133,21 @@ const SignupForm: React.FC = () => {
         );
       }
     } catch (error: any) {
-      setApiError(error.message || "Registration failed. Please try again.");
+      // Handle specific error cases
+      if (error.response?.status === 400) {
+        setApiError(
+          error.response?.data?.message ||
+            "Invalid registration data. Please check your input."
+        );
+      } else if (error.response?.status === 409) {
+        setApiError(
+          "Email already in use. Please use a different email address."
+        );
+      } else if (error.response?.status === 429) {
+        setApiError("Too many registration attempts. Please try again later.");
+      } else {
+        setApiError(error.message || "Registration failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -333,6 +362,16 @@ const SignupForm: React.FC = () => {
                   },
                 }}
               />
+
+              {/* Password Strength Meter */}
+              {formData.password && (
+                <PasswordStrengthMeter
+                  password={formData.password}
+                  onStrengthChange={handlePasswordStrengthChange}
+                  showRequirements={true}
+                  className="mt-2"
+                />
+              )}
 
               <Button
                 type="submit"

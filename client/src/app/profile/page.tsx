@@ -51,6 +51,7 @@ import { successPopup, errorPopup } from "@/utils/errors/alerts";
 import User from "@/utils/User";
 import Link from "next/link";
 import { authService } from "@/lib/api/services/auth.service";
+import ChangePasswordModal from "@/components/auth/ChangePasswordModal";
 
 interface UserGuest {
   name: string;
@@ -64,6 +65,7 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddingGuest, setIsAddingGuest] = useState(false);
   const [editingRowIndex, setEditingRowIndex] = useState<number | null>(null);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({
     fullname: user?.fullname || "",
     phone: user?.phone || "",
@@ -150,7 +152,7 @@ const ProfilePage = () => {
   };
 
   const handleChangePassword = () => {
-    // TODO: Implement change password functionality
+    setIsChangePasswordOpen(true);
   };
 
   if (!user) {
@@ -1021,6 +1023,12 @@ const ProfilePage = () => {
           </Box>
         </Box>
       </Container>
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        open={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+      />
     </Box>
   );
 };
