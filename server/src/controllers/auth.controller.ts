@@ -64,9 +64,13 @@ export const tempRegister = asyncHandler(async (req: Request, res: Response) => 
         website,
       };
       const emailHtml = await renderTemplate('email_verification_template.html', data);
-      await sendBrandedMail(website, 'Verify Your Email - Dadhich Bus Services', emailHtml, [
-        user.email as string,
-      ]);
+      if (emailHtml) {
+        await sendBrandedMail(website, 'Verify Your Email - Dadhich Bus Services', emailHtml, [
+          user.email as string,
+        ]);
+      } else {
+        console.error('Failed to render email verification template');
+      }
     }
   } catch (emailError) {
     console.error('Failed to send verification email:', emailError);
@@ -362,12 +366,16 @@ export const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
         website,
       };
       const emailHtml = await renderTemplate('email_verified_template.html', data);
-      await sendBrandedMail(
-        website,
-        'Email Verified Successfully - Dadhich Bus Services',
-        emailHtml,
-        [user.email as string],
-      );
+      if (emailHtml) {
+        await sendBrandedMail(
+          website,
+          'Email Verified Successfully - Dadhich Bus Services',
+          emailHtml,
+          [user.email as string],
+        );
+      } else {
+        console.error('Failed to render email verified template');
+      }
     }
   } catch (emailError) {
     console.error('Failed to send verification success email:', emailError);
@@ -436,9 +444,13 @@ export const resendVerificationEmail = asyncHandler(async (req: Request, res: Re
         website,
       };
       const emailHtml = await renderTemplate('email_verification_template.html', data);
-      await sendBrandedMail(website, 'Verify Your Email - Dadhich Bus Services', emailHtml, [
-        user.email as string,
-      ]);
+      if (emailHtml) {
+        await sendBrandedMail(website, 'Verify Your Email - Dadhich Bus Services', emailHtml, [
+          user.email as string,
+        ]);
+      } else {
+        console.error('Failed to render email verification template');
+      }
     }
   } catch (emailError) {
     console.error('Failed to send verification email:', emailError);
@@ -498,9 +510,13 @@ export const requestPasswordReset = asyncHandler(async (req: Request, res: Respo
         website,
       };
       const emailHtml = await renderTemplate('password_reset_template.html', data);
-      await sendBrandedMail(website, 'Reset Your Password - Dadhich Bus Services', emailHtml, [
-        user.email as string,
-      ]);
+      if (emailHtml) {
+        await sendBrandedMail(website, 'Reset Your Password - Dadhich Bus Services', emailHtml, [
+          user.email as string,
+        ]);
+      } else {
+        console.error('Failed to render password reset template');
+      }
     }
   } catch (emailError) {
     console.error('Failed to send password reset email:', emailError);
@@ -594,12 +610,16 @@ export const resetPassword = asyncHandler(async (req: Request, res: Response) =>
         website,
       };
       const emailHtml = await renderTemplate('password_reset_success_template.html', data);
-      await sendBrandedMail(
-        website,
-        'Password Reset Successful - Dadhich Bus Services',
-        emailHtml,
-        [user.email as string],
-      );
+      if (emailHtml) {
+        await sendBrandedMail(
+          website,
+          'Password Reset Successful - Dadhich Bus Services',
+          emailHtml as string,
+          [user.email as string],
+        );
+      } else {
+        console.error('Failed to render password reset success template');
+      }
     }
   } catch (emailError) {
     console.error('Failed to send password reset success email:', emailError);
