@@ -63,7 +63,7 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
       ref={ref}
       className={`fixed top-[76px] right-0 max-w-[500px] w-[320px] md:w-[50vw] bg-surface-primary border border-neutral-200 rounded-l-lg shadow-xl p-4 transition-all duration-300 ease-in-out z-50 ${
         menuOpen
-          ? "opacity-100 translate-x-0"
+          ? "opacity-100 translate-x-0 z-50"
           : "opacity-0 translate-x-full pointer-events-none"
       }`}
       style={{
@@ -71,6 +71,29 @@ export const MobileHeader: React.FC<MobileHeaderProps> = ({
         overflowY: "auto",
       }}
     >
+      {/* Close (X) button */}
+      <div className="flex justify-end mb-2">
+        <button
+          onClick={toggleMenu}
+          aria-label="Close menu"
+          className="p-2 rounded-full hover:bg-neutral-100 focus:outline-none"
+        >
+          <svg
+            className="h-6 w-6 text-text-primary"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
       <div className="border-b border-primary-200 mb-4 pb-2">
         <div className="w-8 h-1 bg-primary-500 rounded-full mx-auto"></div>
       </div>

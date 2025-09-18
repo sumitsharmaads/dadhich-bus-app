@@ -152,13 +152,13 @@ export const Header: React.FC = () => {
               <>
                 <Link
                   href={PublicRoutes.LOGIN}
-                  className="px-4 py-2 rounded border border-neutral-300 hover:border-primary-500 transition-colors text-text-primary hover:text-primary-500"
+                  className="px-2 py-1 rounded border border-neutral-300 hover:border-primary-500 transition-colors text-text-primary hover:text-primary-500 text-sm"
                 >
                   Sign In
                 </Link>
                 <Link
                   href={PublicRoutes.SIGNUP}
-                  className="bg-secondary-500 hover:bg-secondary-600 text-white px-4 py-2 rounded transition-colors"
+                  className="bg-secondary-500 hover:bg-secondary-600 text-white px-2 py-1 rounded transition-colors text-sm"
                 >
                   Sign Up
                 </Link>
@@ -180,7 +180,11 @@ export const Header: React.FC = () => {
         {(viewPort.tabView || viewPort.mobileView) && !isAdminPage && (
           <div className="flex items-center">
             <button
-              onClick={toggleMenu}
+              onClick={() =>
+                setMenuOpen(() => {
+                  return menuOpen ? false : true;
+                })
+              }
               className="focus:outline-none p-2 rounded-lg hover:bg-neutral-100 transition-colors"
               aria-label="Toggle menu"
             >
@@ -191,21 +195,12 @@ export const Header: React.FC = () => {
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                {menuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                )}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
               </svg>
             </button>
           </div>
