@@ -33,6 +33,8 @@ import {
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { busService } from "@/lib/api/services/bus.service";
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 import {
   CreateBusData,
   BusType,
@@ -269,10 +271,10 @@ const AddBusPage: React.FC = () => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Capacity"
+                    <NumberTextField
+                label="Capacity"
                       name="capacity"
-                      type="number"
+                      
                       value={bus.capacity}
                       onChange={handleChange}
                       error={!!errors.capacity}
@@ -283,10 +285,10 @@ const AddBusPage: React.FC = () => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Total Seats (Optional)"
+                    <NumberTextField
+                label="Total Seats (Optional)"
                       name="totalSeats"
-                      type="number"
+                      
                       value={bus.totalSeats}
                       onChange={handleChange}
                       error={!!errors.totalSeats}
@@ -463,10 +465,10 @@ const AddBusPage: React.FC = () => {
                   <Box sx={{ mt: 2 }}>
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
-                        <TextField
-                          label="Rows"
+                        <NumberTextField
+                label="Rows"
                           name="rows"
-                          type="number"
+                          
                           value={bus.seatLayout?.rows || ""}
                           onChange={handleSeatLayoutChange}
                           error={!!errors.rows}
@@ -477,10 +479,10 @@ const AddBusPage: React.FC = () => {
                         />
                       </Grid>
                       <Grid item xs={6}>
-                        <TextField
-                          label="Columns"
+                        <NumberTextField
+                label="Columns"
                           name="cols"
-                          type="number"
+                          
                           value={bus.seatLayout?.cols || ""}
                           onChange={handleSeatLayoutChange}
                           error={!!errors.cols}

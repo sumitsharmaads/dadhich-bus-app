@@ -42,6 +42,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { EXCLUSIVE_FEATURES } from "@/constants/tourConstants";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 interface AmountSectionProps {
   form: CreateTourRequest;
   onFormChange: (field: keyof CreateTourRequest, value: any) => void;
@@ -250,10 +252,9 @@ const AmountSection: React.FC<AmountSectionProps> = ({
               </FormControl>
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
+              <NumberTextField
                 fullWidth
                 label="Discount Value *"
-                type="number"
                 value={discountForm.value}
                 onChange={(e) =>
                   setDiscountForm((prev) => ({
@@ -306,10 +307,9 @@ const AmountSection: React.FC<AmountSectionProps> = ({
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
+              <NumberTextField
                 fullWidth
                 label="Minimum Amount"
-                type="number"
                 value={discountForm.minAmount}
                 onChange={(e) =>
                   setDiscountForm((prev) => ({
@@ -325,10 +325,9 @@ const AmountSection: React.FC<AmountSectionProps> = ({
               />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField
+              <NumberTextField
                 fullWidth
                 label="Maximum Discount"
-                type="number"
                 value={discountForm.maxDiscount}
                 onChange={(e) =>
                   setDiscountForm((prev) => ({
@@ -435,10 +434,9 @@ const AmountSection: React.FC<AmountSectionProps> = ({
           <Box sx={{ p: 2, bgcolor: "grey.50", borderRadius: 1, mb: 2 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={3}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Min Members *"
-                  type="number"
                   value={groupDiscountForm.minMembers}
                   onChange={(e) =>
                     setGroupDiscountForm((prev) => ({
@@ -450,10 +448,9 @@ const AmountSection: React.FC<AmountSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={3}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Max Members"
-                  type="number"
                   value={groupDiscountForm.maxMembers}
                   onChange={(e) =>
                     setGroupDiscountForm((prev) => ({
@@ -482,10 +479,9 @@ const AmountSection: React.FC<AmountSectionProps> = ({
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={3}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Value *"
-                  type="number"
                   value={groupDiscountForm.value}
                   onChange={(e) =>
                     setGroupDiscountForm((prev) => ({

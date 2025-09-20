@@ -25,6 +25,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { CreateTourRequest } from "@/lib/api/types/tour.types";
 import { TOUR_TYPES, INCLUSIVE_FEATURES } from "@/constants/tourConstants";
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 
 interface BasicInfoSectionProps {
   form: CreateTourRequest;
@@ -414,10 +416,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Minimum Fare *"
-                  type="number"
                   value={form.pricing?.minFare || ""}
                   onChange={(e) =>
                     onNestedFormChange(
@@ -437,10 +438,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Maximum Fare"
-                  type="number"
                   value={form.pricing?.maxFare || ""}
                   onChange={(e) =>
                     onNestedFormChange(
@@ -459,7 +459,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Adult Price"
                   type="number"
@@ -481,7 +481,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Child Price"
                   type="number"
@@ -503,10 +503,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Infant Price"
-                  type="number"
                   value={form.pricing?.infantPrice || ""}
                   onChange={(e) =>
                     onNestedFormChange(
@@ -525,10 +524,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Single Supplement"
-                  type="number"
                   value={form.pricing?.singleSupplement || ""}
                   onChange={(e) =>
                     onNestedFormChange(
@@ -547,10 +545,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Taxes"
-                  type="number"
                   value={form.pricing?.taxes || ""}
                   onChange={(e) =>
                     onNestedFormChange(
@@ -569,10 +566,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
+                <NumberTextField
                   fullWidth
                   label="Service Charge"
-                  type="number"
                   value={form.pricing?.serviceCharge || ""}
                   onChange={(e) =>
                     onNestedFormChange(
@@ -604,10 +600,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
 
           {/* Capacity */}
           <Grid item xs={12} md={4}>
-            <TextField
+            <NumberTextField
               fullWidth
               label="Total Capacity *"
-              type="number"
               value={form.capacity || ""}
               onChange={(e) => onFormChange("capacity", Number(e.target.value))}
               error={!!errors.capacity}
@@ -617,10 +612,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <TextField
+            <NumberTextField
               fullWidth
               label="Minimum Capacity"
-              type="number"
               value={form.minCapacity || ""}
               onChange={(e) =>
                 onFormChange("minCapacity", Number(e.target.value))
@@ -631,10 +625,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <TextField
+            <NumberTextField
               fullWidth
               label="Maximum Capacity"
-              type="number"
               value={form.maxCapacity || ""}
               onChange={(e) =>
                 onFormChange("maxCapacity", Number(e.target.value))

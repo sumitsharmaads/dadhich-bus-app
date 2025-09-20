@@ -20,6 +20,8 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 import {
   DirectionsBus,
   AccessTime,
@@ -323,9 +325,8 @@ const LocalBusRental = () => {
                 </Select>
               </FormControl>
 
-              <TextField
+              <NumberTextField
                 fullWidth
-                type="number"
                 label="Number of Passengers"
                 value={formData.passengers}
                 onChange={(e) =>

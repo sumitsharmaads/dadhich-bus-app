@@ -5,6 +5,8 @@ import { WebsiteInfoType } from "@/types";
 import { Box, Button, Grid, TextField, Typography, Switch, FormControlLabel } from "@mui/material";
 import { Save, Edit } from "@mui/icons-material";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 const BookingSettings: React.FC<{
   settings: WebsiteInfoType;
   onSave: (updated: Partial<WebsiteInfoType>) => void;
@@ -121,10 +123,10 @@ const BookingSettings: React.FC<{
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Tax Percentage"
+          <NumberTextField
+                label="Tax Percentage"
             name="taxPercent"
-            type="number"
+            
             value={form.taxPercent}
             onChange={handleChange}
             fullWidth
@@ -146,10 +148,10 @@ const BookingSettings: React.FC<{
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Advance Payment %"
+          <NumberTextField
+                label="Advance Payment %"
             name="advancePaymentPercent"
-            type="number"
+            
             value={form.advancePaymentPercent}
             onChange={handleChange}
             fullWidth

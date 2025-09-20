@@ -49,6 +49,8 @@ import {
 } from "@/lib/api/types/places.types";
 import { successPopup, errorPopup } from "@/utils/errors/alerts";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 const EditCityPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
@@ -591,9 +593,8 @@ const EditCityPage: React.FC = () => {
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField
+                  <NumberTextField
                     label="Latitude"
-                    type="number"
                     value={form.location?.coordinates[1] || ""}
                     onChange={(e) =>
                       handleLocationChange("lat", e.target.value)
@@ -604,9 +605,8 @@ const EditCityPage: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField
+                  <NumberTextField
                     label="Longitude"
-                    type="number"
                     value={form.location?.coordinates[0] || ""}
                     onChange={(e) =>
                       handleLocationChange("lng", e.target.value)
@@ -918,9 +918,8 @@ const EditCityPage: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
+                  <NumberTextField
                     label="Average Visit Duration (minutes)"
-                    type="number"
                     value={form.visitInfo?.averageVisitDurationMins || ""}
                     onChange={(e) =>
                       setForm((prev) => ({
@@ -1009,7 +1008,7 @@ const EditCityPage: React.FC = () => {
                     Created
                   </Typography>
                   <Typography variant="body2">
-                    {new Date(city.createdAt).toLocaleDateString()}
+                    {formatDate(new Date(city.createdAt))}
                   </Typography>
                 </Box>
                 <Box>
@@ -1017,7 +1016,7 @@ const EditCityPage: React.FC = () => {
                     Last Updated
                   </Typography>
                   <Typography variant="body2">
-                    {new Date(city.updatedAt).toLocaleDateString()}
+                    {formatDate(new Date(city.updatedAt))}
                   </Typography>
                 </Box>
                 <Box>
