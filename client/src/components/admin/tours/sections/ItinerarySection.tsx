@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 import {
   Box,
   Card,
@@ -248,10 +250,10 @@ const ItinerarySection: React.FC<ItinerarySectionProps> = ({
               />
             </Grid>
             <Grid item xs={12} md={3}>
-              <TextField
+              <NumberTextField
                 fullWidth
                 label="Order"
-                type="number"
+                
                 value={itineraryForm.order}
                 onChange={(e) =>
                   setItineraryForm((prev) => ({
@@ -262,10 +264,10 @@ const ItinerarySection: React.FC<ItinerarySectionProps> = ({
               />
             </Grid>
             <Grid item xs={12} md={3}>
-              <TextField
+              <NumberTextField
                 fullWidth
                 label="Day"
-                type="number"
+                
                 value={itineraryForm.day}
                 onChange={(e) =>
                   setItineraryForm((prev) => ({

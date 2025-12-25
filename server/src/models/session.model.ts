@@ -7,6 +7,9 @@ export interface SessionDocument extends Document {
   ip?: string;
   lastSeenAt: Date;
   expiresAt: Date;
+  // Device identification
+  deviceId?: string; // Unique identifier for the device
+  deviceName?: string; // User-friendly device name
   // WebAuthn challenge state
   webauthnChallenge?: string;
   webauthnChallengeExpiresAt?: Date;
@@ -26,6 +29,8 @@ const SessionSchema = new Schema<SessionDocument, SessionModel>(
     ip: String,
     lastSeenAt: { type: Date, default: () => new Date() },
     expiresAt: { type: Date, required: true, index: true },
+    deviceId: { type: String, index: true },
+    deviceName: String,
     webauthnChallenge: { type: String },
     webauthnChallengeExpiresAt: { type: Date },
     stepUpExpiresAt: { type: Date },

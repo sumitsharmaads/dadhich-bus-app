@@ -693,7 +693,7 @@ const ToursPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Filter Button - Sticky */}
       {isMobile && (
-        <div className="sticky top-0 z-40 bg-white border-b border-gray-200 p-4">
+        <div className="sticky top-0 z-30 bg-white border-b border-gray-200 p-4">
           <Button
             variant="outlined"
             startIcon={<FilterListIcon />}

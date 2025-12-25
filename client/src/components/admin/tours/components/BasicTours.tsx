@@ -17,6 +17,8 @@ import {
 import { getTourDayNight } from "@/utils/common";
 import { ArrowForward, Save } from "@mui/icons-material";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 const getBasicDefaults = (
   input?: Partial<BasicTourInterface>
 ): BasicTourInterface => ({
@@ -141,9 +143,9 @@ export const BasicTour: React.FC = () => {
             />
           </div>
           <div>
-            <TextField
-              label="Capacity (*)"
-              type="number"
+            <NumberTextField
+                label="Capacity (*)"
+              
               fullWidth
               size="small"
               value={basicDetails.capacity}
@@ -153,9 +155,8 @@ export const BasicTour: React.FC = () => {
             />
           </div>
           <div>
-            <TextField
-              type="number"
-              label="Minimum Fare (*)"
+            <NumberTextField
+                label="Minimum Fare (*)"
               fullWidth
               size="small"
               value={basicDetails.minfair}

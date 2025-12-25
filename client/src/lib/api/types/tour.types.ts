@@ -429,3 +429,27 @@ export interface DestinationData {
   image: string;
   state: string;
 }
+
+// SEO-specific tour data interface
+export interface TourSeoData {
+  _id: string;
+  tourName: string;
+  description?: string;
+  shortDescription?: string;
+  days?: number;
+  nights?: number;
+  seo?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+  };
+  heroImage?: TourImage;
+}
+
+// API response wrapper for SEO data
+export interface TourSeoResponse {
+  success: boolean;
+  message: string;
+  data: TourSeoData;
+  meta: any;
+}

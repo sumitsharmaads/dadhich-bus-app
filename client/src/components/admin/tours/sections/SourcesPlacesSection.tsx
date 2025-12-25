@@ -40,6 +40,8 @@ import {
 import { City } from "@/lib/api/types/places.types";
 import { placesService } from "@/lib/api/services/places.service";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 interface SourcesPlacesSectionProps {
   form: CreateTourRequest;
   onFormChange: (field: keyof CreateTourRequest, value: any) => void;
@@ -830,10 +832,10 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
+                <NumberTextField
+                fullWidth
                   label="Fare (₹) *"
-                  type="number"
+                  
                   value={sourceForm.fare}
                   onChange={(e) =>
                     setSourceForm((prev) => ({
@@ -1248,10 +1250,10 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
+                <NumberTextField
+                fullWidth
                   label="Order"
-                  type="number"
+                  
                   value={placeForm.order}
                   onChange={(e) =>
                     setPlaceForm((prev) => ({
@@ -1263,10 +1265,10 @@ const SourcesPlacesSection: React.FC<SourcesPlacesSectionProps> = ({
                 />
               </Grid>
               <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
+                <NumberTextField
+                fullWidth
                   label="Stay Duration (hours)"
-                  type="number"
+                  
                   value={placeForm.stayDuration}
                   onChange={(e) =>
                     setPlaceForm((prev) => ({

@@ -21,22 +21,22 @@ const TourItinerarySection: React.FC<TourItinerarySectionProps> = ({
   }
 
   return (
-    <section className="mb-12">
+    <section className="mb-6 sm:mb-8">
       <Typography
-        variant="h3"
-        className="font-bold text-gray-900 mb-8 text-2xl md:text-3xl text-center"
+        variant="h5"
+        className="font-semibold text-gray-800 mb-4 sm:mb-6 text-xl sm:text-2xl text-center"
       >
         Tour Itinerary
       </Typography>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {itinerary.map((item, index) => (
           <div
             key={index}
-            className="relative bg-white rounded-xl border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-sm"
+            className="relative bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-sm"
           >
             {/* Day indicator */}
-            <div className="absolute -left-2 top-6 w-8 h-8 bg-gradient-to-br from-[#C22A54] to-[#A82046] rounded-full flex items-center justify-center shadow-lg">
+            <div className="absolute -left-2 top-4 sm:top-6 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-[#C22A54] to-[#A82046] rounded-full flex items-center justify-center shadow-lg">
               <Typography
                 variant="caption"
                 className="text-white font-bold text-xs"
@@ -45,10 +45,10 @@ const TourItinerarySection: React.FC<TourItinerarySectionProps> = ({
               </Typography>
             </div>
 
-            <div className="pl-8 p-6">
+            <div className="pl-6 sm:pl-8 p-4 sm:p-6">
               <Typography
-                variant="h5"
-                className="font-semibold mb-3 text-[#C22A54]"
+                variant="h6"
+                className="font-semibold mb-2 sm:mb-3 text-[#C22A54] text-lg sm:text-xl"
               >
                 {item.title}
               </Typography>
@@ -56,18 +56,18 @@ const TourItinerarySection: React.FC<TourItinerarySectionProps> = ({
               {item.shortDescription && (
                 <Typography
                   variant="body2"
-                  className="text-gray-700 mb-4 leading-relaxed"
+                  className="text-gray-700 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base"
                 >
                   {item.shortDescription}
                 </Typography>
               )}
 
               {/* Key Details Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
                 {item.duration && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <AccessTime className="text-[#C22A54] text-sm" />
-                    <Typography variant="body2" className="font-medium">
+                    <Typography variant="body2" className="font-medium text-sm">
                       {item.duration}
                     </Typography>
                   </div>
@@ -76,7 +76,7 @@ const TourItinerarySection: React.FC<TourItinerarySectionProps> = ({
                 {item.accommodation && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <Hotel className="text-[#C22A54] text-sm" />
-                    <Typography variant="body2" className="font-medium">
+                    <Typography variant="body2" className="font-medium text-sm">
                       {item.accommodation}
                     </Typography>
                   </div>
@@ -85,7 +85,7 @@ const TourItinerarySection: React.FC<TourItinerarySectionProps> = ({
                 {item.transportation && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <DirectionsCar className="text-[#C22A54] text-sm" />
-                    <Typography variant="body2" className="font-medium">
+                    <Typography variant="body2" className="font-medium text-sm">
                       {item.transportation}
                     </Typography>
                   </div>
@@ -94,7 +94,7 @@ const TourItinerarySection: React.FC<TourItinerarySectionProps> = ({
                 {item.order && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <TravelExplore className="text-[#C22A54] text-sm" />
-                    <Typography variant="body2" className="font-medium">
+                    <Typography variant="body2" className="font-medium text-sm">
                       Stop {item.order}
                     </Typography>
                   </div>

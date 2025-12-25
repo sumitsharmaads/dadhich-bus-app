@@ -614,13 +614,14 @@ export const tourRepository = {
     } = params || {};
 
     // Create a date 1 hour from now for future tour filtering
-    // const minStart = new Date();
-    // minStart.setHours(minStart.getHours() + 1);
+    const minStart = new Date();
+    minStart.setHours(minStart.getHours() + 1);
 
     const match: FilterQuery<TourDocument> = {
       isDeleted: false,
       status: 'published',
       isActive: true,
+      startDate: { $gte: minStart },
     } as any;
 
     // Handle date filtering
@@ -791,14 +792,15 @@ export const tourRepository = {
 
   getPublicById(id: string) {
     // Create a date 1 hour from now for future tour filtering
-    // const minStart = new Date();
-    // minStart.setHours(minStart.getHours() + 1);
+    const minStart = new Date();
+    minStart.setHours(minStart.getHours() + 1);
 
     return Tour.findOne({
       _id: id,
       isDeleted: false,
       isActive: true,
       status: 'published',
+      startDate: { $gte: minStart },
     })
       .populate('places.cityId', 'name state')
       .populate('sources.cityId', 'name')
@@ -955,8 +957,8 @@ export const tourRepository = {
 
   async upcoming(limit = 4) {
     // Create a date 1 hour from now for future tour filtering
-    // const minStart = new Date();
-    // minStart.setHours(minStart.getHours() + 1);
+    const minStart = new Date();
+    minStart.setHours(minStart.getHours() + 1);
 
     const result = await Tour.aggregate([
       {
@@ -964,7 +966,7 @@ export const tourRepository = {
           status: 'published',
           isActive: true,
           isDeleted: false,
-          // startDate: { $gte: minStart },
+          startDate: { $gte: minStart },
         },
       },
       { $sort: { startDate: 1 as const } },
@@ -997,8 +999,8 @@ export const tourRepository = {
 
   async priceRange() {
     // Create a date 1 hour from now for future tour filtering
-    // const minStart = new Date();
-    // minStart.setHours(minStart.getHours() + 1);
+    const minStart = new Date();
+    minStart.setHours(minStart.getHours() + 1);
 
     const res = await Tour.aggregate([
       {
@@ -1006,7 +1008,7 @@ export const tourRepository = {
           status: 'published',
           isActive: true,
           isDeleted: false,
-          // startDate: { $gte: minStart },
+          startDate: { $gte: minStart },
         },
       },
       {
@@ -1026,8 +1028,8 @@ export const tourRepository = {
 
   async facets() {
     // Create a date 1 hour from now for future tour filtering
-    // const minStart = new Date();
-    // minStart.setHours(minStart.getHours() + 1);
+    const minStart = new Date();
+    minStart.setHours(minStart.getHours() + 1);
 
     // Get basic facets
     const basicPipeline: PipelineStage[] = [
@@ -1036,7 +1038,7 @@ export const tourRepository = {
           status: 'published',
           isActive: true,
           isDeleted: false,
-          // startDate: { $gte: minStart },
+          startDate: { $gte: minStart },
         },
       },
     ];
@@ -1226,8 +1228,8 @@ export const tourRepository = {
 
   async stateBreakup() {
     // Create a date 1 hour from now for future tour filtering
-    // const minStart = new Date();
-    // minStart.setHours(minStart.getHours() + 1);
+    const minStart = new Date();
+    minStart.setHours(minStart.getHours() + 1);
 
     const pipeline: PipelineStage[] = [
       {
@@ -1235,7 +1237,7 @@ export const tourRepository = {
           status: 'published',
           isActive: true,
           isDeleted: false,
-          // startDate: { $gte: minStart },
+          startDate: { $gte: minStart },
         },
       },
       { $unwind: '$places' },

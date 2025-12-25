@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import { Save, Edit, Add } from "@mui/icons-material";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 const RentalSettings: React.FC<{
   settings: WebsiteInfoType;
   onSave: (updated: Partial<WebsiteInfoType>) => void;
@@ -126,10 +128,10 @@ const RentalSettings: React.FC<{
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Minimum Rental Hours"
+          <NumberTextField
+                label="Minimum Rental Hours"
             name="minRentalHours"
-            type="number"
+            
             value={form.minRentalHours}
             onChange={handleChange}
             fullWidth
@@ -140,10 +142,10 @@ const RentalSettings: React.FC<{
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Default Max Passengers"
+          <NumberTextField
+                label="Default Max Passengers"
             name="maxPassengersDefault"
-            type="number"
+            
             value={form.maxPassengersDefault}
             onChange={handleChange}
             fullWidth

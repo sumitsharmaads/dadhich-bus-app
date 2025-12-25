@@ -18,6 +18,8 @@ import {
   Collapse,
   Alert,
 } from "@mui/material";
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 import {
   FilterList as FilterListIcon,
   ExpandMore as ExpandMoreIcon,
@@ -324,9 +326,8 @@ const TourFilters: React.FC<TourFiltersProps> = ({
                   }}
                 />
                 <Box className="flex gap-2">
-                  <TextField
+                  <NumberTextField
                     label="Min Price"
-                    type="number"
                     size="small"
                     value={localFilters.priceMin || ""}
                     onChange={(e) =>
@@ -342,9 +343,8 @@ const TourFilters: React.FC<TourFiltersProps> = ({
                       },
                     }}
                   />
-                  <TextField
+                  <NumberTextField
                     label="Max Price"
-                    type="number"
                     size="small"
                     value={localFilters.priceMax || ""}
                     onChange={(e) =>
@@ -414,9 +414,8 @@ const TourFilters: React.FC<TourFiltersProps> = ({
                 {localFilters.daysMin || 1} - {localFilters.daysMax || 30} Days
               </Typography>
               <Box className="flex gap-2">
-                <TextField
+                <NumberTextField
                   label="Min Days"
-                  type="number"
                   size="small"
                   value={localFilters.daysMin || ""}
                   onChange={(e) =>
@@ -429,9 +428,8 @@ const TourFilters: React.FC<TourFiltersProps> = ({
                     },
                   }}
                 />
-                <TextField
+                <NumberTextField
                   label="Max Days"
-                  type="number"
                   size="small"
                   value={localFilters.daysMax || ""}
                   onChange={(e) =>
@@ -781,9 +779,8 @@ const TourFilters: React.FC<TourFiltersProps> = ({
                 >
                   Minimum Capacity
                 </Typography>
-                <TextField
+                <NumberTextField
                   fullWidth
-                  type="number"
                   placeholder="Enter capacity..."
                   value={localFilters.capacity || ""}
                   onChange={(e) =>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Typography,
@@ -22,7 +22,10 @@ import {
   FormControlLabel,
   Alert,
   CircularProgress,
+  Autocomplete,
 } from "@mui/material";
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 import {
   DirectionsBus,
   AccessTime,
@@ -36,6 +39,8 @@ import {
   ArrowForward,
 } from "@mui/icons-material";
 import { inquiryService } from "@/lib/api/services/inquiry.service";
+import { placesService } from "@/lib/api/services/places.service";
+import { City } from "@/lib/api/types/places.types";
 import { useWebsite } from "@/contexts/WebsiteProvider";
 
 const OutstationBusRentalPage = () => {
@@ -46,10 +51,19 @@ const OutstationBusRentalPage = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  // Cities state
+  const [sourceCities, setSourceCities] = useState<City[]>([]);
+  const [destinationCities, setDestinationCities] = useState<City[]>([]);
+  const [sourceCitiesLoading, setSourceCitiesLoading] = useState(false);
+  const [destinationCitiesLoading, setDestinationCitiesLoading] =
+    useState(false);
+
   // Form states
   const [formData, setFormData] = useState({
     source: "",
     destination: "",
+    sourceCityId: "",
+    destinationCityId: "",
     purpose: "",
     travelDate: "",
     returnDate: "",
@@ -158,7 +172,6 @@ const OutstationBusRentalPage = () => {
     },
   ];
 
-  const cityOptions = ["Fatehabad", "Hisar", "Sirsa", "Delhi", "Adampur"];
   const purposeOptions = [
     "Wedding",
     "Birthday party",
@@ -168,6 +181,60 @@ const OutstationBusRentalPage = () => {
     "Event",
     "Other",
   ];
+
+  // Search cities for autocomplete
+  const searchSourceCities = async (searchTerm: string) => {
+    if (searchTerm.length < 2) return;
+
+    setSourceCitiesLoading(true);
+    try {
+      const response = await placesService.listCities({ name: searchTerm });
+      if (Array.isArray(response)) {
+        setSourceCities(response);
+      }
+    } catch (error) {
+      console.error("Error searching source cities:", error);
+    } finally {
+      setSourceCitiesLoading(false);
+    }
+  };
+
+  const searchDestinationCities = async (searchTerm: string) => {
+    if (searchTerm.length < 2) return;
+
+    setDestinationCitiesLoading(true);
+    try {
+      const response = await placesService.listCities({ name: searchTerm });
+      if (Array.isArray(response)) {
+        setDestinationCities(response);
+      }
+    } catch (error) {
+      console.error("Error searching destination cities:", error);
+    } finally {
+      setDestinationCitiesLoading(false);
+    }
+  };
+
+  // Debounced city search
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.source) {
+        searchSourceCities(formData.source);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.source]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.destination) {
+        searchDestinationCities(formData.destination);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [formData.destination]);
 
   const handleOpenBooking = () => {
     setOpenBookingModal(true);
@@ -181,13 +248,49 @@ const OutstationBusRentalPage = () => {
     setActiveStep(0);
     setSuccess(false);
     setError("");
+    // Clear cities when closing
+    setSourceCities([]);
+    setDestinationCities([]);
+  };
+
+  // City selection handlers
+  const handleSourceCitySelect = (city: City | null) => {
+    if (city) {
+      setFormData((prev) => ({
+        ...prev,
+        source: city.name,
+        sourceCityId: city._id,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        source: "",
+        sourceCityId: "",
+      }));
+    }
+  };
+
+  const handleDestinationCitySelect = (city: City | null) => {
+    if (city) {
+      setFormData((prev) => ({
+        ...prev,
+        destination: city.name,
+        destinationCityId: city._id,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        destination: "",
+        destinationCityId: "",
+      }));
+    }
   };
 
   const handleNext = () => {
     if (activeStep === 0) {
       if (
-        !formData.source ||
-        !formData.destination ||
+        !formData.sourceCityId ||
+        !formData.destinationCityId ||
         !formData.purpose ||
         !formData.travelDate
       ) {
@@ -301,39 +404,94 @@ const OutstationBusRentalPage = () => {
             </FormControl>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormControl fullWidth>
-                <InputLabel>From City</InputLabel>
-                <Select
-                  value={formData.source}
-                  onChange={(e) =>
-                    setFormData({ ...formData, source: e.target.value })
-                  }
-                  label="From City"
-                >
-                  {cityOptions.map((city) => (
-                    <MenuItem key={city} value={city}>
-                      {city}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                options={sourceCities}
+                getOptionLabel={(option) => option.name}
+                value={
+                  sourceCities.find((c) => c._id === formData.sourceCityId) ||
+                  null
+                }
+                onChange={(_, value) => handleSourceCitySelect(value)}
+                onInputChange={(_, value) =>
+                  setFormData((prev) => ({ ...prev, source: value }))
+                }
+                loading={sourceCitiesLoading}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="From City *"
+                    required
+                    error={!formData.sourceCityId && formData.source.length > 0}
+                    helperText={
+                      !formData.sourceCityId && formData.source.length > 0
+                        ? "Please select a city from the dropdown"
+                        : ""
+                    }
+                  />
+                )}
+                renderOption={(props, option) => {
+                  const { key, ...otherProps } = props;
+                  return (
+                    <Box component="li" key={key} {...otherProps}>
+                      <Box>
+                        <Typography variant="body1" fontWeight={600}>
+                          {option.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {option.stateId?.name}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  );
+                }}
+              />
 
-              <FormControl fullWidth>
-                <InputLabel>To City</InputLabel>
-                <Select
-                  value={formData.destination}
-                  onChange={(e) =>
-                    setFormData({ ...formData, destination: e.target.value })
-                  }
-                  label="To City"
-                >
-                  {cityOptions.map((city) => (
-                    <MenuItem key={city} value={city}>
-                      {city}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Autocomplete
+                options={destinationCities}
+                getOptionLabel={(option) => option.name}
+                value={
+                  destinationCities.find(
+                    (c) => c._id === formData.destinationCityId
+                  ) || null
+                }
+                onChange={(_, value) => handleDestinationCitySelect(value)}
+                onInputChange={(_, value) =>
+                  setFormData((prev) => ({ ...prev, destination: value }))
+                }
+                loading={destinationCitiesLoading}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="To City *"
+                    required
+                    error={
+                      !formData.destinationCityId &&
+                      formData.destination.length > 0
+                    }
+                    helperText={
+                      !formData.destinationCityId &&
+                      formData.destination.length > 0
+                        ? "Please select a city from the dropdown"
+                        : ""
+                    }
+                  />
+                )}
+                renderOption={(props, option) => {
+                  const { key, ...otherProps } = props;
+                  return (
+                    <Box component="li" key={key} {...otherProps}>
+                      <Box>
+                        <Typography variant="body1" fontWeight={600}>
+                          {option.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {option.stateId?.name}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  );
+                }}
+              />
             </div>
 
             <FormControl fullWidth>
@@ -379,9 +537,8 @@ const OutstationBusRentalPage = () => {
               )}
             </div>
 
-            <TextField
+            <NumberTextField
               fullWidth
-              type="number"
               label="Number of Passengers"
               value={formData.passengers}
               onChange={(e) =>
@@ -472,9 +629,23 @@ const OutstationBusRentalPage = () => {
               <div className="space-y-2 text-sm">
                 <div>
                   <strong>From:</strong> {formData.source}
+                  {sourceCities.find((c) => c._id === formData.sourceCityId)
+                    ?.stateId?.name &&
+                    `, ${
+                      sourceCities.find((c) => c._id === formData.sourceCityId)
+                        ?.stateId?.name
+                    }`}
                 </div>
                 <div>
                   <strong>To:</strong> {formData.destination}
+                  {destinationCities.find(
+                    (c) => c._id === formData.destinationCityId
+                  )?.stateId?.name &&
+                    `, ${
+                      destinationCities.find(
+                        (c) => c._id === formData.destinationCityId
+                      )?.stateId?.name
+                    }`}
                 </div>
                 <div>
                   <strong>Purpose:</strong> {formData.purpose}

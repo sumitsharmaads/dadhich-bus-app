@@ -33,6 +33,8 @@ import {
 } from "@/constants/tourConstants";
 import axiosInstance from "@/lib/api/axiosInstance";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 interface AdvancedSectionProps {
   form: CreateTourRequest;
   onFormChange: (field: keyof CreateTourRequest, value: any) => void;
@@ -501,10 +503,10 @@ const AdvancedSection: React.FC<AdvancedSectionProps> = ({
           <Box sx={{ p: 2, bgcolor: "grey.50", borderRadius: 1, mb: 2 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={3}>
-                <TextField
-                  fullWidth
+                <NumberTextField
+                fullWidth
                   label="Nights"
-                  type="number"
+                  
                   value={stayForm.nights}
                   onChange={(e) =>
                     setStayForm((prev) => ({

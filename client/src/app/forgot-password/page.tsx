@@ -1,23 +1,30 @@
 import React from "react";
 import { Metadata } from "next";
-import { generateMetadata, createPageSEO } from "@/utils/seo";
-import { ForgotPasswordForm, PreventLoginRoute } from "@/components/auth";
+import { generateServerMetadata } from "@/lib/seo/serverSEO";
+import ForgotPasswordClient from "./ForgotPasswordClient";
 
-export const metadata: Metadata = generateMetadata(
-  createPageSEO({
-    title: "Forgot Password - Travel & Tourism | Reset Your Password",
-    description:
-      "Reset your Travel & Tourism account password. Enter your email to receive password reset instructions.",
-    keywords: "forgot password, reset password, password recovery, travel account",
-  })
-);
-
-export default function ForgotPasswordPage() {
-  return (
-    <PreventLoginRoute>
-      <div className="min-h-screen bg-surface-primary">
-        <ForgotPasswordForm />
-      </div>
-    </PreventLoginRoute>
-  );
+export async function generateMetadata(): Promise<Metadata> {
+  return generateServerMetadata("/forgot-password", {
+    title: "Forgot Password | Dadhich Bus Services",
+    description: "Reset your Dadhich Bus Services account password. Enter your email to receive a secure password reset link.",
+    keywords: [
+      "forgot password",
+      "password reset",
+      "account recovery",
+      "Dadhich Bus password",
+      "reset password",
+      "account security",
+      "password recovery",
+      "login help",
+      "account access",
+      "secure reset"
+    ],
+    image: "/images/og-image.jpg",
+  });
 }
+
+const ForgotPasswordPage = () => {
+  return <ForgotPasswordClient />;
+};
+
+export default ForgotPasswordPage;

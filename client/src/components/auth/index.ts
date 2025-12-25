@@ -5,3 +5,4 @@ export { default as SignupForm } from "./SignupForm";
 export { default as ForgotPasswordForm } from "./ForgotPasswordForm";
 export { default as OTPForm } from "./OTPForm";
 export { default as ResetPasswordForm } from "./ResetPasswordForm";
+export { default as SessionManagement } from "./SessionManagement";

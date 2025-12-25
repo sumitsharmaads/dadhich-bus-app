@@ -14,6 +14,8 @@ import {
 import { inquiryService } from "@/lib/api/services/inquiry.service";
 import { HelpWidgetRequest } from "@/lib/api/types/inquiry.types";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 type CTAStyle = "friendly" | "playful" | "conversion";
 
 const ctaPresets: Record<
@@ -231,9 +233,8 @@ const HelpWidget: React.FC = () => {
               }}
             />
             <div className="flex gap-2">
-              <TextField
+              <NumberTextField
                 size="small"
-                type="number"
                 inputProps={{ min: 1 }}
                 label="Adults"
                 value={formData.adults}
@@ -242,9 +243,8 @@ const HelpWidget: React.FC = () => {
                 }
                 className="w-1/2"
               />
-              <TextField
+              <NumberTextField
                 size="small"
-                type="number"
                 inputProps={{ min: 0 }}
                 label="Children"
                 value={formData.children}

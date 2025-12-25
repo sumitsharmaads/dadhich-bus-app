@@ -29,12 +29,14 @@ export function sendError(
   err: { statusCode: number; message: string; code?: string; details?: unknown },
 ): void {
   const status = err.statusCode || 500;
-  res
-    .status(status)
-    .json({
-      success: false,
-      message: err.message,
-      code: err.code ?? 'ERROR',
-      details: err.details ?? null,
-    });
+  res.status(status).json({
+    success: false,
+    message: err.message,
+    code: err.code ?? 'ERROR',
+    details: err.details ?? null,
+  });
+}
+
+export function sendNotFound(res: Response, message = 'Not found'): void {
+  res.status(404).json({ success: false, message, data: null });
 }

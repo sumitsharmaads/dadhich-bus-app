@@ -381,122 +381,118 @@ const AdminUsersList: React.FC = () => {
         </Button>
       </Box>
 
-      {/* Users Table */}
-      <Paper sx={{ borderRadius: 2, overflow: "hidden", width: "100%" }}>
-        <TableContainer
-          sx={{ maxHeight: 600, width: "100%", overflowX: "hidden" }}
-        >
-          <Table stickyHeader sx={{ width: "100%", tableLayout: "fixed" }}>
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "grey.50" }}>
-                <TableCell sx={{ fontWeight: 600, width: "18%" }}>
-                  User
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, width: "22%" }}>
-                  Contact
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, width: "15%" }}>
-                  Role
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, width: "20%" }}>
-                  Access
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, width: "10%" }}>
-                  Status
-                </TableCell>
-                <TableCell sx={{ fontWeight: 600, width: "15%" }}>
-                  Actions
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user._id} hover>
-                  <TableCell sx={{ width: "18%" }}>
-                    <Box>
-                      <Typography variant="subtitle2" fontWeight={600} noWrap>
-                        {user.fullname}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" noWrap>
-                        @{user.username}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ width: "22%" }}>
-                    <Box>
-                      <Typography variant="body2" noWrap>
-                        {user.email}
-                      </Typography>
-                      {user.phone && (
+      {/* Users Table - Responsive */}
+      <Paper sx={{ borderRadius: 2, width: "100%", overflow: "auto" }}>
+        <Box sx={{ width: "100%", minWidth: 600, overflowX: "auto" }}>
+          <TableContainer sx={{ maxHeight: 600, width: "100%" }}>
+            <Table stickyHeader sx={{ width: "100%", tableLayout: "auto" }}>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: "grey.50" }}>
+                  <TableCell sx={{ fontWeight: 600 }}>User</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Contact</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Role</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Access</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
+                  <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((user) => (
+                  <TableRow key={user._id} hover>
+                    <TableCell>
+                      <Box>
+                        <Typography variant="subtitle2" fontWeight={600} noWrap>
+                          {user.fullname}
+                        </Typography>
                         <Typography
                           variant="body2"
                           color="text.secondary"
                           noWrap
                         >
-                          {user.phone}
+                          @{user.username}
                         </Typography>
-                      )}
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ width: "15%" }}>
-                    <Chip
-                      label={getRoleTypeLabel(user.roleType)}
-                      color={getRoleTypeColor(user.roleType)}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell sx={{ width: "20%" }}>
-                    <Chip
-                      label={getAccessTypeLabel(user.access)}
-                      color={getAccessTypeColor(user.access)}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell sx={{ width: "10%" }}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={user.isActive}
-                          onChange={() =>
-                            handleToggleUserStatus(user._id, user.isActive)
-                          }
-                          color="primary"
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Box>
+                        <Typography variant="body2" noWrap>
+                          {user.email}
+                        </Typography>
+                        {user.phone && (
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            noWrap
+                          >
+                            {user.phone}
+                          </Typography>
+                        )}
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={getRoleTypeLabel(user.roleType)}
+                        color={getRoleTypeColor(user.roleType)}
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Chip
+                        label={getAccessTypeLabel(user.access)}
+                        color={getAccessTypeColor(user.access)}
+                        size="small"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={user.isActive}
+                            onChange={() =>
+                              handleToggleUserStatus(user._id, user.isActive)
+                            }
+                            color="primary"
+                            size="small"
+                          />
+                        }
+                        label={user.isActive ? "Active" : "Inactive"}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 1,
+                          flexDirection: "column",
+                        }}
+                      >
+                        <Button
+                          variant="outlined"
                           size="small"
-                        />
-                      }
-                      label={user.isActive ? "Active" : "Inactive"}
-                    />
-                  </TableCell>
-                  <TableCell sx={{ width: "15%" }}>
-                    <Box
-                      sx={{ display: "flex", gap: 1, flexDirection: "column" }}
-                    >
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        startIcon={<Edit />}
-                        onClick={() => handleEditUser(user._id)}
-                        sx={{ minWidth: "auto", px: 1 }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        size="small"
-                        startIcon={<Delete />}
-                        onClick={() => handleDeleteUser(user._id)}
-                        sx={{ minWidth: "auto", px: 1 }}
-                      >
-                        Delete
-                      </Button>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                          startIcon={<Edit />}
+                          onClick={() => handleEditUser(user._id)}
+                          sx={{ minWidth: "auto", px: 1 }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          size="small"
+                          startIcon={<Delete />}
+                          onClick={() => handleDeleteUser(user._id)}
+                          sx={{ minWidth: "auto", px: 1 }}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Paper>
 
       {/* Pagination */}

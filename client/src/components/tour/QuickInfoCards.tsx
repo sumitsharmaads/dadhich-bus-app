@@ -37,25 +37,25 @@ const QuickInfoCards: React.FC<QuickInfoCardsProps> = ({ data }) => {
   ];
 
   return (
-    <section className="mb-8">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <section className="mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         {stats.map((stat, index) => (
           <div
             key={index}
-            className="group relative overflow-hidden rounded-xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-sm"
+            className="group relative overflow-hidden rounded-lg bg-white border border-gray-100 hover:border-gray-200 transition-all duration-300 hover:shadow-sm"
           >
-            <div className="p-4 text-center">
+            <div className="p-3 sm:p-4 text-center">
               {/* Icon with subtle background */}
               <div
-                className={`inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br ${stat.color} mb-3 group-hover:scale-105 transition-transform duration-300`}
+                className={`inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br ${stat.color} mb-2 sm:mb-3 group-hover:scale-105 transition-transform duration-300`}
               >
-                <div className="text-white text-lg">{stat.icon}</div>
+                <div className="text-white text-sm sm:text-lg">{stat.icon}</div>
               </div>
 
               {/* Value */}
               <Typography
                 variant="h4"
-                className="font-bold text-gray-900 mb-1 text-2xl"
+                className="font-bold text-gray-900 mb-1 text-xl sm:text-2xl"
               >
                 {stat.value}
               </Typography>
@@ -63,7 +63,7 @@ const QuickInfoCards: React.FC<QuickInfoCardsProps> = ({ data }) => {
               {/* Label */}
               <Typography
                 variant="body2"
-                className="text-gray-600 font-medium text-sm"
+                className="text-gray-600 font-medium text-xs sm:text-sm"
               >
                 {stat.label}
               </Typography>

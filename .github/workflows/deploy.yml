@@ -47,7 +47,17 @@ jobs:
           # Navigate to project directory
           cd /root/dadhich-bus-app
           
-          # Pull latest changes
+          # Configure git for this session
+          echo "⚙️ Configuring git..."
+          git config --global user.name "Sumit Sharma"
+          git config --global user.email "dadhich.uideveloper@gmail.com"
+          
+          # Ensure we're on main branch
+          echo "🌿 Checking out main branch..."
+          git checkout main
+          
+          # Pull latest changes with explicit origin
+          echo "📥 Pulling latest changes..."
           git pull origin main
           
           # Complete deployment flow: npm ci → npm run build → npm start (via PM2)

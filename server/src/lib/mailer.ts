@@ -59,24 +59,52 @@ export function buildBrandedHtml(
    </body></html>`;
 }
 
-const INTERNAL_TEMPLATES_DIR = path.join(__dirname, '..', 'views', 'email');
+// Templates are always in server/src/views/email - with fallback for different environments
+const INTERNAL_TEMPLATES_DIR = (() => {
+  // Try different possible paths for different environments
+  const possiblePaths = [
+    path.join(__dirname, '..', 'views', 'email'), // Development: server/src/lib -> server/src/views/email
+    path.join(__dirname, '..', '..', 'src', 'views', 'email'), // Production: server/dist/lib -> server/src/views/email
+    path.join(process.cwd(), 'src', 'views', 'email'), // Alternative: from project root
+    path.join(process.cwd(), 'views', 'email'), // Alternative: from project root
+  ];
+
+  for (const templatePath of possiblePaths) {
+    try {
+      if (fs.existsSync(templatePath)) {
+        console.log('✅ Found templates directory:', templatePath);
+        return templatePath;
+      }
+    } catch (error) {
+      // Continue to next path
+    }
+  }
+
+  // Fallback to the original path
+  console.log('⚠️ Using fallback templates directory');
+  return path.join(__dirname, '..', 'views', 'email');
+})();
 
 export async function renderTemplate(
   templateFile: string,
   data: Record<string, unknown>,
 ): Promise<string | null> {
-  const searchPaths = [env.EMAIL_TEMPLATES_DIR, INTERNAL_TEMPLATES_DIR].filter(Boolean) as string[];
-  for (const base of searchPaths) {
-    const fullPath = path.join(base, templateFile);
-    try {
-      await fs.promises.access(fullPath, fs.constants.R_OK);
-      const tpl = await fs.promises.readFile(fullPath, 'utf8');
-      return ejs.render(tpl, data);
-    } catch {
-      // continue
-    }
+  const fullPath = path.join(INTERNAL_TEMPLATES_DIR, templateFile);
+
+  try {
+    await fs.promises.access(fullPath, fs.constants.R_OK);
+    const tpl = await fs.promises.readFile(fullPath, 'utf8');
+    const rendered = ejs.render(tpl, data);
+    console.log('✅ Template rendered successfully:', templateFile);
+    return rendered;
+  } catch (error) {
+    console.log('❌ Template not found at:', fullPath);
+    console.log('❌ Error:', (error as Error).message);
+    console.log('📁 Current working directory:', process.cwd());
+    console.log('📁 __dirname:', __dirname);
+    console.log('📁 INTERNAL_TEMPLATES_DIR:', INTERNAL_TEMPLATES_DIR);
+    return null; // Return null instead of throwing error for fallback compatibility
   }
-  return null;
 }
 
 export async function sendBrandedMail(

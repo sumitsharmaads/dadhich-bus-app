@@ -9,6 +9,8 @@ import {
   TourFacets,
   StateBreakupResponse,
   TourStats,
+  TourSeoData,
+  TourSeoResponse,
 } from "../types/tour.types";
 
 export const tourService = {
@@ -374,5 +376,16 @@ export const tourService = {
     link.click();
     link.remove();
     window.URL.revokeObjectURL(url);
+  },
+
+  // Get tour SEO data only (for metadata generation)
+  getTourSeo: async (tourId: string): Promise<TourSeoResponse> => {
+    try {
+      const response = await get<TourSeoResponse>(`/tours/${tourId}/seo`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching tour SEO data:", error);
+      throw error;
+    }
   },
 };

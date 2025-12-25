@@ -19,6 +19,8 @@ import { Delete, ExpandMore, Add, Save } from "@mui/icons-material";
 import { post } from "@/lib/service";
 import { debounce } from "lodash";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 interface Location {
   _id: string;
   name: string;
@@ -176,10 +178,10 @@ const SelectSourcesDynamic: React.FC<Props> = ({ value, onSave }) => {
                 />
               )}
             />
-            <TextField
-              fullWidth
+            <NumberTextField
+                fullWidth
               label="Fare"
-              type="number"
+              
               value={source.fare == 0 ? "" : source.fare}
               onChange={(e) =>
                 handleFareChange(

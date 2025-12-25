@@ -12,91 +12,91 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
   data,
 }) => {
   return (
-    <section className="mb-8 sm:mb-12">
-      <div className="text-center mb-6 sm:mb-8">
+    <section className="mb-6 sm:mb-8">
+      <div className="text-center mb-4 sm:mb-6">
         <Typography
-          variant="h4"
-          className="font-black text-gray-800 mb-3 sm:mb-4 text-2xl sm:text-3xl"
+          variant="h5"
+          className="font-semibold text-gray-800 mb-2 sm:mb-3 text-xl sm:text-2xl"
         >
           Additional Information
         </Typography>
-        <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
+        <div className="w-16 sm:w-20 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
       </div>
 
-      <Card className="p-6 sm:p-8 shadow-xl border-0 bg-gradient-to-br from-white to-gray-50">
-        <Grid container spacing={{ xs: 4, sm: 6 }}>
+      <Card className="p-4 sm:p-6 shadow-sm border border-gray-100 bg-white">
+        <Grid container spacing={{ xs: 3, sm: 4 }}>
           {/* Tour Details */}
           <Grid item xs={12} md={6}>
-            <div className="text-center mb-4 sm:mb-6">
-              <div className="bg-gradient-to-br from-[#C22A54] to-[#A82046] p-2 sm:p-3 rounded-full w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 flex items-center justify-center">
-                <TravelExplore className="text-xl sm:text-2xl text-white" />
+            <div className="text-center mb-3 sm:mb-4">
+              <div className="bg-gradient-to-br from-[#C22A54] to-[#A82046] p-2 rounded-full w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 flex items-center justify-center">
+                <TravelExplore className="text-lg sm:text-xl text-white" />
               </div>
               <Typography
                 variant="h6"
-                className="font-black text-[#C22A54] mb-2 text-lg sm:text-xl"
+                className="font-semibold text-[#C22A54] mb-2 text-base sm:text-lg"
               >
                 Tour Details
               </Typography>
-              <div className="w-12 sm:w-16 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
+              <div className="w-10 sm:w-12 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
             </div>
 
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex justify-between items-center p-3 sm:p-4 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="bg-blue-100 p-1.5 sm:p-2 rounded-full">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-2">
+                  <div className="bg-blue-100 p-1.5 rounded-full">
                     <AccessTime className="text-blue-600 text-sm" />
                   </div>
-                  <span className="text-gray-700 font-semibold text-sm sm:text-base">
+                  <span className="text-gray-700 font-medium text-sm">
                     Duration:
                   </span>
                 </div>
-                <span className="font-bold text-base sm:text-lg text-[#C22A54]">
+                <span className="font-semibold text-sm text-[#C22A54]">
                   {data?.duration || `${data?.days} days`}
                 </span>
               </div>
 
-              <div className="flex justify-between items-center p-3 sm:p-4 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="bg-green-100 p-1.5 sm:p-2 rounded-full">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-2">
+                  <div className="bg-green-100 p-1.5 rounded-full">
                     <Group className="text-green-600 text-sm" />
                   </div>
-                  <span className="text-gray-700 font-semibold text-sm sm:text-base">
+                  <span className="text-gray-700 font-medium text-sm">
                     Capacity:
                   </span>
                 </div>
-                <span className="font-bold text-base sm:text-lg text-[#C22A54]">
+                <span className="font-semibold text-sm text-[#C22A54]">
                   {data?.capacity} people
                 </span>
               </div>
 
               {data?.minCapacity && data?.maxCapacity && (
-                <div className="flex justify-between items-center p-3 sm:p-4 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="bg-purple-100 p-1.5 sm:p-2 rounded-full">
+                <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-purple-100 p-1.5 rounded-full">
                       <Group className="text-purple-600 text-sm" />
                     </div>
-                    <span className="text-gray-700 font-semibold text-sm sm:text-base">
+                    <span className="text-gray-700 font-medium text-sm">
                       Group Size:
                     </span>
                   </div>
-                  <span className="font-bold text-base sm:text-lg text-[#C22A54]">
+                  <span className="font-semibold text-sm text-[#C22A54]">
                     {data.minCapacity} - {data.maxCapacity} people
                   </span>
                 </div>
               )}
 
-              <div className="flex justify-between items-center p-3 sm:p-4 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="bg-orange-100 p-1.5 sm:p-2 rounded-full">
+              <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+                <div className="flex items-center gap-2">
+                  <div className="bg-orange-100 p-1.5 rounded-full">
                     <div className="text-orange-600 text-sm font-bold">📊</div>
                   </div>
-                  <span className="text-gray-700 font-semibold text-sm sm:text-base">
+                  <span className="text-gray-700 font-medium text-sm">
                     Status:
                   </span>
                 </div>
                 <Chip
                   label={data?.status}
-                  size="medium"
+                  size="small"
                   sx={{
                     backgroundColor:
                       data?.status === "published" ? "#10B981" : "#F59E0B",
@@ -110,18 +110,18 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
               </div>
 
               {data?.difficulty && (
-                <div className="flex justify-between items-center p-3 sm:p-4 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="bg-red-100 p-1.5 sm:p-2 rounded-full">
+                <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-red-100 p-1.5 rounded-full">
                       <div className="text-red-600 text-sm font-bold">🏔️</div>
                     </div>
-                    <span className="text-gray-700 font-semibold text-sm sm:text-base">
+                    <span className="text-gray-700 font-medium text-sm">
                       Difficulty Level:
                     </span>
                   </div>
                   <Chip
                     label={data.difficulty}
-                    size="medium"
+                    size="small"
                     sx={{
                       backgroundColor:
                         data.difficulty === "easy"
@@ -140,34 +140,34 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
               )}
 
               {data?.fitnessLevel && (
-                <div className="flex justify-between items-center p-3 sm:p-4 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="bg-indigo-100 p-1.5 sm:p-2 rounded-full">
+                <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-indigo-100 p-1.5 rounded-full">
                       <div className="text-indigo-600 text-sm font-bold">
                         💪
                       </div>
                     </div>
-                    <span className="text-gray-700 font-semibold text-sm sm:text-base">
+                    <span className="text-gray-700 font-medium text-sm">
                       Fitness Required:
                     </span>
                   </div>
-                  <span className="font-bold text-base sm:text-lg text-[#C22A54]">
+                  <span className="font-semibold text-sm text-[#C22A54]">
                     {data.fitnessLevel}
                   </span>
                 </div>
               )}
 
               {data?.category && (
-                <div className="flex justify-between items-center p-3 sm:p-4 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="bg-pink-100 p-1.5 sm:p-2 rounded-full">
+                <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-pink-100 p-1.5 rounded-full">
                       <div className="text-pink-600 text-sm font-bold">🏷️</div>
                     </div>
-                    <span className="text-gray-700 font-semibold text-sm sm:text-base">
+                    <span className="text-gray-700 font-medium text-sm">
                       Category:
                     </span>
                   </div>
-                  <span className="font-bold text-base sm:text-lg text-[#C22A54]">
+                  <span className="font-semibold text-sm text-[#C22A54]">
                     {data.category}
                   </span>
                 </div>
@@ -178,29 +178,29 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
           {/* Stay Description */}
           {data?.stayDescription && data.stayDescription.length > 0 && (
             <Grid item xs={12} md={6}>
-              <div className="text-center mb-4 sm:mb-6">
-                <div className="bg-gradient-to-br from-[#C22A54] to-[#A82046] p-2 sm:p-3 rounded-full w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 flex items-center justify-center">
-                  <Hotel className="text-xl sm:text-2xl text-white" />
+              <div className="text-center mb-3 sm:mb-4">
+                <div className="bg-gradient-to-br from-[#C22A54] to-[#A82046] p-2 rounded-full w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 flex items-center justify-center">
+                  <Hotel className="text-lg sm:text-xl text-white" />
                 </div>
                 <Typography
                   variant="h6"
-                  className="font-black text-[#C22A54] mb-2 text-lg sm:text-xl"
+                  className="font-semibold text-[#C22A54] mb-2 text-base sm:text-lg"
                 >
                   Stay Details
                 </Typography>
-                <div className="w-12 sm:w-16 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
+                <div className="w-10 sm:w-12 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
               </div>
 
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-2 sm:space-y-3">
                 {data.stayDescription.map((stay: any, index: number) => (
                   <div
                     key={index}
-                    className="group p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+                    className="group p-3 sm:p-4 bg-white rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:scale-105 cursor-pointer"
                   >
                     <div className="flex items-center justify-between mb-2 sm:mb-3">
                       <Typography
                         variant="h6"
-                        className="font-bold text-gray-800 group-hover:text-[#C22A54] transition-colors text-base sm:text-lg"
+                        className="font-semibold text-gray-800 group-hover:text-[#C22A54] transition-colors text-base sm:text-lg"
                       >
                         {stay.nights} night{stay.nights !== 1 ? "s" : ""} in{" "}
                         {stay.place}
@@ -211,7 +211,7 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
                     </div>
 
                     {stay.accommodation && (
-                      <div className="flex items-center gap-2 text-gray-600 mb-2">
+                      <div className="flex items-center gap-2 text-gray-600">
                         <Hotel className="text-sm" />
                         <Typography
                           variant="body2"
@@ -244,27 +244,27 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
             (data?.specialRequirements &&
               data.specialRequirements.length > 0)) && (
             <Grid item xs={12} md={6}>
-              <div className="text-center mb-4 sm:mb-6">
-                <div className="bg-gradient-to-br from-[#C22A54] to-[#A82046] p-2 sm:p-3 rounded-full w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 flex items-center justify-center">
-                  <div className="text-white text-lg sm:text-2xl font-bold">
+              <div className="text-center mb-3 sm:mb-4">
+                <div className="bg-gradient-to-br from-[#C22A54] to-[#A82046] p-2 rounded-full w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 flex items-center justify-center">
+                  <div className="text-white text-lg sm:text-xl font-bold">
                     ⚠️
                   </div>
                 </div>
                 <Typography
                   variant="h6"
-                  className="font-black text-[#C22A54] mb-2 text-lg sm:text-xl"
+                  className="font-semibold text-[#C22A54] mb-2 text-base sm:text-lg"
                 >
                   Requirements & Restrictions
                 </Typography>
-                <div className="w-12 sm:w-16 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
+                <div className="w-10 sm:w-12 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
               </div>
 
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-2 sm:space-y-3">
                 {data?.ageGroup && data.ageGroup.length > 0 && (
-                  <div className="p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100">
+                  <div className="p-3 sm:p-4 bg-white rounded-lg shadow-sm border border-gray-100">
                     <Typography
                       variant="h6"
-                      className="text-gray-800 mb-2 sm:mb-3 font-bold text-base sm:text-lg"
+                      className="text-gray-800 mb-2 sm:mb-3 font-semibold text-base sm:text-lg"
                     >
                       👥 Age Group:
                     </Typography>
@@ -273,7 +273,7 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
                         <Chip
                           key={index}
                           label={age}
-                          size="medium"
+                          size="small"
                           sx={{
                             backgroundColor: "rgba(194, 42, 84, 0.1)",
                             color: "#C22A54",
@@ -294,10 +294,10 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
 
                 {data?.specialRequirements &&
                   data.specialRequirements.length > 0 && (
-                    <div className="p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100">
+                    <div className="p-3 sm:p-4 bg-white rounded-lg shadow-sm border border-gray-100">
                       <Typography
                         variant="h6"
-                        className="text-gray-800 mb-2 sm:mb-3 font-bold text-base sm:text-lg"
+                        className="text-gray-800 mb-2 sm:mb-3 font-semibold text-base sm:text-lg"
                       >
                         🎯 Special Requirements:
                       </Typography>
@@ -307,7 +307,7 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
                             <Chip
                               key={index}
                               label={req}
-                              size="medium"
+                              size="small"
                               sx={{
                                 backgroundColor: "rgba(168, 32, 70, 0.1)",
                                 color: "#A82046",
@@ -333,27 +333,27 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
           {/* Cancellation & Refund Policies */}
           {(data?.cancellationPolicy || data?.refundPolicy) && (
             <Grid item xs={12} md={6}>
-              <div className="text-center mb-4 sm:mb-6">
-                <div className="bg-gradient-to-br from-[#C22A54] to-[#A82046] p-2 sm:p-3 rounded-full w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-3 flex items-center justify-center">
-                  <div className="text-white text-lg sm:text-2xl font-bold">
+              <div className="text-center mb-3 sm:mb-4">
+                <div className="bg-gradient-to-br from-[#C22A54] to-[#A82046] p-2 rounded-full w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 flex items-center justify-center">
+                  <div className="text-white text-lg sm:text-xl font-bold">
                     📋
                   </div>
                 </div>
                 <Typography
                   variant="h6"
-                  className="font-black text-[#C22A54] mb-2 text-lg sm:text-xl"
+                  className="font-semibold text-[#C22A54] mb-2 text-base sm:text-lg"
                 >
                   Policies
                 </Typography>
-                <div className="w-12 sm:w-16 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
+                <div className="w-10 sm:w-12 h-0.5 bg-gradient-to-r from-[#C22A54] to-[#A82046] mx-auto rounded-full"></div>
               </div>
 
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-2 sm:space-y-3">
                 {data?.cancellationPolicy && (
-                  <div className="p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100">
+                  <div className="p-3 sm:p-4 bg-white rounded-lg shadow-sm border border-gray-100">
                     <Typography
                       variant="h6"
-                      className="text-gray-800 mb-2 sm:mb-3 font-bold text-base sm:text-lg"
+                      className="text-gray-800 mb-2 sm:mb-3 font-semibold text-base sm:text-lg"
                     >
                       ❌ Cancellation Policy:
                     </Typography>
@@ -367,10 +367,10 @@ const AdditionalInfoSection: React.FC<AdditionalInfoSectionProps> = ({
                 )}
 
                 {data?.refundPolicy && (
-                  <div className="p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100">
+                  <div className="p-3 sm:p-4 bg-white rounded-lg shadow-sm border border-gray-100">
                     <Typography
                       variant="h6"
-                      className="text-gray-800 mb-2 sm:mb-3 font-bold text-base sm:text-lg"
+                      className="text-gray-800 mb-2 sm:mb-3 font-semibold text-base sm:text-lg"
                     >
                       💰 Refund Policy:
                     </Typography>

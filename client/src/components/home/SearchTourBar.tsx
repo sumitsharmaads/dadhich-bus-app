@@ -171,7 +171,7 @@ const SearchTourBar: React.FC = () => {
   const memoizedSuggestions = useMemo(() => suggestions, [suggestions]);
 
   return (
-    <div className="relative w-full max-w-lg z-40">
+    <div className="relative w-full max-w-lg z-30">
       <input
         type="text"
         placeholder="Search for tours, destinations, descriptions..."
@@ -201,7 +201,7 @@ const SearchTourBar: React.FC = () => {
 
       {memoizedSuggestions.length > 0 && (
         <div
-          className="absolute w-full bg-white shadow-lg mt-1 rounded-lg max-h-80 overflow-y-auto z-50"
+          className="absolute w-full bg-white shadow-lg mt-1 rounded-lg max-h-80 overflow-y-auto z-30"
           role="listbox"
           aria-label="Search suggestions"
         >

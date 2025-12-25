@@ -4,60 +4,145 @@ export interface SEOEntry {
   _id: string;
   routePath: string;
   pageName?: string;
+
+  // Basic Meta Tags (Route-specific)
   meta?: {
     title?: string;
     description?: string;
     keywords?: string[];
   };
+
+  // Open Graph (Route-specific)
   openGraph?: {
     title?: string;
     description?: string;
     imageUrl?: string;
+    imageWidth?: number;
+    imageHeight?: number;
+    imageAlt?: string;
   };
+
+  // Twitter Cards (Route-specific)
   twitter?: {
     card?: "summary" | "summary_large_image" | "app" | "player";
     title?: string;
     description?: string;
     imageUrl?: string;
   };
+
+  // Technical SEO (Route-specific)
   canonicalUrl?: string;
   robots?: {
     noindex?: boolean;
     nofollow?: boolean;
+    noarchive?: boolean;
+    nosnippet?: boolean;
+    noimageindex?: boolean;
+    maxSnippet?: number;
+    maxImagePreview?: "none" | "standard" | "large";
+    maxVideoPreview?: number;
   };
+
+  // Structured Data (Route-specific)
   structuredData?: Record<string, unknown> | null;
+
+  // Content Optimization (Route-specific)
+  contentOptimization?: {
+    focusKeyword?: string;
+    secondaryKeywords?: string[];
+    contentLength?: number;
+    readabilityScore?: number;
+    internalLinks?: string[];
+    externalLinks?: string[];
+  };
+
+  // Publishing Control
   isPublished: boolean;
   isDeleted: boolean;
+  priority?: number;
+  changeFrequency?:
+    | "always"
+    | "hourly"
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "yearly"
+    | "never";
+  lastModified?: string;
+
+  // Audit Trail
   createdAt: string;
   updatedAt: string;
+  createdBy?: string;
+  updatedBy?: string;
 }
 
 export interface CreateSEORequest {
   routePath: string;
   pageName?: string;
+
+  // Basic Meta Tags
   meta?: {
     title?: string;
     description?: string;
     keywords?: string[];
   };
+
+  // Open Graph
   openGraph?: {
     title?: string;
     description?: string;
     imageUrl?: string;
+    imageWidth?: number;
+    imageHeight?: number;
+    imageAlt?: string;
   };
+
+  // Twitter Cards
   twitter?: {
     card?: "summary" | "summary_large_image" | "app" | "player";
     title?: string;
     description?: string;
     imageUrl?: string;
   };
+
+  // Technical SEO
   canonicalUrl?: string;
   robots?: {
     noindex?: boolean;
     nofollow?: boolean;
+    noarchive?: boolean;
+    nosnippet?: boolean;
+    noimageindex?: boolean;
+    maxSnippet?: number;
+    maxImagePreview?: "none" | "standard" | "large";
+    maxVideoPreview?: number;
   };
+
+  // Structured Data
   structuredData?: Record<string, unknown> | null;
+
+  // Content Optimization
+  contentOptimization?: {
+    focusKeyword?: string;
+    secondaryKeywords?: string[];
+    contentLength?: number;
+    readabilityScore?: number;
+    internalLinks?: string[];
+    externalLinks?: string[];
+  };
+
+  // Publishing Control
   isPublished?: boolean;
+  priority?: number;
+  changeFrequency?:
+    | "always"
+    | "hourly"
+    | "daily"
+    | "weekly"
+    | "monthly"
+    | "yearly"
+    | "never";
 }
 
 export interface UpdateSEORequest extends Partial<CreateSEORequest> {}

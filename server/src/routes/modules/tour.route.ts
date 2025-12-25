@@ -40,6 +40,10 @@ import {
 } from '../../controllers/tour.controller';
 import { verifyCsrfToken } from '../../middlewares/csrf.middleware';
 import { uploadSingleFile } from '../../middlewares/upload.middleware';
+import { Request, Response } from 'express';
+import { Tour } from '../../models/tour.model';
+import { sendSuccess, sendNotFound } from '../../utils/apiResponse';
+import { asyncHandler } from '../../utils/asyncHandler';
 
 export const tourRouter = Router();
 
@@ -61,6 +65,40 @@ tourRouter.get('/categories', limiter, getTourCategories);
 tourRouter.get('/types', limiter, getTourTypes);
 tourRouter.get('/searchtourInformation', limiter, searchTourInformation);
 tourRouter.get('/public/:id', limiter, validate(idParamSchema, 'params'), getTourPublic);
+
+// SEO-specific route for metadata generation
+tourRouter.get(
+  '/:id/seo',
+  limiter,
+  validate(idParamSchema, 'params'),
+  asyncHandler(async (req: Request, res: Response) => {
+    const tourId = req.params.id;
+
+    // Only fetch minimal data needed for SEO
+    const tour = await Tour.findById(tourId)
+      .select('tourName description shortDescription days nights seo heroImage _id')
+      .lean()
+      .exec();
+
+    if (!tour) {
+      return sendNotFound(res, 'Tour not found');
+    }
+
+    // Return only SEO-relevant data
+    const seoData = {
+      _id: tour._id,
+      tourName: tour.tourName,
+      description: tour.description,
+      shortDescription: tour.shortDescription,
+      days: tour.days,
+      nights: tour.nights,
+      seo: tour.seo,
+      heroImage: tour.heroImage,
+    };
+
+    sendSuccess(res, seoData, 'Tour SEO data fetched');
+  }),
+);
 
 // Admin
 tourRouter.get('/admin/list', limiter, requireAuth, requireAdmin, listToursAdmin);

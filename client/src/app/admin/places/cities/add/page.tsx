@@ -47,6 +47,8 @@ import {
 } from "@/lib/api/types/places.types";
 import { successPopup, errorPopup } from "@/utils/errors/alerts";
 
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 const AddCityPage: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -431,9 +433,9 @@ const AddCityPage: React.FC = () => {
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Latitude"
-                    type="number"
+                  <NumberTextField
+                label="Latitude"
+                    
                     value={form.location?.coordinates[1] || ""}
                     onChange={(e) =>
                       handleLocationChange("lat", e.target.value)
@@ -444,9 +446,9 @@ const AddCityPage: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Longitude"
-                    type="number"
+                  <NumberTextField
+                label="Longitude"
+                    
                     value={form.location?.coordinates[0] || ""}
                     onChange={(e) =>
                       handleLocationChange("lng", e.target.value)
@@ -724,9 +726,9 @@ const AddCityPage: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
-                    label="Average Visit Duration (minutes)"
-                    type="number"
+                  <NumberTextField
+                label="Average Visit Duration (minutes)"
+                    
                     value={form.visitInfo?.averageVisitDurationMins || ""}
                     onChange={(e) =>
                       setForm((prev) => ({

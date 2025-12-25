@@ -38,6 +38,8 @@ import {
   Badge,
   Divider,
 } from "@mui/material";
+import { NumberTextField } from "@/components/common";
+import { formatDate, formatTime, formatDateTime } from "@/utils/dateFormat";
 import {
   Add,
   Edit,
@@ -841,9 +843,8 @@ const AdminToursPage: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <TextField
+                <NumberTextField
                   label="Min Price"
-                  type="number"
                   size="small"
                   value={filters.minPrice || ""}
                   onChange={(e) =>
@@ -858,9 +859,8 @@ const AdminToursPage: React.FC = () => {
               </Grid>
 
               <Grid item xs={12} sm={6} md={3}>
-                <TextField
+                <NumberTextField
                   label="Max Price"
-                  type="number"
                   size="small"
                   value={filters.maxPrice || ""}
                   onChange={(e) =>
@@ -1066,10 +1066,10 @@ const AdminToursPage: React.FC = () => {
                   <TableCell>
                     <Box>
                       <Typography variant="body2">
-                        {dayjs(tour.startDate).format("DD MMM YYYY")}
+                        {formatDate(tour.startDate)}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        to {dayjs(tour.endDate).format("DD MMM YYYY")}
+                        to {formatDate(tour.endDate)}
                       </Typography>
                     </Box>
                   </TableCell>

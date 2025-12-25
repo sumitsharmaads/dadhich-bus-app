@@ -10,7 +10,7 @@ const YatraBooking: React.FC = () => {
     <section className="bg-gray-100 p-6 rounded-lg shadow-md max-w-5xl mx-auto mt-3 mb-3">
       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-700 font-['Volkhov'] text-center md:text-left flex flex-wrap justify-center md:justify-start">
         Why&nbsp;
-        <span className="text-red-600 font-extrabold mr-1">DHADHICH</span>
+        <span className="text-red-600 font-extrabold mr-1">DADHICH</span>
         Bus Service?
       </h2>
       <div className="flex flex-col md:flex-row items-center">

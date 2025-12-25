@@ -43,11 +43,15 @@ import {
   Email as EmailIcon,
   Badge as BadgeIcon,
   Group as GroupIcon,
+  Devices as DevicesIcon,
 } from "@mui/icons-material";
 import { useAuth } from "@/contexts/AuthContextProvider";
 import { post } from "@/lib/service";
 import { successPopup, errorPopup } from "@/utils/errors/alerts";
 import User from "@/utils/User";
+import Link from "next/link";
+import { authService } from "@/lib/api/services/auth.service";
+import ChangePasswordModal from "@/components/auth/ChangePasswordModal";
 
 interface UserGuest {
   name: string;
@@ -61,6 +65,7 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddingGuest, setIsAddingGuest] = useState(false);
   const [editingRowIndex, setEditingRowIndex] = useState<number | null>(null);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({
     fullname: user?.fullname || "",
     phone: user?.phone || "",
@@ -135,12 +140,19 @@ const ProfilePage = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Still logout locally even if API call fails
+      logout();
+    }
   };
 
   const handleChangePassword = () => {
-    // TODO: Implement change password functionality
+    setIsChangePasswordOpen(true);
   };
 
   if (!user) {
@@ -438,9 +450,16 @@ const ProfilePage = () => {
                 </Box>
 
                 {/* Action Buttons */}
-                <Box sx={{ mt: 4, display: "flex", gap: 2 }}>
+                <Box
+                  sx={{
+                    mt: 4,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                  }}
+                >
                   {isEditing ? (
-                    <>
+                    <Box sx={{ display: "flex", gap: 2 }}>
                       <Button
                         variant="outlined"
                         onClick={() => {
@@ -483,7 +502,7 @@ const ProfilePage = () => {
                       >
                         Save Changes
                       </Button>
-                    </>
+                    </Box>
                   ) : (
                     <Button
                       variant="outlined"
@@ -501,6 +520,30 @@ const ProfilePage = () => {
                       Edit Profile
                     </Button>
                   )}
+
+                  {/* Sessions Management Button */}
+                  <Link href="/profile/sessions" passHref>
+                    <Button
+                      variant="outlined"
+                      startIcon={<DevicesIcon />}
+                      fullWidth
+                      sx={{
+                        borderRadius: 2,
+                        py: 1.5,
+                        textTransform: "none",
+                        fontWeight: 600,
+                        fontSize: "1rem",
+                        borderColor: "primary.main",
+                        color: "primary.main",
+                        "&:hover": {
+                          borderColor: "primary.dark",
+                          backgroundColor: "primary.50",
+                        },
+                      }}
+                    >
+                      Manage Sessions
+                    </Button>
+                  </Link>
                 </Box>
               </CardContent>
             </Card>
@@ -980,6 +1023,12 @@ const ProfilePage = () => {
           </Box>
         </Box>
       </Container>
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        open={isChangePasswordOpen}
+        onClose={() => setIsChangePasswordOpen(false)}
+      />
     </Box>
   );
 };

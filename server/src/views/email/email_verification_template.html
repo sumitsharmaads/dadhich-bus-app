@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= website.branding?.brandName %> • Email Verification</title>
+</head>
+
+<body style="font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7f9;padding:24px;color:#111">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:720px;margin:0 auto;background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden">
+    <tr>
+      <td style="padding:20px 24px;border-bottom:1px solid #eee">
+        <div style="display:flex;align-items:center;gap:12px">
+          <% if (website.branding?.logo?.url) { %>
+          <img src="<%= website.branding.logo.url %>" alt="<%= website.branding.brandName %>" height="28" />
+          <% } %>
+          <strong style="font-size:18px"><%= website.branding?.brandName || 'Dadhich Bus Services' %></strong>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:24px">
+        <h2 style="margin:0 0 12px;font-size:20px;color:#1f2937">📧 Verify Your Email Address</h2>
+        <p style="margin:0 0 16px;color:#6b7280">Hello <strong><%= fullname %></strong>,</p>
+        <p style="margin:0 0 20px;color:#6b7280">Welcome to <%= website.branding?.brandName || 'Dadhich Bus Services' %>! We're excited to have you on board. To complete your registration and start using our services, please verify your email address.</p>
+
+        <!-- Verification Section -->
+        <div style="background:#f0f9ff;border:1px solid #0ea5e9;border-radius:8px;padding:20px;margin-bottom:20px">
+          <h3 style="margin:0 0 16px;font-size:16px;color:#0c4a6e;display:flex;align-items:center;gap:8px">
+            🔐 Account Verification Required
+          </h3>
+          <p style="margin:0 0 16px;color:#0c4a6e;font-size:14px">Click the button below to verify your email address and activate your account:</p>
+
+          <div style="text-align:center;margin:20px 0">
+            <a href="<%= verificationUrl %>" style="display:inline-block;background:linear-gradient(135deg, #2c5aa0, #1e3a6f);color:white;padding:15px 30px;text-decoration:none;border-radius:8px;font-weight:bold;font-size:16px;box-shadow:0 4px 12px rgba(44, 90, 160, 0.3)">
+              ✅ Verify Email Address
+            </a>
+          </div>
+        </div>
+
+        <!-- Security Information -->
+        <div style="background:#fff3cd;border:1px solid #f59e0b;border-radius:8px;padding:16px;margin-bottom:20px">
+          <h4 style="margin:0 0 8px;font-size:14px;color:#92400e;display:flex;align-items:center;gap:6px">
+            ⏰ Important Security Information
+          </h4>
+          <ul style="margin:0;padding-left:20px;color:#92400e;font-size:14px">
+            <li>This verification link will expire in <strong>24 hours</strong> for security reasons</li>
+            <li>If you didn't create this account, please ignore this email</li>
+            <li>Your account will remain inactive without verification</li>
+          </ul>
+        </div>
+
+        <!-- Fallback URL -->
+        <div style="background:#f8f9fa;border:1px solid #e2e8f0;border-radius:8px;padding:16px;margin-bottom:20px">
+          <p style="margin:0 0 8px;color:#6b7280;font-size:14px">If the button doesn't work, copy and paste this link into your browser:</p>
+          <p style="word-break:break-all;background:#fff;padding:12px;border-radius:6px;font-family:monospace;font-size:12px;color:#374151;margin:0;border:1px solid #d1d5db">
+            <%= verificationUrl %>
+          </p>
+        </div>
+
+        <!-- Next Steps -->
+        <div style="background:#f0fdf4;border:1px solid #22c55e;border-radius:8px;padding:20px;margin-bottom:20px">
+          <h4 style="margin:0 0 12px;font-size:16px;color:#166534;display:flex;align-items:center;gap:8px">
+            🚀 What's Next?
+          </h4>
+          <div style="color:#166534;font-size:14px">
+            <div style="margin:8px 0;padding-left:20px;position:relative">
+              <span style="color:#22c55e;font-weight:bold;position:absolute;left:0">✓</span>
+              Verify your email to activate your account
+            </div>
+            <div style="margin:8px 0;padding-left:20px;position:relative">
+              <span style="color:#22c55e;font-weight:bold;position:absolute;left:0">✓</span>
+              Start booking bus tickets for your travels
+            </div>
+            <div style="margin:8px 0;padding-left:20px;position:relative">
+              <span style="color:#22c55e;font-weight:bold;position:absolute;left:0">✓</span>
+              Access exclusive deals and offers
+            </div>
+            <div style="margin:8px 0;padding-left:20px;position:relative">
+              <span style="color:#22c55e;font-weight:bold;position:absolute;left:0">✓</span>
+              Manage your bookings and travel history
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Notice -->
+        <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:16px">
+          <p style="margin:0;color:#991b1b;font-size:14px">
+            <strong>🔒 Security Notice:</strong> If you didn't create an account with <%= website.branding?.brandName || 'Dadhich Bus Services' %>, please ignore this email. Your account will remain inactive without verification.
+          </p>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:18px 24px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center">
+        <p style="margin:0;color:#6b7280;font-size:12px">
+          This email was sent from a registration form on your website.
+          <% if (website.contact?.emails?.supportEmail) { %>
+          For support, contact: <a href="mailto:<%= website.contact.emails.supportEmail %>" style="color:#3b82f6"><%= website.contact.emails.supportEmail %></a>
+          <% } %>
+        </p>
+        <div style="margin-top:8px;font-size:12px;color:#6b7280">
+          <%= website.branding?.brandName || 'Dadhich Bus Services' %> •
+          <a href="https://<%= website.domains?.primary %>" style="color:#3b82f6;text-decoration:none"><%= website.domains?.primary %></a>
+          <% if (website.contact?.phone) { %>
+          • <a href="tel:<%= website.contact.phone %>" style="color:#3b82f6;text-decoration:none"><%= website.contact.phone %></a>
+          <% } %>
+        </div>
+        <% if (website.socials) { %>
+        <div style="margin-top:8px;font-size:12px;color:#6b7280">
+          <% Object.entries(website.socials).forEach(function([k,v]){ if (v) { %>
+          <a href="<%= v %>" style="color:#6b7280;margin-right:10px;text-decoration:none"><%= k %></a>
+          <% }}); %>
+        </div>
+        <% } %>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

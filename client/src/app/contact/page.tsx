@@ -1,35 +1,32 @@
 import React from "react";
 import { Metadata } from "next";
+import { generateServerMetadata } from "@/lib/seo/serverSEO";
 import ContactClient from "@/components/pages/ContactClient";
 
-export const metadata: Metadata = {
-  title: "Contact Us | Dadhich Bus Services",
-  description:
-    "Get in touch with Dadhich Bus Services for all your transportation needs. Contact us for local and outstation bus rental services, tours, and inquiries.",
-  keywords:
-    "contact us, bus rental contact, Dadhich Bus Service contact, bus service inquiry, transportation contact",
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  return generateServerMetadata("/contact", {
     title: "Contact Us | Dadhich Bus Services",
     description:
       "Get in touch with Dadhich Bus Services for all your transportation needs. Contact us for local and outstation bus rental services, tours, and inquiries.",
-    type: "website",
-    url: "https://dadhichbusservice.com/contact",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  alternates: {
-    canonical: "https://dadhichbusservice.com/contact",
-  },
-};
+    keywords: [
+      "contact us",
+      "bus rental contact",
+      "Dadhich Bus Service contact",
+      "bus service inquiry",
+      "transportation contact",
+      "bus booking contact",
+      "tour inquiry",
+      "customer service",
+      "bus rental support",
+      "transportation help",
+      "booking assistance",
+      "bus service phone",
+      "transportation email",
+      "customer support",
+    ],
+    image: "/images/og-image.jpg",
+  });
+}
 
 const ContactPage = () => {
   return <ContactClient />;

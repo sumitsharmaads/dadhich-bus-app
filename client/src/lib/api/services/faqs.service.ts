@@ -27,7 +27,7 @@ export const faqsService = {
   },
 
   updateFAQs: async (data: UpdateFAQsRequest): Promise<FAQsResponse> => {
-    const response = await put<FAQsResponse>("/faqs/update", data);
+    const response = await put<FAQsResponse>(`/faqs/update`, data);
     return response.data;
   },
 

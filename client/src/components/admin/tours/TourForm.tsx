@@ -14,10 +14,19 @@ import {
   CircularProgress,
   Stack,
   Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip,
+  Badge,
 } from "@mui/material";
 import {
   Save as SaveIcon,
   ArrowBack as ArrowBackIcon,
+  ExpandMore as ExpandMoreIcon,
+  CheckCircle as CheckCircleIcon,
+  RadioButtonUnchecked as RadioButtonUncheckedIcon,
+  Warning as WarningIcon,
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import {
@@ -43,6 +52,8 @@ interface TourFormProps {
 const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
+  const [expandedStep, setExpandedStep] = useState<number | false>(0);
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -105,13 +116,48 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
   });
 
   const steps = [
-    "Basic Information",
-    "Sources & Places",
-    "Itinerary",
-    "Bus & Captain",
-    "Amount & Discounts",
-    "Advanced Features",
-    "SEO",
+    {
+      title: "Basic Information",
+      description: "Tour name, dates, pricing, and basic details (Required)",
+      icon: "📝",
+      mandatory: true,
+    },
+    {
+      title: "Sources & Places",
+      description: "Starting points and destinations (Required)",
+      icon: "📍",
+      mandatory: true,
+    },
+    {
+      title: "Itinerary",
+      description: "Day-by-day tour schedule (Optional)",
+      icon: "🗓️",
+      mandatory: false,
+    },
+    {
+      title: "Bus & Captain",
+      description: "Transportation and guide assignment (Optional)",
+      icon: "🚌",
+      mandatory: false,
+    },
+    {
+      title: "Amount & Discounts",
+      description: "Pricing details and discount options (Optional)",
+      icon: "💰",
+      mandatory: false,
+    },
+    {
+      title: "Advanced Features",
+      description: "Additional tour features and requirements (Optional)",
+      icon: "⚙️",
+      mandatory: false,
+    },
+    {
+      title: "SEO",
+      description: "Search engine optimization settings (Optional)",
+      icon: "🔍",
+      mandatory: false,
+    },
   ];
 
   // Load tour data for edit mode
@@ -120,6 +166,78 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
       loadTourData();
     }
   }, [mode, tourId]);
+
+  // Helper function to check if a step is completed
+  const isStepCompleted = (stepIndex: number): boolean => {
+    switch (stepIndex) {
+      case 0: // Basic Information - MANDATORY
+        return !!(
+          form.tourName?.trim() &&
+          form.startDate &&
+          form.endDate &&
+          form.inclusive?.length &&
+          form.type?.length &&
+          form.pricing?.minFare &&
+          form.capacity
+        );
+      case 1: // Sources & Places - MANDATORY
+        return !!(form.sources?.length && form.places?.length);
+      case 2: // Itinerary - OPTIONAL (completed if any itinerary exists)
+        return !!form.itinerary?.length;
+      case 3: // Bus & Captain - OPTIONAL (completed if any bus/captain assigned)
+        return !!(form.busId || form.captainUserId);
+      case 4: // Amount & Discounts - OPTIONAL (completed if adult price exists)
+        return !!form.pricing?.adultPrice;
+      case 5: // Advanced Features - OPTIONAL (completed if any advanced feature is set)
+        return !!(
+          form.difficulty ||
+          form.ageGroup?.length ||
+          form.specialRequirements?.length
+        );
+      case 6: // SEO - OPTIONAL (completed if any SEO field is filled)
+        return !!(
+          form.seo?.title ||
+          form.seo?.description ||
+          form.seo?.keywords?.length
+        );
+      default:
+        return false;
+    }
+  };
+
+  // Helper function to check if a step has errors
+  const hasStepErrors = (stepIndex: number): boolean => {
+    // Only check for errors in mandatory steps (0 and 1)
+    const mandatoryStepErrorFields = {
+      0: [
+        "tourName",
+        "startDate",
+        "endDate",
+        "inclusive",
+        "type",
+        "pricing.minFare",
+        "capacity",
+      ],
+      1: ["sources", "places"],
+    };
+
+    const fields =
+      mandatoryStepErrorFields[
+        stepIndex as keyof typeof mandatoryStepErrorFields
+      ] || [];
+    return fields.some((field) => errors[field]);
+  };
+
+  // Update completed steps when form changes
+  useEffect(() => {
+    const newCompletedSteps = new Set<number>();
+    steps.forEach((_, index) => {
+      if (isStepCompleted(index)) {
+        newCompletedSteps.add(index);
+      }
+    });
+    setCompletedSteps(newCompletedSteps);
+  }, [form]);
 
   const loadTourData = async () => {
     if (!tourId) return;
@@ -512,6 +630,14 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
     setActiveStep(step);
   };
 
+  const handleAccordionChange =
+    (step: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpandedStep(isExpanded ? step : false);
+      if (isExpanded) {
+        setActiveStep(step);
+      }
+    };
+
   if (loading) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -603,29 +729,173 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
           {mode === "create" ? "Create New Tour" : "Edit Tour"}
         </Typography>
         <Typography variant="body1" color="textSecondary">
-          Fill in the tour details below. You can navigate between sections
-          using the stepper below.
+          Fill in the tour details below. Click on any section to expand and
+          edit it. Completed sections are marked with a green checkmark, and
+          sections with errors are highlighted in red.
         </Typography>
       </Box>
 
-      {/* Stepper */}
-      <Paper sx={{ p: 3, mb: 4 }}>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label, index) => (
-            <Step key={label}>
-              <StepLabel
-                onClick={() => handleStepClick(index)}
-                sx={{ cursor: "pointer" }}
-              >
-                {label}
-              </StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </Paper>
+      {/* Accordion Steps */}
+      <Box sx={{ mb: 4 }}>
+        {steps.map((step, index) => {
+          const isCompleted = completedSteps.has(index);
+          const hasErrors = hasStepErrors(index);
+          const isExpanded = expandedStep === index;
 
-      {/* Step Content */}
-      <Box sx={{ mb: 4 }}>{renderStepContent(activeStep)}</Box>
+          return (
+            <Accordion
+              key={index}
+              expanded={isExpanded}
+              onChange={handleAccordionChange(index)}
+              sx={{
+                mb: 2,
+                "&:before": {
+                  display: "none",
+                },
+                "&.Mui-expanded": {
+                  margin: "0 0 16px 0",
+                },
+                border: hasErrors
+                  ? "2px solid #f44336"
+                  : isCompleted
+                  ? "2px solid #4caf50"
+                  : "1px solid #e0e0e0",
+                borderRadius: "8px !important",
+                boxShadow: hasErrors
+                  ? "0 0 0 1px #f44336"
+                  : isCompleted
+                  ? "0 0 0 1px #4caf50"
+                  : "0 2px 4px rgba(0,0,0,0.1)",
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                sx={{
+                  backgroundColor: isCompleted
+                    ? "#f1f8e9"
+                    : hasErrors
+                    ? "#ffebee"
+                    : "#fafafa",
+                  borderRadius: "8px 8px 0 0",
+                  "&.Mui-expanded": {
+                    borderRadius: "8px 8px 0 0",
+                  },
+                  "& .MuiAccordionSummary-content": {
+                    alignItems: "center",
+                    margin: "12px 0",
+                  },
+                }}
+              >
+                <Box
+                  sx={{ display: "flex", alignItems: "center", width: "100%" }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
+                    <Badge
+                      badgeContent={index + 1}
+                      color="primary"
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          backgroundColor: isCompleted
+                            ? "#4caf50"
+                            : hasErrors
+                            ? "#f44336"
+                            : "#1976d2",
+                          color: "white",
+                          fontWeight: "bold",
+                        },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: "50%",
+                          backgroundColor: isCompleted
+                            ? "#4caf50"
+                            : hasErrors
+                            ? "#f44336"
+                            : "#e3f2fd",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: "20px",
+                        }}
+                      >
+                        {isCompleted ? (
+                          <CheckCircleIcon
+                            sx={{ color: "white", fontSize: 24 }}
+                          />
+                        ) : hasErrors ? (
+                          <WarningIcon sx={{ color: "white", fontSize: 24 }} />
+                        ) : (
+                          <RadioButtonUncheckedIcon
+                            sx={{ color: "#1976d2", fontSize: 24 }}
+                          />
+                        )}
+                      </Box>
+                    </Badge>
+                  </Box>
+
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                      {step.title}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {step.description}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    {step.mandatory && (
+                      <Chip
+                        label="Required"
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      />
+                    )}
+                    {!step.mandatory && (
+                      <Chip
+                        label="Optional"
+                        size="small"
+                        color="default"
+                        variant="outlined"
+                      />
+                    )}
+                    {isCompleted && (
+                      <Chip
+                        label="Completed"
+                        size="small"
+                        color="success"
+                        icon={<CheckCircleIcon />}
+                      />
+                    )}
+                    {hasErrors && (
+                      <Chip
+                        label="Has Errors"
+                        size="small"
+                        color="error"
+                        icon={<WarningIcon />}
+                      />
+                    )}
+                    {!isCompleted && !hasErrors && !step.mandatory && (
+                      <Chip
+                        label="Not Started"
+                        size="small"
+                        variant="outlined"
+                      />
+                    )}
+                  </Box>
+                </Box>
+              </AccordionSummary>
+
+              <AccordionDetails sx={{ p: 3, backgroundColor: "white" }}>
+                {renderStepContent(index)}
+              </AccordionDetails>
+            </Accordion>
+          );
+        })}
+      </Box>
 
       {/* Action Buttons */}
       <Paper sx={{ p: 3 }}>
@@ -647,34 +917,40 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
           </Box>
 
           <Stack direction="row" spacing={2}>
-            {mode === "create" && activeStep === 1 && (
-              <Button
-                variant="outlined"
-                onClick={handleQuickSave}
-                disabled={saving}
-              >
-                Create and Skip Further
-              </Button>
-            )}
-
-            {activeStep < steps.length - 1 ? (
-              <Button variant="contained" onClick={handleNext}>
-                Next
-              </Button>
-            ) : (
+            {/* Show Create Tour button for create mode after step 1 (from step 2 onwards) */}
+            {mode === "create" && activeStep >= 1 && (
               <Button
                 variant="contained"
+                color="primary"
                 onClick={handleSave}
                 disabled={saving}
                 startIcon={
                   saving ? <CircularProgress size={20} /> : <SaveIcon />
                 }
               >
-                {saving
-                  ? "Saving..."
-                  : mode === "create"
-                  ? "Create Tour"
-                  : "Update Tour"}
+                {saving ? "Creating..." : "Create Tour"}
+              </Button>
+            )}
+
+            {/* Show Update button for edit mode on all steps */}
+            {mode === "edit" && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSave}
+                disabled={saving}
+                startIcon={
+                  saving ? <CircularProgress size={20} /> : <SaveIcon />
+                }
+              >
+                {saving ? "Updating..." : "Update Tour"}
+              </Button>
+            )}
+
+            {/* Show Next button when not on last step */}
+            {activeStep < steps.length - 1 && (
+              <Button variant="contained" onClick={handleNext}>
+                Next
               </Button>
             )}
           </Stack>
@@ -683,9 +959,61 @@ const TourForm: React.FC<TourFormProps> = ({ mode, tourId, initialData }) => {
 
       {/* Progress Indicator */}
       <Box sx={{ mt: 3, textAlign: "center" }}>
-        <Typography variant="body2" color="textSecondary">
-          Step {activeStep + 1} of {steps.length}: {steps[activeStep]}
+        <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+          Progress: {completedSteps.size} of {steps.length} sections completed
         </Typography>
+        {steps.filter(
+          (_, index) => completedSteps.has(index) && steps[index].mandatory
+        ).length === 2 && (
+          <Typography
+            variant="body2"
+            color="success.main"
+            sx={{ mt: 1, mb: 2, fontWeight: 600 }}
+          >
+            ✅ All required sections completed! Optional sections can be filled
+            later.
+          </Typography>
+        )}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          {steps.map((step, index) => (
+            <Chip
+              key={index}
+              label={`${index + 1}. ${step.title}${step.mandatory ? " *" : ""}`}
+              size="small"
+              color={
+                completedSteps.has(index)
+                  ? "success"
+                  : hasStepErrors(index)
+                  ? "error"
+                  : step.mandatory
+                  ? "primary"
+                  : "default"
+              }
+              variant={completedSteps.has(index) ? "filled" : "outlined"}
+              icon={
+                completedSteps.has(index) ? (
+                  <CheckCircleIcon />
+                ) : hasStepErrors(index) ? (
+                  <WarningIcon />
+                ) : step.mandatory ? (
+                  <RadioButtonUncheckedIcon />
+                ) : undefined
+              }
+              onClick={() => {
+                setExpandedStep(index);
+                setActiveStep(index);
+              }}
+              sx={{ cursor: "pointer" }}
+            />
+          ))}
+        </Box>
       </Box>
     </Container>
   );

@@ -28,6 +28,10 @@ import {
   Stack,
   Tooltip,
   Divider,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import {
   Add,
@@ -53,22 +57,104 @@ const SEOAdminPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<SEOEntry | null>(null);
+  const [cacheStats, setCacheStats] = useState<{
+    size: number;
+    entries: string[];
+  } | null>(null);
   const [formData, setFormData] = useState<CreateSEORequest>({
     routePath: "",
     pageName: "",
     meta: { title: "", description: "", keywords: [] },
-    openGraph: { title: "", description: "", imageUrl: "" },
-    twitter: { card: "summary", title: "", description: "", imageUrl: "" },
+    openGraph: {
+      title: "",
+      description: "",
+      imageUrl: "",
+      imageWidth: 1200,
+      imageHeight: 630,
+      imageAlt: "",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "",
+      description: "",
+      imageUrl: "",
+    },
     canonicalUrl: "",
-    robots: { noindex: false, nofollow: false },
+    robots: {
+      noindex: false,
+      nofollow: false,
+      noarchive: false,
+      nosnippet: false,
+      noimageindex: false,
+      maxSnippet: -1,
+      maxImagePreview: "large",
+      maxVideoPreview: -1,
+    },
+    contentOptimization: {
+      focusKeyword: "",
+      secondaryKeywords: [],
+      contentLength: 0,
+      readabilityScore: 0,
+      internalLinks: [],
+      externalLinks: [],
+    },
     structuredData: null,
     isPublished: true,
+    priority: 0.5,
+    changeFrequency: "monthly",
   });
   const [newKeyword, setNewKeyword] = useState("");
 
   useEffect(() => {
     fetchSEOEntries();
+    fetchCacheStats();
   }, []);
+
+  const fetchCacheStats = async () => {
+    try {
+      const response = await fetch("/api/admin/seo/cache");
+      const data = await response.json();
+      if (data.success) {
+        setCacheStats(data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch cache stats:", error);
+    }
+  };
+
+  const clearCache = async (
+    type: "all" | "route" | "pattern" | "prefix",
+    value?: string
+  ) => {
+    try {
+      let url = "/api/admin/seo/cache";
+      const params = new URLSearchParams();
+
+      if (type === "route" && value) {
+        params.append("route", value);
+      } else if (type === "pattern" && value) {
+        params.append("pattern", value);
+      } else if (type === "prefix" && value) {
+        params.append("prefix", value);
+      }
+
+      if (params.toString()) {
+        url += `?${params.toString()}`;
+      }
+
+      const response = await fetch(url, { method: "DELETE" });
+      const data = await response.json();
+
+      if (data.success) {
+        successPopup("Cache cleared successfully!");
+        fetchCacheStats();
+      } else {
+        errorPopup(data.message || "Failed to clear cache");
+      }
+    } catch (error) {
+      errorPopup("Failed to clear cache");
+    }
+  };
 
   const fetchSEOEntries = async () => {
     setLoading(true);
@@ -93,17 +179,39 @@ const SEOAdminPage: React.FC = () => {
           title: "",
           description: "",
           imageUrl: "",
+          imageWidth: 1200,
+          imageHeight: 630,
+          imageAlt: "",
         },
         twitter: entry.twitter || {
-          card: "summary",
+          card: "summary_large_image",
           title: "",
           description: "",
           imageUrl: "",
         },
         canonicalUrl: entry.canonicalUrl || "",
-        robots: entry.robots || { noindex: false, nofollow: false },
+        robots: entry.robots || {
+          noindex: false,
+          nofollow: false,
+          noarchive: false,
+          nosnippet: false,
+          noimageindex: false,
+          maxSnippet: -1,
+          maxImagePreview: "large",
+          maxVideoPreview: -1,
+        },
+        contentOptimization: entry.contentOptimization || {
+          focusKeyword: "",
+          secondaryKeywords: [],
+          contentLength: 0,
+          readabilityScore: 0,
+          internalLinks: [],
+          externalLinks: [],
+        },
         structuredData: entry.structuredData,
         isPublished: entry.isPublished,
+        priority: entry.priority || 0.5,
+        changeFrequency: entry.changeFrequency || "monthly",
       });
     } else {
       setEditingEntry(null);
@@ -111,12 +219,43 @@ const SEOAdminPage: React.FC = () => {
         routePath: "",
         pageName: "",
         meta: { title: "", description: "", keywords: [] },
-        openGraph: { title: "", description: "", imageUrl: "" },
-        twitter: { card: "summary", title: "", description: "", imageUrl: "" },
+        openGraph: {
+          title: "",
+          description: "",
+          imageUrl: "",
+          imageWidth: 1200,
+          imageHeight: 630,
+          imageAlt: "",
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: "",
+          description: "",
+          imageUrl: "",
+        },
         canonicalUrl: "",
-        robots: { noindex: false, nofollow: false },
+        robots: {
+          noindex: false,
+          nofollow: false,
+          noarchive: false,
+          nosnippet: false,
+          noimageindex: false,
+          maxSnippet: -1,
+          maxImagePreview: "large",
+          maxVideoPreview: -1,
+        },
+        contentOptimization: {
+          focusKeyword: "",
+          secondaryKeywords: [],
+          contentLength: 0,
+          readabilityScore: 0,
+          internalLinks: [],
+          externalLinks: [],
+        },
         structuredData: null,
         isPublished: true,
+        priority: 0.5,
+        changeFrequency: "monthly",
       });
     }
     setDialogOpen(true);
@@ -381,6 +520,7 @@ const SEOAdminPage: React.FC = () => {
                 variant="outlined"
                 startIcon={<Refresh />}
                 onClick={fetchSEOEntries}
+                disabled={loading}
               >
                 Refresh
               </Button>
@@ -394,6 +534,53 @@ const SEOAdminPage: React.FC = () => {
             </Stack>
           </Grid>
         </Grid>
+
+        {/* Cache Management Section */}
+        <Paper sx={{ p: 2, mb: 3, mt: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            🚀 Cache Management
+          </Typography>
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Cache Size: {cacheStats?.size || 0} entries
+            </Typography>
+            <Button size="small" variant="outlined" onClick={fetchCacheStats}>
+              Refresh Stats
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              color="warning"
+              onClick={() => clearCache("all")}
+            >
+              Clear All Cache
+            </Button>
+          </Box>
+          {cacheStats?.entries && cacheStats.entries.length > 0 && (
+            <Box>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                Cached Routes:
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                {cacheStats.entries.slice(0, 10).map((route, index) => (
+                  <Chip
+                    key={index}
+                    label={route}
+                    size="small"
+                    onDelete={() => clearCache("route", route)}
+                  />
+                ))}
+                {cacheStats.entries.length > 10 && (
+                  <Chip
+                    label={`+${cacheStats.entries.length - 10} more`}
+                    size="small"
+                    variant="outlined"
+                  />
+                )}
+              </Box>
+            </Box>
+          )}
+        </Paper>
       </Box>
 
       {filteredEntries.length === 0 ? (
@@ -695,6 +882,48 @@ const SEOAdminPage: React.FC = () => {
                   helperText="Image displayed when sharing on social media"
                 />
               </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Image Width"
+                  type="number"
+                  value={formData.openGraph?.imageWidth || 1200}
+                  onChange={(e) =>
+                    handleFormChange(
+                      "openGraph.imageWidth",
+                      parseInt(e.target.value)
+                    )
+                  }
+                  helperText="Image width in pixels"
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Image Height"
+                  type="number"
+                  value={formData.openGraph?.imageHeight || 630}
+                  onChange={(e) =>
+                    handleFormChange(
+                      "openGraph.imageHeight",
+                      parseInt(e.target.value)
+                    )
+                  }
+                  helperText="Image height in pixels"
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  label="Image Alt Text"
+                  value={formData.openGraph?.imageAlt || ""}
+                  onChange={(e) =>
+                    handleFormChange("openGraph.imageAlt", e.target.value)
+                  }
+                  placeholder="Alt text for the image"
+                  helperText="Accessibility description"
+                />
+              </Grid>
 
               {/* Twitter Card */}
               <Grid item xs={12}>
@@ -758,41 +987,189 @@ const SEOAdminPage: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Stack direction="row" spacing={3}>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.robots?.noindex || false}
-                        onChange={(e) =>
-                          handleFormChange("robots.noindex", e.target.checked)
-                        }
-                      />
+                <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                  Robots Directives
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6} md={3}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.robots?.noindex || false}
+                          onChange={(e) =>
+                            handleFormChange("robots.noindex", e.target.checked)
+                          }
+                        />
+                      }
+                      label="No Index"
+                    />
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.robots?.nofollow || false}
+                          onChange={(e) =>
+                            handleFormChange(
+                              "robots.nofollow",
+                              e.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="No Follow"
+                    />
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.robots?.noarchive || false}
+                          onChange={(e) =>
+                            handleFormChange(
+                              "robots.noarchive",
+                              e.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="No Archive"
+                    />
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.robots?.nosnippet || false}
+                          onChange={(e) =>
+                            handleFormChange(
+                              "robots.nosnippet",
+                              e.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="No Snippet"
+                    />
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.robots?.noimageindex || false}
+                          onChange={(e) =>
+                            handleFormChange(
+                              "robots.noimageindex",
+                              e.target.checked
+                            )
+                          }
+                        />
+                      }
+                      label="No Image Index"
+                    />
+                  </Grid>
+                  <Grid item xs={6} md={3}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={formData.isPublished}
+                          onChange={(e) =>
+                            handleFormChange("isPublished", e.target.checked)
+                          }
+                        />
+                      }
+                      label="Published"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              {/* Content Optimization */}
+              <Grid item xs={12}>
+                <Divider sx={{ my: 2 }} />
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  Content Optimization
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Focus Keyword"
+                  value={formData.contentOptimization?.focusKeyword || ""}
+                  onChange={(e) =>
+                    handleFormChange(
+                      "contentOptimization.focusKeyword",
+                      e.target.value
+                    )
+                  }
+                  placeholder="Primary keyword for this page"
+                  helperText="Main keyword you want to rank for"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Content Length"
+                  type="number"
+                  value={formData.contentOptimization?.contentLength || 0}
+                  onChange={(e) =>
+                    handleFormChange(
+                      "contentOptimization.contentLength",
+                      parseInt(e.target.value)
+                    )
+                  }
+                  placeholder="Word count"
+                  helperText="Number of words on the page"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Readability Score"
+                  type="number"
+                  value={formData.contentOptimization?.readabilityScore || 0}
+                  onChange={(e) =>
+                    handleFormChange(
+                      "contentOptimization.readabilityScore",
+                      parseInt(e.target.value)
+                    )
+                  }
+                  placeholder="0-100"
+                  helperText="Content readability score (0-100)"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Priority"
+                  type="number"
+                  inputProps={{ min: 0, max: 1, step: 0.1 }}
+                  value={formData.priority || 0.5}
+                  onChange={(e) =>
+                    handleFormChange("priority", parseFloat(e.target.value))
+                  }
+                  helperText="Sitemap priority (0.0 to 1.0)"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Change Frequency</InputLabel>
+                  <Select
+                    value={formData.changeFrequency || "monthly"}
+                    onChange={(e) =>
+                      handleFormChange("changeFrequency", e.target.value)
                     }
-                    label="No Index"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.robots?.nofollow || false}
-                        onChange={(e) =>
-                          handleFormChange("robots.nofollow", e.target.checked)
-                        }
-                      />
-                    }
-                    label="No Follow"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formData.isPublished}
-                        onChange={(e) =>
-                          handleFormChange("isPublished", e.target.checked)
-                        }
-                      />
-                    }
-                    label="Published"
-                  />
-                </Stack>
+                    label="Change Frequency"
+                  >
+                    <MenuItem value="always">Always</MenuItem>
+                    <MenuItem value="hourly">Hourly</MenuItem>
+                    <MenuItem value="daily">Daily</MenuItem>
+                    <MenuItem value="weekly">Weekly</MenuItem>
+                    <MenuItem value="monthly">Monthly</MenuItem>
+                    <MenuItem value="yearly">Yearly</MenuItem>
+                    <MenuItem value="never">Never</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Box>

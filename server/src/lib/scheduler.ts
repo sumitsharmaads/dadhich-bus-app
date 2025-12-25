@@ -2,6 +2,7 @@ import { env } from './env';
 import { logger } from './logger';
 import { Booking } from '../models/booking.model';
 import { SeatHold } from '../models/seatHold.model';
+import { cleanupExpiredSessions } from '../jobs/sessionCleanup.job';
 
 export function startSchedulers() {
   // Sweep pending bookings beyond TTL and cancel them; release holds
@@ -21,4 +22,16 @@ export function startSchedulers() {
       logger.error({ err }, 'Error sweeping expired bookings');
     }
   }, env.BOOKING_EXPIRY_SWEEP_MS).unref();
+
+  // Clean up expired and inactive sessions every hour
+  setInterval(
+    async () => {
+      try {
+        await cleanupExpiredSessions();
+      } catch (err) {
+        logger.error({ err }, 'Error cleaning up sessions');
+      }
+    },
+    60 * 60 * 1000,
+  ).unref(); // Run every hour
 }
